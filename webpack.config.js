@@ -1,7 +1,6 @@
 'use strict'
 
 const path = require('path')
-const pkg = require('./app/package.json')
 const settings = require('./config.js')
 const webpack = require('webpack')
 
@@ -55,6 +54,14 @@ let config = {
           limit: 10000,
           name: 'fonts/[name].[hash:7].[ext]'
         }
+      },
+      {
+        test: /muse-ui.src.*?js$/,
+        loader: 'babel'
+      },
+      {
+        test: /\.less$/,
+        loader: 'style!css!less?strictMath&noIeCompat'
       }
     ]
   },
@@ -74,7 +81,8 @@ let config = {
   resolve: {
     alias: {
       'components': path.join(__dirname, 'app/src/components'),
-      'src': path.join(__dirname, 'app/src')
+      'src': path.join(__dirname, 'app/src'),
+      'muse-ui': 'muse-ui/src'
     },
     extensions: ['', '.js', '.vue', '.json', '.css'],
     fallback: [path.join(__dirname, 'app/node_modules')]

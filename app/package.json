@@ -4,6 +4,7 @@
   "description": "An electron-vue project",
   "main": "electron.js",
   "dependencies": {
+    "muse-ui": "^2.0.0-alpha.6",
     "vue": "^2.0.1",
     "vue-electron": "^1.0.0",
     "vue-router": "^2.0.2",
