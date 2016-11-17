@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import MuseUI from 'muse-ui'
 import App from './App'
 import routes from './routes'
+import store from 'src/vuex/store'
 
 Vue.use(Electron)
 Vue.use(VueRouter)
@@ -18,5 +19,6 @@ const router = new VueRouter({
 /* eslint-disable no-new */
 new Vue({
   router,
+  store,
   ...App
 }).$mount('#app')

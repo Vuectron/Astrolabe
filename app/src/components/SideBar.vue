@@ -17,10 +17,13 @@ export default {
   methods: {
     handleClose () {
       this.$emit('close')
+    },
+    toggleSidebar () {
+      this.$store.dispatch('toggleSidebar')
     }
   },
   mounted () {
-
+    console.log(this.$store.state.global.version)
   }
 }
 </script>
@@ -28,8 +31,8 @@ export default {
 <template>
 <div>
   <mu-drawer @close="handleClose" :open="open" :docked="docked" class="app-drawer" :zDepth="1">
-    <mu-appbar class="exmaples-nav-appbar" :zDepth="0">
-      <!-- <mu-icon-button @click="open = !open" icon="menu" slot="left"/> -->
+    <mu-appbar class="sidebar-appbar" :zDepth="0">
+      <mu-icon-button @click="toggleSidebar" icon="menu" slot="left"/>
     </mu-appbar>
     <mu-divider/>
   </mu-drawer>
@@ -38,32 +41,18 @@ export default {
 
 <style lang="less">
 @import "~muse-ui/less/vars.less";
-.exmaples-drawer{
+.sidebar-drawer{
   box-shadow: none;
   border-right: 1px solid @borderColor;
 }
-.exmaples-nav-appbar.mu-appbar{
+.sidebar-appbar.mu-appbar{
   background-color: @primaryColor;
-  color: @secondaryTextColor;
+  color: @dialogBackgroundColor;
 }
-.exmaples-appbar-title{
-  color: @secondaryTextColor;
+.sidebar-appbar-title{
+  color: @dialogBackgroundColor;
 }
-.exmaples-version {
-  margin-left: 10px;
-  align-self: flex-start;
-}
-.exmaples-nav-sub-header {
+.sidebar-sub-header {
   padding-left: 34px;
-}
-.mu-version-box{
-  height: 48px;
-  margin-top: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-}
-.mu-version-text {
-  font-size: 16px;
-  margin-top: 8px;
 }
 </style>

@@ -1,25 +1,41 @@
 <script>
-  import store from 'src/vuex/store'
-  import AppNavDrawer from './components/AppNavDrawer.vue'
+  import NavBar from './components/NavBar.vue'
+  import SideBar from './components/SideBar.vue'
+
+  const isDesktop = () => window.innerWidth > 993
 
   export default {
     name: 'App',
-    store,
     data () {
-      const desktop = isDesktop()
       return {
-        open: desktop,
-        docked: desktop,
-        desktop: desktop,
-        title: ''
+        title: '',
+        dashed: isDesktop(),
+        desktop: isDesktop()
+      }
+    },
+    computed: {
+      open () {
+        return this.$store.state.global.open
+      },
+      isDesktop () {
+        return window.innerWidth > 993
+      }
+    },
+    watch: {
+      open (newVal) {
+        console.log(newVal)
+      },
+      isDesktop (newVal) {
+        console.log(newVal)
       }
     },
     mounted () {
+      this.$store.dispatch('setSidebar', { isDesktop: isDesktop() })
       this.routes = this.$router.options.routes
       this.setTitle()
-      this.changeNav()
+      this.resizeSidebar()
       this.handleResize = () => {
-        this.changeNav()
+        this.resizeSidebar()
       }
       window.addEventListener('resize', this.handleResize)
       window.addEventListener('hashchange', () => {
@@ -27,23 +43,21 @@
       })
     },
     methods: {
-      toggleNav () {
-        this.open = !this.open
+      toggleSidebar () {
+        this.$store.dispatch('toggleSidebar')
       },
-      changeNav () {
+      resizeSidebar () {
         const desktop = isDesktop()
+        console.log(desktop)
         this.docked = desktop
         if (desktop === this.desktop) return
         if (!desktop && this.desktop && this.open) {
-          this.open = false
+          this.$store.dispatch('toggleSidebar')
         }
         if (desktop && !this.desktop && !this.open) {
-          this.open = true
+          this.$store.dispatch('toggleSidebar')
         }
         this.desktop = desktop
-      },
-      handleMenuChange (path) {
-        if (!this.desktop) this.open = false
       },
       setTitle () {
         let path = window.location.hash
@@ -61,26 +75,23 @@
       window.removeEventListener('resize', this.handleResize)
     },
     components: {
-      'app-nav': AppNavDrawer
+      NavBar,
+      SideBar
     }
-  }
-  function isDesktop () {
-    return window.innerWidth > 993
   }
 </script>
 
 <template>
   <div>
-    <mu-appbar :zDepth="0" :title="title" class="example-appbar" :class="{'nav-hide': !open}">
-      <mu-icon-button @click="toggleNav" icon="menu" slot="left"/>
-      <mu-icon-button slot="right" href="https://github.com/museui/muse-ui">
-        <i class="mudocs-icon-custom-github"></i>
-      </mu-icon-button>
-    </mu-appbar>
-    <app-nav @change="handleMenuChange" @close="toggleNav" :open="open" :docked="docked" />
-    <div class="example-content" :class="{'nav-hide': !open}">
+    <header class="header">
+      <nav-bar :open="open" />
+    </header>
+    <aside class="sidebar">
+      <side-bar @close="toggleSidebar" :open="open" :docked="docked" />
+    </aside>
+    <main class="content" :class="{'nav-hide': !open}">
       <router-view></router-view>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -89,7 +100,7 @@
 @import '~muse-ui/dist/theme-teal.css';
 @import '~muse-ui/less/vars.less';
 @import '~muse-ui/less/mixins.less';
-.example-appbar{
+.header-appbar{
   position: fixed;
   left: 256px;
   right: 0;
@@ -97,30 +108,30 @@
   width: auto;
   transition: all .45s @easeOutFunction;
   &.nav-hide {
-    left: 0;
+    left: 64px;
   }
 }
-.example-content{
+.content{
   padding-top: 56px;
   padding-left: 256px;
   transition: all .45s @easeOutFunction;
   &.nav-hide {
-    padding-left: 0;
+    padding-left: 64px;
   }
 }
 .content-wrapper{
   padding: 48px 72px;
 }
 @media (min-width: 480px) {
-  .example-content{
+  .content{
     padding-top: 64px;
   }
 }
 @media (max-width: 993px) {
-  .example-appbar {
+  .header-appbar {
     left: 0;
   }
-  .example-content{
+  .content{
     padding-left: 0;
   }
   .content-wrapper {

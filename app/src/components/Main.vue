@@ -1,13 +1,6 @@
 <script>
-  import Links from './LandingPageView/Links'
-  import Versions from './LandingPageView/Versions'
-
   export default {
-    components: {
-      Links,
-      Versions
-    },
-    name: 'landing-page'
+    name: 'Main'
   }
 </script>
 
