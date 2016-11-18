@@ -82,7 +82,7 @@ let config = {
     alias: {
       'components': path.join(__dirname, 'app/src/components'),
       'src': path.join(__dirname, 'app/src'),
-      'muse-ui': 'muse-ui/src'
+      'muse-components': 'muse-ui/src'
     },
     extensions: ['', '.js', '.vue', '.json', '.css'],
     fallback: [path.join(__dirname, 'app/node_modules')]

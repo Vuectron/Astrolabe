@@ -9,7 +9,7 @@ export default {
   },
   data () {
     return {
-      title: ''
+      title: 'Astrolabe'
     }
   },
   computed: {},

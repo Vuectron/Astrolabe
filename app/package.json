@@ -1,9 +1,10 @@
 {
-  "name": "astrolabe",
+  "name": "Astrolabe",
   "version": "0.0.0",
-  "description": "An electron-vue project",
+  "description": "Manage your GitHub stars with the best one desktop app.",
   "main": "electron.js",
   "dependencies": {
+    "material-design-icons": "^3.0.1",
     "muse-ui": "^2.0.0-alpha.6",
     "vue": "^2.0.1",
     "vue-electron": "^1.0.0",
