@@ -89,7 +89,7 @@
     <aside class="sidebar">
       <side-bar @close="toggleSidebar" :open="open" :docked="docked" />
     </aside>
-    <main class="content" :class="{'nav-hide': !open}">
+    <main class="wrapper" :class="{'nav-hide': !open}">
       <router-view></router-view>
     </main>
   </div>
@@ -98,9 +98,10 @@
 <style lang='less'>
 @import '~muse-ui/dist/muse-ui.css';
 @import '~muse-ui/dist/theme-teal.css';
+@import '~material-design-icons/iconfont/material-icons.css';
 @import '~muse-ui/less/vars.less';
 @import '~muse-ui/less/mixins.less';
-.header-appbar{
+.header-appbar {
   position: fixed;
   left: 256px;
   right: 0;
@@ -111,7 +112,7 @@
     left: 64px;
   }
 }
-.content{
+.wrapper {
   padding-top: 56px;
   padding-left: 256px;
   transition: all .45s @easeOutFunction;
@@ -119,11 +120,11 @@
     padding-left: 64px;
   }
 }
-.content-wrapper{
-  padding: 48px 72px;
+.content {
+  padding: 10px;
 }
 @media (min-width: 480px) {
-  .content{
+  .wrapper {
     padding-top: 64px;
   }
 }
@@ -131,11 +132,11 @@
   .header-appbar {
     left: 0;
   }
-  .content{
+  .wrapper {
     padding-left: 0;
   }
-  .content-wrapper {
-    padding: 24px 36px;
+  .content {
+    padding: 5px;
   }
 }
 </style>
