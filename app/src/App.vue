@@ -120,9 +120,6 @@
     padding-left: 64px;
   }
 }
-.content {
-  padding: 10px;
-}
 @media (min-width: 480px) {
   .wrapper {
     padding-top: 64px;
@@ -134,9 +131,6 @@
   }
   .wrapper {
     padding-left: 0;
-  }
-  .content {
-    padding: 5px;
   }
 }
 </style>

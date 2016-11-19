@@ -82,16 +82,13 @@
   line-height: 32px;
 }
 .repos-desc {
-  position: relative;
+  position: absolute;
   background: #fafafa;
   border-right: 1px solid rgba(55,53,112,0.08);
-  padding: 4px 8px;
-  /*top: 64px;*/
+  padding: 8px;
+  top: 64px;
   bottom: 0;
-  left: 0;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  /*overflow-y: auto;*/
+  overflow-y: auto;
   width: 320px;
 }
 .repos-readme {
