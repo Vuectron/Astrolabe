@@ -1,6 +1,6 @@
 <script>
   import Login from './components/Login.vue'
-  import Main from './components/Main.vue'
+  import Layout from './components/Layout.vue'
 
   export default {
     name: 'App',
@@ -16,7 +16,7 @@
     // },
     components: {
       Login,
-      Main
+      Layout
     }
   }
 </script>
@@ -27,7 +27,7 @@
       <login></login>
     </div>
     <div class="animated fadeIn" v-else>
-      <main></main>
+      <layout></layout>
     </div>
   </div>
 </template>

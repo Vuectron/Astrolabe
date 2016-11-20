@@ -5,7 +5,7 @@
   const isDesktop = () => window.innerWidth > 993
 
   export default {
-    name: 'Main',
+    name: 'Layout',
     data () {
       return {
         title: '',

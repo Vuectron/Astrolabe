@@ -72,7 +72,8 @@ let config = {
       template: './app/index.ejs',
       title: settings.name
     }),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({ "global.GENTLY": false })
   ],
   output: {
     filename: '[name].js',
