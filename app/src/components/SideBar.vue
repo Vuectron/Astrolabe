@@ -29,14 +29,36 @@ export default {
 </script>
 
 <template>
-<div>
   <mu-drawer @close="handleClose" :open="open" :docked="docked" class="app-drawer" :zDepth="1">
     <mu-appbar class="sidebar-appbar" :zDepth="0">
       <mu-icon-button @click="toggleSidebar" icon="menu" slot="left"/>
     </mu-appbar>
     <mu-divider/>
+    <mu-list>
+      <mu-list-item title="All Stars">
+        <mu-icon slot="left" value="grade"/>
+      </mu-list-item>
+      <mu-list-item title="Untagged Stars">
+        <mu-icon slot="left" value="bookmark_border"/>
+      </mu-list-item>
+    </mu-list>
+    <mu-divider />
+    <mu-list>
+      <mu-list-item title="All mail">
+        <mu-icon slot="left" value="inbox"/>
+        <mu-icon slot="right" value="info"/>
+      </mu-list-item>
+      <mu-list-item title="Trash">
+        <mu-icon slot="right" value="info"/>
+      </mu-list-item>
+      <mu-list-item title="Spam">
+        <mu-icon slot="right" value="info"/>
+      </mu-list-item>
+      <mu-list-item title="Follow up">
+        <mu-icon slot="right" value="info"/>
+      </mu-list-item>
+    </mu-list>
   </mu-drawer>
-</div>
 </template>
 
 <style lang="less">

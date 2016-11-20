@@ -62,12 +62,42 @@
           <mu-flat-button label="View on GitHub"/>
         </mu-card-actions>
       </mu-card>
+      <mu-card>
+        <mu-card-title title="Angular/Angular"/>
+        <mu-card-text>
+          Material Design for Angular 2
+        </mu-card-text>
+        <mu-card-actions>
+          <mu-flat-button label="Action 1"/>
+          <mu-flat-button label="View on GitHub"/>
+        </mu-card-actions>
+      </mu-card>
+      <mu-card>
+        <mu-card-title title="Angular/Angular"/>
+        <mu-card-text>
+          Material Design for Angular 2
+        </mu-card-text>
+        <mu-card-actions>
+          <mu-flat-button label="Action 1"/>
+          <mu-flat-button label="View on GitHub"/>
+        </mu-card-actions>
+      </mu-card>
+      <mu-card>
+        <mu-card-title title="Angular/Angular"/>
+        <mu-card-text>
+          Material Design for Angular 2
+        </mu-card-text>
+        <mu-card-actions>
+          <mu-flat-button label="Action 1"/>
+          <mu-flat-button label="View on GitHub"/>
+        </mu-card-actions>
+      </mu-card>
     </aside>
-    <main id="repos-readme" class="repos-readme">
+    <aside id="repos-readme" class="repos-readme">
       <div class='empty-placeholder' v-if='repoReadme.length == 0'>
         No Repo Selected
       </div>
-    </main>
+    </aside>
   </div>
 </template>
 
@@ -80,6 +110,9 @@
   background-color: #e0e0e0;
   text-align: center;
   line-height: 32px;
+}
+.mu-card {
+  margin-bottom: 8px;
 }
 .repos-desc {
   position: absolute;
@@ -100,6 +133,7 @@
   right: 0;
   bottom: 0;
   min-width: 448px;
+  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   overflow-y: scroll;
   overflow-x: hidden;
 }

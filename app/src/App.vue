@@ -86,11 +86,13 @@
     <header class="header">
       <nav-bar :open="open" />
     </header>
-    <aside class="sidebar">
-      <side-bar @close="toggleSidebar" :open="open" :docked="docked" />
-    </aside>
-    <main class="wrapper" :class="{'nav-hide': !open}">
-      <router-view></router-view>
+    <main>
+      <aside class="sidebar">
+        <side-bar @close="toggleSidebar" :open="open" :docked="docked" />
+      </aside>
+      <main class="wrapper" :class="{'nav-hide': !open}">
+        <router-view></router-view>
+      </main>
     </main>
   </div>
 </template>
@@ -118,6 +120,9 @@
   transition: all .45s @easeOutFunction;
   &.nav-hide {
     padding-left: 64px;
+  }
+  &.nav-hide .repos-readme {
+    left: 384px;
   }
 }
 @media (min-width: 480px) {
