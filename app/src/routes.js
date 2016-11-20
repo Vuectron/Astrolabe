@@ -1,8 +1,8 @@
 export default [
   {
     path: '/',
-    name: 'Main',
-    component: require('components/Main')
+    name: 'Content',
+    component: require('components/Content')
   },
   {
     path: '*',
