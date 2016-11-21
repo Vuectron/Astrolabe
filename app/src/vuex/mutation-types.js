@@ -18,3 +18,9 @@ export const INIT_REPOS = 'INIT_REPOS'
 export const SET_REPOS = 'SET_REPOS'
 export const SET_LAZY_REPOS = 'SET_LAZY_REPOS'
 export const SET_LANG_GROUP = 'SET_LANG_GROUP'
+
+// content mutation types
+export const TOGGLE_LOADING_REPOS = 'TOGGLE_LOADING_REPOS'
+export const TOGGLE_LOADING_README = 'TOGGLE_LOADING_README'
+export const SET_ACTIVE_REPO = 'SET_ACTIVE_REPO'
+export const ORDER_REPO = 'ORDER_REPO'

@@ -29,7 +29,7 @@ export const setToken = ({ commit }, data) => {
   commit(types.SET_TOKEN, data)
 }
 export const setGithub = ({ commit }, data) => {
-  commit(types.setUser, data)
+  commit(types.SET_GITHUB, data)
 }
 export const setUser = ({ commit }, data) => {
   commit(types.SET_USER, data)
@@ -45,4 +45,18 @@ export const setLazyRepos = ({ commit }, data) => {
 }
 export const setLangGroup = ({ commit }, data) => {
   commit(types.SET_LANG_GROUP, data)
+}
+
+// content actions
+export const toggleLoadingRepos = ({ commit }) => {
+  commit(types.TOGGLE_LOADING_REPOS)
+}
+export const toggleLoadingReadme = ({ commit }) => {
+  commit(types.TOGGLE_LOADING_README)
+}
+export const setActiveRepo = ({ commit }, data) => {
+  commit(types.SET_ACTIVE_REPO, data)
+}
+export const orderRepo = ({ commit }, data) => {
+  commit(types.ORDER_REPO, data)
 }
