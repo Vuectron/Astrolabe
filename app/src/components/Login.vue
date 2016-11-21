@@ -43,25 +43,25 @@
         return this.$store.dispatch('toggleLogin')
       },
       setToken (token) {
-        return this.$store.dispatch('setToken', { data: token })
+        return this.$store.dispatch('setToken', { token: token })
       },
       setGithub (github) {
-        return this.$store.dispatch('setGithub', { data: github })
+        return this.$store.dispatch('setGithub', { github: github })
       },
       setUser (user) {
-        return this.$store.dispatch('setUser', { data: user })
+        return this.$store.dispatch('setUser', { user: user })
       },
       setRepos (repos) {
-        return this.$store.dispatch('setRepos', { data: repos })
+        return this.$store.dispatch('setRepos', { repos: repos })
       },
       setLangGroup (langGroup) {
-        return this.$store.dispatch('setLangGroup', { data: langGroup })
+        return this.$store.dispatch('setLangGroup', { langGroup: langGroup })
       },
       setLazyRepos (lazyRepos) {
-        return this.$store.dispatch('setLazyRepos', { data: lazyRepos })
+        return this.$store.dispatch('setLazyRepos', { lazyRepos: lazyRepos })
       },
       initRepos (repos) {
-        return this.$store.dispatch('initRepos', { data: repos })
+        return this.$store.dispatch('initRepos', { repos: repos })
       },
       getLocalToken () {
         let self = this

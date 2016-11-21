@@ -4,16 +4,16 @@
 
   export default {
     name: 'App',
-    data () {
-      return {
-        isLogin: true
-      }
-    },
-    // computed: {
-    //   isLogin () {
-    //     return this.$store.state.login.isLogin
+    // data () {
+    //   return {
+    //     isLogin: true
     //   }
     // },
+    computed: {
+      isLogin () {
+        return this.$store.state.login.isLogin
+      }
+    },
     components: {
       Login,
       Layout
@@ -27,7 +27,9 @@
       <login></login>
     </div>
     <div class="animated fadeIn" v-else>
+    <!-- <transition name="fade" mode="out-in"> -->
       <layout></layout>
+    <!-- </transition> -->
     </div>
   </div>
 </template>

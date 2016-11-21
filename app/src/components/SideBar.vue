@@ -14,6 +14,9 @@ export default {
     return {
     }
   },
+  computed: {
+    version () { return this.$store.state.global.version }
+  },
   methods: {
     handleClose () {
       this.$emit('close')
@@ -23,7 +26,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$store.state.global.version)
+    console.log(this.version)
   }
 }
 </script>
