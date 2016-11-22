@@ -268,20 +268,25 @@
   text-align: center;
   width: 100%;
 }
-.mu-card-title-container .mu-card-title {
-  font-size: 18px !important;
-}
-.mu-card-text {
-  padding: 8px 16px;
-}
-.mu-card-actions {
-  .mu-flat-button {
-    float: right;
+.mu-card {
+  .mu-card-title-container {
+      padding: 8px 16px;
+     .mu-card-title {
+      font-size: 18px !important;
+     }
   }
-}
-.mu-flat-button-wrapper {
-  .mu-flat-button-label {
-    font-size: 12px;
+  .mu-card-text {
+    padding: 8px 16px;
+  }
+  .mu-card-actions {
+    .mu-flat-button {
+      float: right;
+      .mu-flat-button-wrapper {
+        .mu-flat-button-label {
+          font-size: 12px;
+        }
+      }
+    }
   }
 }
 </style>
