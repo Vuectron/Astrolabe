@@ -14,8 +14,8 @@ const state = {
   repos: [],
   lazyRepos: [],
   langGroup: [],
-  reposCount: 0,
-  untaggedCount: 0
+  reposCount: '0',
+  untaggedCount: '0'
 }
 // mutations
 const mutations = {
@@ -150,7 +150,7 @@ const mutations = {
         let langCount = {
           '_id': lang,
           'lang': lang,
-          'count': countLangs[lang],
+          'count': _.toString(countLangs[lang]),
           'color': _.sample(waveColors),
           'icon': icon
         }
@@ -172,16 +172,16 @@ const mutations = {
     state.repos = initRepos
 
     // set repos count
-    state.reposCount = _.size(repos)
+    state.reposCount = _.toString(_.size(repos))
 
     // set untagged count
-    state.untaggedCount = _.size(_.filter(repos, _.matches({ 'language': null })))
+    state.untaggedCount = _.toString(_.size(_.filter(repos, _.matches({ 'language': null }))))
   },
 
   [types.SET_REPOS] (state, {repos}) {
     state.repos = repos
-    state.reposCount = _.size(repos)
-    state.untaggedCount = _.size(_.filter(repos, _.matches({ 'language': 'null' })))
+    state.reposCount = _.toString(_.size(repos))
+    state.untaggedCount = _.toString(_.size(_.filter(repos, _.matches({ 'language': 'null' }))))
   },
 
   [types.SET_LAZY_REPOS] (state, {lazyRepos}) {

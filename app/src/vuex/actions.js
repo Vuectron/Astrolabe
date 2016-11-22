@@ -23,6 +23,12 @@ export const toggleSidebar = ({ commit }) => {
 export const setSidebar = ({ commit }, data) => {
   commit(types.SET_SIDEBAR, data)
 }
+export const setSearchQuery = ({ commit }, data) => {
+  commit(types.SET_SEARCH_QUERY, data)
+}
+export const filterByLanguage = ({ commit }, data) => {
+  commit(types.FILTER_BY_LANGUAGE, data)
+}
 
 // github actions
 export const setToken = ({ commit }, data) => {

@@ -9,6 +9,8 @@ export const TOGGLE_LOGIN = 'TOGGLE_LOGIN'
 // sidebar mutation types
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
 export const SET_SIDEBAR = 'SET_SIDEBAR'
+export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY'
+export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
 
 // github mutation types
 export const SET_TOKEN = 'SET_TOKEN'
