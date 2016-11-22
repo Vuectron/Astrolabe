@@ -8,7 +8,8 @@
   import MarkdownIt from 'markdown-it'
   import db from '../services/db'
   import request from 'superagent'
-  import InfiniteLoading from 'vue-infinite-loading'
+  import { mapState, mapActions } from 'vuex'
+  // import InfiniteLoading from 'vue-infinite-loading'
   // import marked, { Renderer } from 'marked'
 
   const md = new MarkdownIt({
@@ -58,55 +59,36 @@
     data () {
       return {
         repoReadme: '',
-        distance: 100
+        distance: 100,
+        loading: false,
+        scroller: null
       }
     },
 
     computed: {
-      github () {
-        return this.$store.state.github.github
-      },
-      reposCount () {
-        return this.$store.state.github.reposCount
-      },
-      langGroup () {
-        return this.$store.state.github.langGroup
-      },
-      lazyRepos () {
-        return this.$store.state.github.lazyRepos
-      },
-      loadingRepos () {
-        return this.$store.state.content.loadingRepos
-      },
-      loadingReadme () {
-        return this.$store.state.content.loadingReadme
-      },
-      activeRepo () {
-        return this.$store.state.content.activeRepo
-      },
-      repoKey () {
-        return this.$store.state.content.repoKey
-      },
-      order () {
-        return this.$store.state.content.order
-      },
-      searchQuery () {
-        return this.$store.state.sidebar.searchQuery
-      },
-      filterFields () {
-        return this.$store.state.sidebar.filterFields
-      },
-      limitCount () {
-        return this.$store.state.global.limitCount
-      }
+      ...mapState({
+        github: state => state.github.github,
+        reposCount: state => state.github.reposCount,
+        langGroup: state => state.github.langGroup,
+        lazyRepos: state => state.github.lazyRepos,
+        loadingRepos: state => state.content.loadingRepos,
+        loadingReadme: state => state.content.loadingReadme,
+        activeRepo: state => state.content.activeRepo,
+        repoKey: state => state.content.repoKey,
+        order: state => state.content.order,
+        searchQuery: state => state.sidebar.searchQuery,
+        filterFields: state => state.sidebar.filterFields,
+        limitCount: state => state.content.limitCount
+      })
     },
 
     mounted () {
-      // $(document).ready(function () {
-      //   $('body').css('overflow', 'hidden')
-      //   // $('[data-toggle="tooltip"]').tooltip()
-      //   $('.repos-desc').css('height', $(window).height() - 124)
-      // })
+      $(document).ready(function () {
+        $('body').css('overflow', 'hidden')
+        // $('[data-toggle="tooltip"]').tooltip()
+        // $('.repos-desc').css('height', $(window).height() - 124)
+      })
+      this.scroller = this.$el
       //
       // $(window).resize(function () {
       //   $('.repos-desc').css('height', $(this).height() - 124)
@@ -114,12 +96,11 @@
     },
 
     methods: {
-      toggleLoadingRepos () {
-        return this.$store.dispatch('toggleLoadingRepos')
-      },
-      toggleLoadingReadme () {
-        return this.$store.dispatch('toggleLoadingReadme')
-      },
+      ...mapActions([
+        'toggleLoadingRepos',
+        'toggleLoadingReadme',
+        'increaseLimit'
+      ]),
       setActiveRepo (repo) {
         return this.$store.dispatch('setActiveRepo', { repo: repo })
       },
@@ -128,9 +109,6 @@
       },
       setLazyRepos (lazyRepos) {
         return this.$store.dispatch('setLazyRepos', { lazyRepos: lazyRepos })
-      },
-      increaseLimit () {
-        return this.$store.dispatch('increaseLimit')
       },
       filterByLanguage (searchQuery) {
         return this.$store.dispatch('filterByLanguage', { searchQuery: searchQuery })
@@ -165,15 +143,24 @@
         }
       },
       loadMore () {
-        const self = this
-        // Configurable
-        this.increaseLimit()
+        // const self = this
+        // // Configurable
+        // this.increaseLimit()
+        // setTimeout(() => {
+        //   db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
+        //     self.setLazyRepos(lazyRepos)
+        //     self.$broadcast('$InfiniteLoading:loaded')
+        //   })
+        // }, 1000)
+        this.loading = true
         setTimeout(() => {
           db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
             self.setLazyRepos(lazyRepos)
             self.$broadcast('$InfiniteLoading:loaded')
           })
-        }, 1000)
+          this.num += 10
+          this.loading = false
+        }, 2000)
       },
       reload () {
         const self = this
@@ -199,8 +186,7 @@
     components: {
       Readme,
       MdlLoading,
-      MdlFab,
-      InfiniteLoading
+      MdlFab
     }
   }
 </script>
@@ -216,7 +202,8 @@
           <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button>
         </mu-card-actions>
       </mu-card>
-      <infinite-loading :distance="distance" :on-infinite="loadMore" v-if="limitCount < reposCount">No More Data.</infinite-loading>
+      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
+      <!-- <infinite-loading :distance="distance" :on-infinite="loadMore" v-if="limitCount < reposCount">No More Data.</infinite-loading> -->
     </aside>
     <mdl-fab></mdl-fab>
     <mdl-loading v-show='loadingReadme'></mdl-loading>
@@ -249,6 +236,7 @@
   padding: 8px;
   top: 64px;
   bottom: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   width: 320px;
 }

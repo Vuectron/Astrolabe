@@ -1,4 +1,5 @@
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'NavBar',
   props: {
@@ -15,9 +16,9 @@ export default {
   computed: {},
   mounted () {},
   methods: {
-    toggleSidebar () {
-      this.$store.dispatch('toggleSidebar')
-    }
+    ...mapActions([
+      'toggleSidebar'
+    ])
   },
   components: {}
 }

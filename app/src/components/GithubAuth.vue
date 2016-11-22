@@ -6,6 +6,7 @@
   import request from 'superagent'
   import { isNull, isEmpty } from 'lodash'
   import db from '../services/db'
+  import { mapActions } from 'vuex'
 
   export default {
     data () {
@@ -27,15 +28,11 @@
     },
 
     methods: {
-      toggleConnecting () {
-        return this.$store.dispatch('toggleConnecting')
-      },
-      toggleLoading () {
-        return this.$store.dispatch('toggleLoading')
-      },
-      toggleLogin () {
-        return this.$store.dispatch('toggleLogin')
-      },
+      ...mapActions([
+        'toggleConnecting',
+        'toggleLoading',
+        'toggleLogin'
+      ]),
       setToken (token) {
         return this.$store.dispatch('setToken', { token: token })
       },

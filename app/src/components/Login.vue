@@ -8,24 +8,17 @@
   import Github from 'github-api'
   import { isNull, isEmpty } from 'lodash'
   import db from '../services/db'
+  import { mapState, mapActions } from 'vuex'
 
   export default {
     computed: {
-      connecting () {
-        return this.$store.state.login.connecting
-      },
-      loading () {
-        return this.$store.state.login.loading
-      },
-      github () {
-        return this.$store.state.github.github
-      },
-      repos () {
-        return this.$store.state.github.repos
-      },
-      lazyRepos () {
-        return this.$store.state.github.lazyRepos
-      }
+      ...mapState({
+        connecting: state => state.login.connecting,
+        loading: state => state.login.loading,
+        github: state => state.github.github,
+        repos: state => state.github.github,
+        lazyRepos: state => state.github.lazyRepos
+      })
     },
 
     mounted () {
@@ -33,15 +26,11 @@
     },
 
     methods: {
-      toggleConnecting () {
-        return this.$store.dispatch('toggleConnecting')
-      },
-      toggleLoading () {
-        return this.$store.dispatch('toggleLoading')
-      },
-      toggleLogin () {
-        return this.$store.dispatch('toggleLogin')
-      },
+      ...mapActions([
+        'toggleConnecting',
+        'toggleLoading',
+        'toggleLogin'
+      ]),
       setToken (token) {
         return this.$store.dispatch('setToken', { token: token })
       },
