@@ -51,19 +51,19 @@
 
 <template>
   <div class="fab">
-    <a href="#" class="btn-fab btn-floating waves-effect waves-light red" tooltip="View on GitHub" v-show="showCopy" @click="openInBrowser(activeRepo.html_url)">
+    <a href="#" class="btn-fab btn-floating" tooltip="View on GitHub" v-show="showCopy" @click="openInBrowser(activeRepo.html_url)">
       <i class="material-icons">open_in_browser</i>
     </a>
-    <a href="#" class="btn-fab btn-floating waves-effect waves-light yellow darken-1" :tooltip="copyTooltip" v-show="showCopy"  @click="copyTooltip = 'Copied'">
+    <a href="#" class="btn-fab btn-floating" :tooltip="copyTooltip" v-show="showCopy" @click="copyTooltip = 'Copied'">
       <i class="material-icons">content_copy</i>
     </a>
-    <a href="#" class="btn-fab btn-floating waves-effect waves-light green" tooltip="Download" v-show="showCopy" @click="openInBrowser(activeRepo.downloads_url)">
+    <a href="#" class="btn-fab btn-floating" tooltip="Download" v-show="showCopy" @click="openInBrowser(activeRepo.downloads_url)">
       <i class="material-icons">file_download</i>
     </a>
-    <a href="#" class="btn-fab btn-floating waves-effect waves-light blue" tooltip="Back to Top" @click="backToTop()">
+    <a href="#" class="btn-fab btn-floating" tooltip="Back to Top" @click="backToTop()">
       <i class="material-icons">expand_less</i>
     </a>
-    <a href="#" class="btn-fab btn-large btn-floating waves-effect waves-light red" tooltip="OPERATE" @mouseenter="copyTooltip = 'Copy clone link to clipboard'">
+    <a href="#" class="btn-fab btn-large btn-floating" tooltip="OPERATE" @mouseenter="copyTooltip = 'Copy clone link to clipboard'">
       <i class="large material-icons rotate" v-text="operateIcon" @mouseenter="operateIcon = 'create'" @mouseleave="operateIcon = 'add'"></i>
     </a>
   </div>
@@ -87,6 +87,8 @@
 
   .btn-fab {
     display: block;
+    text-align: center;
+    line-height: 55px;
     width: 35px;
     height: 35px;
     margin: 20px auto 0;
@@ -100,26 +102,38 @@
   }
 
   .btn-fab:nth-last-of-type(2) {
+    background-color: #03a9f4;
+    color: #ffffff;
     transition-delay: 20ms;
   }
 
   .btn-fab:nth-last-of-type(3) {
+    background-color: #4caf50;
+    color: #ffffff;
     transition-delay: 40ms;
   }
 
   .btn-fab:nth-last-of-type(4) {
+    background-color: #ffeb3b;
+    color: #ffffff;
     transition-delay: 60ms;
   }
 
   .btn-fab:nth-last-of-type(5) {
+    background-color: #ff4081;
+    color: #ffffff;
     transition-delay: 80ms;
   }
 
   .btn-fab:nth-last-of-type(6) {
+    background-color: #f44336;
+    color: #ffffff;
     transition-delay: 100ms;
   }
 
   .btn-fab:nth-last-of-type(1) {
+    background-color: #f44336;
+    color: #ffffff;
     width: 56px;
     height: 56px;
     opacity: 1;
@@ -138,6 +152,8 @@
   .fab i.rotate {
     transform: rotate(90deg);
     transition: .3s;
+    text-align: center;
+    line-height: 55px;
   }
 
   .fab i.rotate:hover {

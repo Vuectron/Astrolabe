@@ -89,6 +89,7 @@
         // $('.repos-desc').css('height', $(window).height() - 124)
       })
       this.scroller = this.$el
+      console.log(this.scroller)
       //
       // $(window).resize(function () {
       //   $('.repos-desc').css('height', $(this).height() - 124)
@@ -152,14 +153,13 @@
         //     self.$broadcast('$InfiniteLoading:loaded')
         //   })
         // }, 1000)
+        const self = this
         this.loading = true
         setTimeout(() => {
           db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
             self.setLazyRepos(lazyRepos)
-            self.$broadcast('$InfiniteLoading:loaded')
           })
-          this.num += 10
-          this.loading = false
+          self.loading = false
         }, 2000)
       },
       reload () {
@@ -194,14 +194,16 @@
 <template>
   <div class="content">
     <aside id= "repos-desc" class="repos-desc">
-      <mu-card v-for="repo in lazyRepos" @click="showReadme(repo)">
-        <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
-        <mu-card-text v-text="repo.description"></mu-card-text>
-        <mu-card-actions>
-          <mu-chip class="demo-chip" backgroundColor="cyan300" v-text="repo.language" v-if="repo.language != 'null'"></mu-chip>
-          <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button>
-        </mu-card-actions>
-      </mu-card>
+      <template v-for="repo in lazyRepos" @click="showReadme(repo)">
+        <mu-card>
+          <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
+          <mu-card-text v-text="repo.description"></mu-card-text>
+          <mu-card-actions>
+            <mu-chip class="demo-chip" backgroundColor="grey200" v-text="repo.language" v-if="repo.language != 'null'"></mu-chip>
+            <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button>
+          </mu-card-actions>
+        </mu-card>
+      </template>
       <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
       <!-- <infinite-loading :distance="distance" :on-infinite="loadMore" v-if="limitCount < reposCount">No More Data.</infinite-loading> -->
     </aside>
