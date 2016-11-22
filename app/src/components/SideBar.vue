@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      value: ''
+      value: 'allStars'
     }
   },
   computed: {
@@ -76,24 +76,6 @@ export default {
         <mu-icon slot="left" value="grade"/>
         <mu-badge :content="group.count" secondary slot="right"/>
       </mu-list-item>
-      <!-- <div tabindex="0" class="mu-item-wrapper" style="-webkit-user-select: none; outline: none; cursor: pointer; -webkit-appearance: none;"
-        v-for="group in langGroup">
-          <div style="margin-left: 0px;">
-              <div class="mu-ripple-wrapper"></div>
-              <div class="mu-item show-left show-right">
-                  <div class="mu-item-left"><i aria-hidden="true" class="mu-icon material-icons inbox" style="font-size: 24px; width: 24px; height: 24px;">inbox</i> </div>
-                  <div class="mu-item-content" v-text="group.lang">
-                  </div>
-                  <div class="mu-item-right">
-                      <div class="mu-badge-container">
-                      	<em class="mu-badge mu-badge-secondary">
-            							<span v-text="group.count"></span>
-            						</em>
-            					</div>
-                  </div>
-              </div>
-          </div>
-      </div> -->
     </mu-list>
   </mu-drawer>
 </template>
@@ -113,6 +95,9 @@ export default {
 }
 .sidebar-sub-header {
   padding-left: 34px;
+}
+.mu-item.selected {
+  background: #eaeaea;
 }
 .appbar-search-field{
   color: #FFF;
