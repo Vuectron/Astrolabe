@@ -73,7 +73,7 @@ let config = {
       title: settings.name
     }),
     new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({ "global.GENTLY": false })
+    new webpack.DefinePlugin({ 'global.GENTLY': false })
   ],
   output: {
     filename: '[name].js',
@@ -81,6 +81,7 @@ let config = {
   },
   resolve: {
     alias: {
+      'vue': 'vue/dist/vue.js',
       'components': path.join(__dirname, 'app/src/components'),
       'src': path.join(__dirname, 'app/src'),
       'muse-components': 'muse-ui/src'

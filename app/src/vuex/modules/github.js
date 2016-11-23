@@ -15,7 +15,8 @@ const state = {
   lazyRepos: [],
   langGroup: [],
   reposCount: '0',
-  untaggedCount: '0'
+  untaggedCount: '0',
+  searchQuery: ''
 }
 // mutations
 const mutations = {
@@ -101,8 +102,6 @@ const mutations = {
 
     let langGroup = []
 
-    const waveColors = ['waves-red', 'waves-orange', 'waves-yellow', 'waves-green', 'waves-teal', 'waves-blue', 'waves-purple']
-
     for (let lang in countLangs) {
       if (countLangs.hasOwnProperty(lang)) {
         let icon = ''
@@ -151,7 +150,6 @@ const mutations = {
           '_id': lang,
           'lang': lang,
           'count': _.toString(countLangs[lang]),
-          'color': _.sample(waveColors),
           'icon': icon
         }
         langGroup.push(langCount)
@@ -190,6 +188,15 @@ const mutations = {
 
   [types.SET_LANG_GROUP] (state, {langGroup}) {
     state.langGroup = langGroup
+  },
+
+  [types.FILTER_BY_LANGUAGE] (state, {lang}) {
+    state.lazyRepos = _.isNull(lang) ? state.repos : _.filter(state.repos, _.matches({ 'language': lang }))
+  },
+
+  [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
+    console.log(searchQuery)
+    state.lazyRepos = _.isNull(searchQuery) ? state.repos : _.filter(state.repos, _.matches({ 'language': searchQuery }))
   }
 }
 

@@ -9,8 +9,6 @@ export const TOGGLE_LOGIN = 'TOGGLE_LOGIN'
 // sidebar mutation types
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
 export const SET_SIDEBAR = 'SET_SIDEBAR'
-export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY'
-export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
 
 // github mutation types
 export const SET_TOKEN = 'SET_TOKEN'
@@ -20,6 +18,8 @@ export const INIT_REPOS = 'INIT_REPOS'
 export const SET_REPOS = 'SET_REPOS'
 export const SET_LAZY_REPOS = 'SET_LAZY_REPOS'
 export const SET_LANG_GROUP = 'SET_LANG_GROUP'
+export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
+export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY'
 
 // content mutation types
 export const TOGGLE_LOADING_REPOS = 'TOGGLE_LOADING_REPOS'

@@ -2,7 +2,7 @@ import * as types from '../mutation-types'
 
 const state = {
   version: '0.0.1',
-  limitCount: 0
+  limitCount: 20
 }
 
 const mutations = {
