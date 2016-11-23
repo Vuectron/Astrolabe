@@ -14,7 +14,8 @@ export default {
   },
   data () {
     return {
-      value: 'allStars'
+      value: 'allStars',
+      searchVal: ''
     }
   },
   computed: {
@@ -26,7 +27,15 @@ export default {
       untaggedCount: state => state.github.untaggedCount,
       langGroup: state => state.github.langGroup,
       searchQuery: state => state.sidebar.searchQuery
-    })
+    }),
+    searchVal: {
+      get () {
+        return this.searchQuery
+      },
+      set (val) {
+        this.setSearchQuery(val)
+      }
+    }
   },
   methods: {
     handleChange (val) {
@@ -39,13 +48,11 @@ export default {
       return this.$store.dispatch('setSearchQuery', { searchQuery: searchQuery })
     },
     filterByLanguage (lang) {
-      return this.$store.dispatch('filterByLanguage', { searchQuery: lang })
+      return this.$store.dispatch('filterByLanguage', { lang: lang })
     }
   },
   mounted () {
     console.log(this.version)
-    console.log(this.$store.state)
-    console.log(this.langGroup)
   }
 }
 </script>
@@ -54,11 +61,11 @@ export default {
   <mu-drawer :open="open" :docked="docked" class="app-drawer" :zDepth="1">
     <mu-appbar class="sidebar-appbar" :zDepth="0">
       <!-- <mu-icon-button @click="toggleSidebar" icon="menu" slot="left"/> -->
-      <mu-text-field icon="search" class="appbar-search-field" slot="left" hintText="Search"/>
+      <mu-text-field icon="search" class="appbar-search-field" slot="left" hintText="Search" v-model="searchVal"/>
     </mu-appbar>
     <mu-divider/>
     <mu-list :value="value" @change="handleChange">
-      <mu-list-item title="All Stars" value="allStars" @click="setSearchQuery('')">
+      <mu-list-item title="All Stars" value="allStars" @click="filterByLanguage(null)">
         <mu-icon slot="left" value="grade"/>
         <mu-badge :content="reposCount" secondary slot="right"/>
       </mu-list-item>
@@ -77,6 +84,9 @@ export default {
         <mu-badge :content="group.count" secondary slot="right"/>
       </mu-list-item>
     </mu-list>
+    <div class="">
+      <span>{{ searchVal }}</span>
+    </div>
   </mu-drawer>
 </template>
 

@@ -19,12 +19,13 @@
 
   .showbox {
     position: absolute;
-    top: 0;
+    top: 64px;
     bottom: 0;
-    left: 320px;
+    left: 576px;
     right: 0;
     padding: 5%;
     background: white;
+    transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
     opacity: .9;
     z-index: 99;
   }

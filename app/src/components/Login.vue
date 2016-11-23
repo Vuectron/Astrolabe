@@ -16,8 +16,7 @@
         connecting: state => state.login.connecting,
         loading: state => state.login.loading,
         github: state => state.github.github,
-        repos: state => state.github.github,
-        lazyRepos: state => state.github.lazyRepos
+        repos: state => state.github.github
       })
     },
 
@@ -45,9 +44,6 @@
       },
       setLangGroup (langGroup) {
         return this.$store.dispatch('setLangGroup', { langGroup: langGroup })
-      },
-      setLazyRepos (lazyRepos) {
-        return this.$store.dispatch('setLazyRepos', { lazyRepos: lazyRepos })
       },
       initRepos (repos) {
         return this.$store.dispatch('initRepos', { repos: repos })

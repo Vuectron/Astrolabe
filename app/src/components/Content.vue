@@ -9,7 +9,7 @@
   import db from '../services/db'
   import request from 'superagent'
   import { mapState, mapActions } from 'vuex'
-  // import InfiniteLoading from 'vue-infinite-loading'
+  import InfiniteLoading from 'vue-infinite-loading'
   // import marked, { Renderer } from 'marked'
 
   const md = new MarkdownIt({
@@ -78,7 +78,7 @@
         order: state => state.content.order,
         searchQuery: state => state.sidebar.searchQuery,
         filterFields: state => state.sidebar.filterFields,
-        limitCount: state => state.content.limitCount
+        limitCount: state => state.global.limitCount
       })
     },
 
@@ -89,8 +89,6 @@
         // $('.repos-desc').css('height', $(window).height() - 124)
       })
       this.scroller = this.$el
-      console.log(this.scroller)
-      //
       // $(window).resize(function () {
       //   $('.repos-desc').css('height', $(this).height() - 124)
       // })
@@ -144,23 +142,24 @@
         }
       },
       loadMore () {
-        // const self = this
-        // // Configurable
-        // this.increaseLimit()
-        // setTimeout(() => {
-        //   db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
-        //     self.setLazyRepos(lazyRepos)
-        //     self.$broadcast('$InfiniteLoading:loaded')
-        //   })
-        // }, 1000)
         const self = this
-        this.loading = true
+        // Configurable
+        console.log('into loadMore func')
+        this.increaseLimit()
         setTimeout(() => {
           db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
             self.setLazyRepos(lazyRepos)
+            // self.$broadcast('$InfiniteLoading:loaded')
+            self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
           })
-          self.loading = false
-        }, 2000)
+        }, 1000)
+        // this.loading = true
+        // setTimeout(() => {
+        //   db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
+        //     self.setLazyRepos(lazyRepos)
+        //   })
+        //   self.loading = false
+        // }, 2000)
       },
       reload () {
         const self = this
@@ -186,7 +185,8 @@
     components: {
       Readme,
       MdlLoading,
-      MdlFab
+      MdlFab,
+      InfiniteLoading
     }
   }
 </script>
@@ -199,13 +199,29 @@
           <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
           <mu-card-text v-text="repo.description"></mu-card-text>
           <mu-card-actions>
-            <mu-chip class="demo-chip" backgroundColor="grey200" v-text="repo.language" v-if="repo.language != 'null'"></mu-chip>
-            <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button>
+            <mu-chip class="demo-chip" backgroundColor="grey200"
+              v-text="repo.language"
+              v-if="repo.language != 'null'"
+              @click="showReadme(repo)"></mu-chip>
+          </mu-card-actions>
+          <mu-card-actions class="card-action">
+            <div class="repo-count">
+              <div class="star">
+                <i class="material-icons">star</i><span> {{ repo.stargazers_count }}</span>
+              </div>
+              <div class="fork">
+                <i class="devicons devicons-git_branch"></i><i class="material-icons">star</i><span> {{ repo.forks_count }}</span>
+              </div>
+            </div>
+            <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
+            <!-- <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button> -->
           </mu-card-actions>
         </mu-card>
       </template>
-      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
-      <!-- <infinite-loading :distance="distance" :on-infinite="loadMore" v-if="limitCount < reposCount">No More Data.</infinite-loading> -->
+      <!-- <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/> -->
+      <infinite-loading :on-infinite="loadMore"
+        v-if="limitCount < reposCount"
+        ref="infiniteLoading">No More Data.</infinite-loading>
     </aside>
     <mdl-fab></mdl-fab>
     <mdl-loading v-show='loadingReadme'></mdl-loading>
@@ -289,6 +305,44 @@
         }
       }
     }
+  }
+}
+.card-action {
+  border-top: 1px solid #eee;
+  .repo-count {
+    display: inline-flex;
+    margin-top: 2px;
+    font-weight: bold;
+    color: #546e7a;
+    i{
+      font-size: 18px;
+    }
+    .star {
+      margin-right: 4px;
+      padding: 5px 0;
+    }
+    .fork {
+      padding: 4px 0;
+    }
+    span {
+      float: right;
+    }
+  }
+  a {
+    float: right;
+    margin: 0px;
+    padding: 10px 0;
+    transition: color .3s ease;
+    color: #26a69a;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: inherit;
+  }
+}
+.card-content.white-text {
+  color: #ffffff;
+  a {
+    color: #ffab40;
   }
 }
 </style>

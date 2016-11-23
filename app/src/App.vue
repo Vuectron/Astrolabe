@@ -27,15 +27,16 @@
       <login></login>
     </div>
     <div class="animated fadeIn" v-else>
-    <!-- <transition name="fade" mode="out-in"> -->
+    <transition name="fade" mode="out-in">
       <layout></layout>
-    <!-- </transition> -->
+    </transition>
     </div>
   </div>
 </template>
 
 <style lang='less'>
 @import '~muse-ui/dist/muse-ui.css';
-@import '~muse-ui/dist/theme-teal.css';
+// @import '~muse-ui/dist/theme-teal.css';
 @import '~material-design-icons/iconfont/material-icons.css';
+@import '~highlight.js/styles/github.css';
 </style>

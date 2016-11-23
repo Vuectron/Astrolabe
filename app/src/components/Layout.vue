@@ -121,6 +121,9 @@
   &.nav-hide .repos-readme {
     left: 384px;
   }
+  &.nav-hide .showbox {
+    left: 384px;
+  }
 }
 @media (min-width: 480px) {
   .wrapper {
