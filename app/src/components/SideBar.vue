@@ -84,9 +84,6 @@ export default {
         <mu-badge :content="group.count" secondary slot="right"/>
       </mu-list-item>
     </mu-list>
-    <div class="">
-      <span>{{ searchVal }}</span>
-    </div>
   </mu-drawer>
 </template>
 

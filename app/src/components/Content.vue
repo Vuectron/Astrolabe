@@ -61,7 +61,8 @@
         repoReadme: '',
         distance: 100,
         loading: false,
-        scroller: null
+        scroller: null,
+        unconnect: false
       }
     },
 
@@ -137,6 +138,7 @@
                 })
               } else {
                 console.log('Something went wrong fetching from GitHub', err)
+                self.enconnect = true
               }
             })
         }
@@ -194,39 +196,38 @@
 <template>
   <div class="content">
     <aside id= "repos-desc" class="repos-desc">
-      <template v-for="repo in lazyRepos" @click="showReadme(repo)">
-        <mu-card>
-          <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
-          <mu-card-text v-text="repo.description"></mu-card-text>
-          <mu-card-actions>
-            <mu-chip class="demo-chip" backgroundColor="grey200"
-              v-text="repo.language"
-              v-if="repo.language != 'null'"
-              @click="showReadme(repo)"></mu-chip>
-          </mu-card-actions>
-          <mu-card-actions class="card-action">
-            <div class="repo-count">
-              <div class="star">
-                <i class="material-icons">star</i><span> {{ repo.stargazers_count }}</span>
-              </div>
-              <div class="fork">
-                <i class="devicons devicons-git_branch"></i><i class="material-icons">star</i><span> {{ repo.forks_count }}</span>
-              </div>
+      <mu-card v-for="repo in lazyRepos" @click="showReadme(repo)">
+        <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
+        <mu-card-text v-text="repo.description"></mu-card-text>
+        <mu-card-actions>
+          <mu-chip class="demo-chip" backgroundColor="grey200"
+            v-text="repo.language"
+            v-if="repo.language != 'null'"
+            @click="showReadme(repo)"></mu-chip>
+        </mu-card-actions>
+        <mu-card-actions class="card-action">
+          <div class="repo-count">
+            <div class="star">
+              <i class="material-icons">star</i><span> {{ repo.stargazers_count }}</span>
             </div>
-            <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
-            <!-- <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button> -->
-          </mu-card-actions>
-        </mu-card>
-      </template>
+            <div class="fork">
+              <i class="devicons devicons-git_branch"></i><i class="material-icons">star</i><span> {{ repo.forks_count }}</span>
+            </div>
+          </div>
+          <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
+          <!-- <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button> -->
+        </mu-card-actions>
+      </mu-card>
       <!-- <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/> -->
-      <infinite-loading :on-infinite="loadMore"
-        v-if="limitCount < reposCount"
-        ref="infiniteLoading">No More Data.</infinite-loading>
+      <infinite-loading :distance="distance" :on-infinite="loadMore" ref="infiniteLoading">No More Data.</infinite-loading>
     </aside>
     <mdl-fab></mdl-fab>
     <mdl-loading v-show='loadingReadme'></mdl-loading>
     <aside id="repos-readme" class="repos-readme">
-      <div class='empty-placeholder' v-if='repoReadme.length == 0'>
+      <div class='empty-placeholder' v-if='unconnect'>
+        X_X, Something went wrong with your network.
+      </div>
+      <div class='empty-placeholder' v-if='repoReadme.length == 0' else>
         No Repo Selected
       </div>
       <readme :repo-readme='repoReadme' v-else></readme>
