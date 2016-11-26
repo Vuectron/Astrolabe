@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      value: 'allStars',
+      menuVal: 'allStars',
       searchVal: ''
     }
   },
@@ -38,8 +38,22 @@ export default {
     }
   },
   methods: {
-    handleChange (val) {
-      this.value = val
+    handleMenuChange (val) {
+      this.menuVal = val
+      if (this.docked) {
+        window.location.hash = this.menuVal
+      } else {
+        this.changeHref = true
+      }
+      this.$emit('change', val)
+    },
+    handleClose () {
+      this.$emit('close')
+    },
+    handleHide () {
+      if (!this.changeHref) return
+      window.location.hash = this.menuVal
+      this.changeHref = false
     },
     toggleSidebar () {
       this.$store.dispatch('toggleSidebar')
@@ -58,13 +72,13 @@ export default {
 </script>
 
 <template>
-  <mu-drawer :open="open" :docked="docked" class="app-drawer" :zDepth="1">
+  <mu-drawer @hide="handleHide" @close="handleClose" :open="open" :docked="docked" class="app-drawer" :zDepth="1">
     <mu-appbar class="sidebar-appbar" :zDepth="0">
       <!-- <mu-icon-button @click="toggleSidebar" icon="menu" slot="left"/> -->
       <mu-text-field icon="search" class="appbar-search-field" slot="left" hintText="Search" v-model="searchVal"/>
     </mu-appbar>
     <mu-divider/>
-    <mu-list :value="value" @change="handleChange">
+    <mu-list :value="menuVal" @change="handleMenuChange">
       <mu-list-item title="All Stars" value="allStars" @click="filterByLanguage(null)">
         <mu-icon slot="left" value="grade"/>
         <mu-badge :content="reposCount" secondary slot="right"/>
@@ -75,7 +89,7 @@ export default {
       </mu-list-item>
     </mu-list>
     <mu-divider />
-    <mu-list :value="value" @change="handleChange">
+    <mu-list :value="menuVal" @change="handleMenuChange">
       <mu-list-item :title="group.lang" :value="group.lang"
         v-for="group in langGroup"
         v-if="group.count >= 5 && group.lang != 'null'"

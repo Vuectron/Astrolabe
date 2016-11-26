@@ -61,8 +61,7 @@
         repoReadme: '',
         distance: 100,
         loading: false,
-        scroller: null,
-        unconnect: false
+        scroller: null
       }
     },
 
@@ -138,7 +137,6 @@
                 })
               } else {
                 console.log('Something went wrong fetching from GitHub', err)
-                self.enconnect = true
               }
             })
         }
@@ -196,38 +194,39 @@
 <template>
   <div class="content">
     <aside id= "repos-desc" class="repos-desc">
-      <mu-card v-for="repo in lazyRepos" @click="showReadme(repo)">
-        <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
-        <mu-card-text v-text="repo.description"></mu-card-text>
-        <mu-card-actions>
-          <mu-chip class="demo-chip" backgroundColor="grey200"
-            v-text="repo.language"
-            v-if="repo.language != 'null'"
-            @click="showReadme(repo)"></mu-chip>
-        </mu-card-actions>
-        <mu-card-actions class="card-action">
-          <div class="repo-count">
-            <div class="star">
-              <i class="material-icons">star</i><span> {{ repo.stargazers_count }}</span>
+      <template v-for="repo in lazyRepos" @click="showReadme(repo)">
+        <mu-card>
+          <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
+          <mu-card-text v-text="repo.description"></mu-card-text>
+          <mu-card-actions>
+            <mu-chip class="demo-chip" backgroundColor="grey200"
+              v-text="repo.language"
+              v-if="repo.language != 'null'"
+              @click="showReadme(repo)"></mu-chip>
+          </mu-card-actions>
+          <mu-card-actions class="card-action">
+            <div class="repo-count">
+              <div class="star">
+                <i class="material-icons">star</i><span> {{ repo.stargazers_count }}</span>
+              </div>
+              <div class="fork">
+                <i class="devicons devicons-git_branch"></i><i class="material-icons">star</i><span> {{ repo.forks_count }}</span>
+              </div>
             </div>
-            <div class="fork">
-              <i class="devicons devicons-git_branch"></i><i class="material-icons">star</i><span> {{ repo.forks_count }}</span>
-            </div>
-          </div>
-          <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
-          <!-- <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button> -->
-        </mu-card-actions>
-      </mu-card>
+            <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
+            <!-- <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button> -->
+          </mu-card-actions>
+        </mu-card>
+      </template>
       <!-- <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/> -->
-      <infinite-loading :distance="distance" :on-infinite="loadMore" ref="infiniteLoading">No More Data.</infinite-loading>
+      <infinite-loading :on-infinite="loadMore"
+        v-if="limitCount < reposCount"
+        ref="infiniteLoading">No More Data.</infinite-loading>
     </aside>
     <mdl-fab></mdl-fab>
     <mdl-loading v-show='loadingReadme'></mdl-loading>
     <aside id="repos-readme" class="repos-readme">
-      <div class='empty-placeholder' v-if='unconnect'>
-        X_X, Something went wrong with your network.
-      </div>
-      <div class='empty-placeholder' v-if='repoReadme.length == 0' else>
+      <div class='empty-placeholder' v-if='repoReadme.length == 0'>
         No Repo Selected
       </div>
       <readme :repo-readme='repoReadme' v-else></readme>
@@ -248,16 +247,31 @@
 .mu-card {
   margin-bottom: 8px;
 }
-.repos-desc {
+.wrapper.nav-hide .repos-desc {
+  position: absolute;
+  background: #fafafa;
+  border-right: 1px solid rgba(55,53,112,0.08);
+  padding: 8px;
+  top: 64px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.wrapper .repos-desc {
+  left: 256px;
   position: absolute;
   background: #fafafa;
   border-right: 1px solid rgba(55,53,112,0.08);
   padding: 8px;
   top: 64px;
   bottom: 0;
+  width: 320px;
+  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   overflow-x: hidden;
   overflow-y: auto;
-  width: 320px;
 }
 .repos-readme {
   position: absolute;
@@ -269,8 +283,8 @@
   bottom: 0;
   min-width: 448px;
   transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
-  overflow-y: scroll;
   overflow-x: hidden;
+  overflow-y: scroll;
 }
 .repos-readme .empty-placeholder {
   -webkit-transform: translateY(-50%);

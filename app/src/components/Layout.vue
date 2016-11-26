@@ -9,7 +9,7 @@
     data () {
       return {
         title: '',
-        dashed: isDesktop(),
+        docked: isDesktop(),
         desktop: isDesktop()
       }
     },
@@ -48,16 +48,19 @@
       },
       resizeSidebar () {
         const desktop = isDesktop()
-        console.log(desktop)
+        console.log('resizeSidebar:' + desktop)
         this.docked = desktop
         if (desktop === this.desktop) return
         if (!desktop && this.desktop && this.open) {
-          this.$store.dispatch('toggleSidebar')
+          this.$store.dispatch('setSidebar', { isDesktop: false })
         }
         if (desktop && !this.desktop && !this.open) {
-          this.$store.dispatch('toggleSidebar')
+          this.$store.dispatch('setSidebar', { isDesktop: true })
         }
         this.desktop = desktop
+      },
+      handleMenuChange (path) {
+        if (!this.desktop) this.$store.dispatch('setSidebar', { isDesktop: false })
       },
       setTitle () {
         let path = window.location.hash
@@ -88,7 +91,7 @@
     </header>
     <main>
       <aside class="sidebar">
-        <side-bar @close="toggleSidebar" :open="open" :docked="docked" />
+        <side-bar @change="handleMenuChange" @close="toggleSidebar" :open="open" :docked="docked" />
       </aside>
       <main class="wrapper" :class="{'nav-hide': !open}">
         <router-view></router-view>
@@ -108,7 +111,8 @@
   width: auto;
   transition: all .45s @easeOutFunction;
   &.nav-hide {
-    left: 64px;
+    // left: 64px;
+    left: 0;
   }
 }
 .wrapper {
@@ -116,13 +120,16 @@
   padding-left: 256px;
   transition: all .45s @easeOutFunction;
   &.nav-hide {
-    padding-left: 64px;
+    // padding-left: 64px;
+    padding-left: 0;
   }
   &.nav-hide .repos-readme {
-    left: 384px;
+    // left: 384px;
+    left: 320px;
   }
   &.nav-hide .showbox {
-    left: 384px;
+    // left: 384px;
+    left: 320px;
   }
 }
 @media (min-width: 480px) {
