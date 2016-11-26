@@ -9,7 +9,6 @@
   import db from '../services/db'
   import request from 'superagent'
   import { mapState, mapActions } from 'vuex'
-  import InfiniteLoading from 'vue-infinite-loading'
   // import marked, { Renderer } from 'marked'
 
   const md = new MarkdownIt({
@@ -185,8 +184,7 @@
     components: {
       Readme,
       MdlLoading,
-      MdlFab,
-      InfiniteLoading
+      MdlFab
     }
   }
 </script>
@@ -207,10 +205,12 @@
           <mu-card-actions class="card-action">
             <div class="repo-count">
               <div class="star">
-                <i class="material-icons">star</i><span> {{ repo.stargazers_count }}</span>
+                <i class="material-icons">star</i>
+                <span> {{ repo.stargazers_count }}</span>
               </div>
               <div class="fork">
-                <i class="devicons devicons-git_branch"></i><i class="material-icons">star</i><span> {{ repo.forks_count }}</span>
+                <i class="material-icons">star</i>
+                <span>{{ repo.forks_count }}</span>
               </div>
             </div>
             <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
@@ -219,9 +219,6 @@
         </mu-card>
       </template>
       <!-- <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/> -->
-      <infinite-loading :on-infinite="loadMore"
-        v-if="limitCount < reposCount"
-        ref="infiniteLoading">No More Data.</infinite-loading>
     </aside>
     <mdl-fab></mdl-fab>
     <mdl-loading v-show='loadingReadme'></mdl-loading>
@@ -337,7 +334,7 @@
       padding: 5px 0;
     }
     .fork {
-      padding: 4px 0;
+      padding: 5px 0;
     }
     span {
       float: right;

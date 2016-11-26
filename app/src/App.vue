@@ -36,7 +36,11 @@
 
 <style lang='less'>
 @import '~muse-ui/dist/muse-ui.css';
-// @import '~muse-ui/dist/theme-teal.css';
+@import '~muse-ui/dist/theme-teal.css';
 @import '~material-design-icons/iconfont/material-icons.css';
 @import '~highlight.js/styles/github.css';
+@import '~devicons/css/devicons.min.css';
+body {
+  font-family: Lato,Roboto,sans-serif;
+}
 </style>

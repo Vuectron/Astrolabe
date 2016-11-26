@@ -103,40 +103,46 @@ export default {
 
 <style lang="less">
 @import "~muse-ui/less/vars.less";
-.sidebar-drawer{
+.sidebar-drawer {
   box-shadow: none;
   border-right: 1px solid @borderColor;
 }
-.sidebar-appbar.mu-appbar{
+.sidebar-appbar.mu-appbar {
   background-color: @primaryColor;
   color: @dialogBackgroundColor;
 }
-.sidebar-appbar-title{
+.sidebar-appbar-title {
   color: @dialogBackgroundColor;
 }
 .sidebar-sub-header {
   padding-left: 34px;
 }
-.mu-item.selected {
-  background: #eaeaea;
+.mu-item {
+  min-height: 36px;
+  .mu-item.selected {
+    background: #eaeaea;
+  }
 }
-.appbar-search-field{
-  color: #FFF;
+.appbar-search-field {
+  color: #fff;
   margin-bottom: 0;
   &.mu-text-field {
     width: 224px;
+    &.has-icon {
+      color: #fff;
+    }
   }
   &.focus-state {
-    color: #FFF;
+    color: #fff;
   }
   .mu-text-field-hint {
-    color: fade(#FFF, 54%);
+    color: fade(#fff, 54%);
   }
   .mu-text-field-input {
-    color: #FFF;
+    color: #fff;
   }
   .mu-text-field-focus-line {
-    background-color: #FFF;
+    background-color: #fff;
   }
 }
 </style>

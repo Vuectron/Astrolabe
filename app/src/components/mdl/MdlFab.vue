@@ -135,7 +135,7 @@
   }
 
   .btn-fab:nth-last-of-type(5) {
-    background-color: #ff4081;
+    background-color: #e91e63;
     color: #ffffff;
     transition-delay: 80ms;
   }
