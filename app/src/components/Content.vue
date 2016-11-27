@@ -244,21 +244,7 @@
 .mu-card {
   margin-bottom: 8px;
 }
-.wrapper.nav-hide .repos-desc {
-  position: absolute;
-  background: #fafafa;
-  border-right: 1px solid rgba(55,53,112,0.08);
-  padding: 8px;
-  top: 64px;
-  left: 0;
-  bottom: 0;
-  width: 320px;
-  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.wrapper .repos-desc {
-  left: 256px;
+.repos-desc {
   position: absolute;
   background: #fafafa;
   border-right: 1px solid rgba(55,53,112,0.08);
@@ -266,7 +252,6 @@
   top: 64px;
   bottom: 0;
   width: 320px;
-  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -275,28 +260,26 @@
   background: #fff;
   color: #546e7a;
   top: 64px;
-  left: 576px;
   right: 0;
   bottom: 0;
   min-width: 448px;
-  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   overflow-x: hidden;
   overflow-y: scroll;
-}
-.repos-readme .empty-placeholder {
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  transform: translateY(-50%);
-  color: #658399;
-  font-weight: bold;
-  pointer-events: none;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  text-align: center;
-  width: 100%;
+  .empty-placeholder {
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #658399;
+    font-weight: bold;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    text-align: center;
+    width: 100%;
+  }
 }
 .mu-card {
   .mu-card-title-container {
