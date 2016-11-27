@@ -196,8 +196,8 @@ const mutations = {
 
   [types.ORDERED_REPOS] (state, {orderField}) {
     console.log(orderField)
-    state.lazyRepos = _.isNull(orderField) ? state.repos : _.orderBy(state.repos, 'stargazers_count')
-    console.log(state.lazyRepos)
+    state.lazyRepos = _.isNull(orderField) ? state.repos : _.orderBy(state.repos, orderField)
+    // console.log(state.lazyRepos)
   },
 
   [types.SET_SEARCH_QUERY] (state, {searchQuery}) {

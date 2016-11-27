@@ -113,9 +113,6 @@ export default {
     width: 256px;
     .mu-item {
       min-height: 36px;
-      .mu-item.selected {
-        background: #eaeaea;
-      }
     }
   }
   min-width: 64px;
@@ -130,6 +127,9 @@ export default {
     .mu-item-content {
       white-space: nowrap;
     }
+  }
+  .mu-item.selected {
+    background: #eaeaea;
   }
 }
 .sidebar-appbar.mu-appbar {

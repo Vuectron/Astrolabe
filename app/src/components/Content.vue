@@ -147,21 +147,21 @@
         const self = this
         // Configurable
         console.log('into loadMore func')
-        this.increaseLimit()
-        setTimeout(() => {
-          db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
-            self.setLazyRepos(lazyRepos)
-            // self.$broadcast('$InfiniteLoading:loaded')
-            self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
-          })
-        }, 1000)
-        // this.loading = true
+        // this.increaseLimit()
         // setTimeout(() => {
         //   db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
         //     self.setLazyRepos(lazyRepos)
+        //     // self.$broadcast('$InfiniteLoading:loaded')
+        //     self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
         //   })
-        //   self.loading = false
-        // }, 2000)
+        // }, 1000)
+        this.loading = true
+        setTimeout(() => {
+          db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
+            self.setLazyRepos(lazyRepos)
+          })
+          self.loading = false
+        }, 2000)
       },
       reload () {
         const self = this
@@ -181,7 +181,7 @@
         this.toggleLoadingRepos()
       },
       'loadingRepos': function (val, oldVal) {
-        if (!val) {
+        if (val) {
           this.reload()
         }
       }
@@ -209,7 +209,6 @@
           <div class="mu-card-title-container">
             <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
           </div>
-          <!-- <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/> -->
           <mu-card-text v-text="repo.description"></mu-card-text>
           <mu-card-actions>
             <mu-chip class="demo-chip" backgroundColor="grey200"
@@ -229,11 +228,10 @@
               </div>
             </div>
             <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
-            <!-- <mu-flat-button @click="openInBrowser(repo.html_url)" label="View on GitHub" secondary></mu-flat-button> -->
           </mu-card-actions>
         </mu-card>
       </template>
-      <!-- <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/> -->
+      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
     </aside>
     <mdl-fab></mdl-fab>
     <mdl-loading v-show='loadingReadme'></mdl-loading>
