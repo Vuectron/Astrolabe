@@ -74,8 +74,8 @@ export default {
 <template>
   <mu-drawer @hide="handleHide" @close="handleClose" :open="open" :docked="docked" class="app-drawer" :zDepth="1">
     <mu-appbar class="sidebar-appbar" :zDepth="0">
-      <!-- <mu-icon-button @click="toggleSidebar" icon="menu" slot="left"/> -->
-      <mu-text-field icon="search" class="appbar-search-field" slot="left" hintText="Search" v-model="searchVal"/>
+      <mu-icon-button @click="toggleSidebar" icon="menu" slot="left"/>
+      <mu-text-field class="appbar-search-field" slot="left" hintText="Search" v-model="searchVal"/>
     </mu-appbar>
     <mu-divider/>
     <mu-list :value="menuVal" @change="handleMenuChange">
@@ -103,13 +103,38 @@ export default {
 
 <style lang="less">
 @import "~muse-ui/less/vars.less";
-.sidebar-drawer {
-  box-shadow: none;
-  border-right: 1px solid @borderColor;
+// .sidebar-drawer {
+//   box-shadow: none;
+//   border-right: 1px solid @borderColor;
+// }
+.mu-drawer {
+  &.open {
+    min-width: 256px;
+    width: 256px;
+    .mu-item {
+      min-height: 36px;
+      .mu-item.selected {
+        background: #eaeaea;
+      }
+    }
+  }
+  min-width: 64px;
+  width: 64px;
+  transform: translate3d(0, 0, 0);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  visibility: visible;
+  .mu-item {
+    .mu-item-content {
+      white-space: nowrap;
+    }
+  }
 }
 .sidebar-appbar.mu-appbar {
   background-color: @primaryColor;
   color: @dialogBackgroundColor;
+  .mu-icon-button {
+    margin-right: 8px;
+  }
 }
 .sidebar-appbar-title {
   color: @dialogBackgroundColor;
@@ -117,17 +142,11 @@ export default {
 .sidebar-sub-header {
   padding-left: 34px;
 }
-.mu-item {
-  min-height: 36px;
-  .mu-item.selected {
-    background: #eaeaea;
-  }
-}
 .appbar-search-field {
   color: #fff;
   margin-bottom: 0;
   &.mu-text-field {
-    width: 224px;
+    width: 176px;
     &.has-icon {
       color: #fff;
     }

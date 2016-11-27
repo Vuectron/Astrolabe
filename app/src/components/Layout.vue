@@ -111,8 +111,8 @@
   width: auto;
   transition: all .45s @easeOutFunction;
   &.nav-hide {
-    // left: 64px;
-    left: 0;
+    left: 64px;
+    // left: 0;
   }
 }
 .wrapper {
@@ -120,8 +120,8 @@
   padding-left: 256px;
   transition: all .45s @easeOutFunction;
   &.nav-hide {
-    // padding-left: 64px;
-    padding-left: 0;
+    padding-left: 64px;
+    // padding-left: 0;
   }
   .repos-desc {
     left: 256px;
@@ -136,15 +136,16 @@
     transition: all .45s @easeOutFunction;
   }
   &.nav-hide .repos-desc {
-    left: 0;
+    left: 64px;
+    // left: 0;
   }
   &.nav-hide .repos-readme {
-    // left: 384px;
-    left: 320px;
+    left: 384px;
+    // left: 320px;
   }
   &.nav-hide .showbox {
-    // left: 384px;
-    left: 320px;
+    left: 384px;
+    // left: 320px;
   }
 }
 @media (min-width: 480px) {
@@ -156,7 +157,8 @@
   .header-appbar {
     left: 256px;
     &.nav-hide {
-      left: 0;
+      left: 64px;
+      // left: 0;
     }
   }
   .wrapper {
