@@ -85,7 +85,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="animated">
     <header class="header">
       <nav-bar :open="open" />
     </header>

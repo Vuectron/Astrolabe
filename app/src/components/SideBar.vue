@@ -124,6 +124,9 @@ export default {
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   visibility: visible;
   .mu-item {
+    .mu-item-left {
+      left: 20px;
+    }
     .mu-item-content {
       white-space: nowrap;
     }

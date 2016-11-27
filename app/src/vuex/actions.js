@@ -49,6 +49,9 @@ export const setLangGroup = ({ commit }, data) => {
 export const filterByLanguage = ({ commit }, data) => {
   commit(types.FILTER_BY_LANGUAGE, data)
 }
+export const orderedRepos = ({ commit }, data) => {
+  commit(types.ORDERED_REPOS, data)
+}
 export const setSearchQuery = ({ commit }, data) => {
   commit(types.SET_SEARCH_QUERY, data)
 }

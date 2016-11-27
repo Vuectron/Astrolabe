@@ -19,6 +19,7 @@ export const SET_REPOS = 'SET_REPOS'
 export const SET_LAZY_REPOS = 'SET_LAZY_REPOS'
 export const SET_LANG_GROUP = 'SET_LANG_GROUP'
 export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
+export const ORDERED_REPOS = 'ORDERED_REPOS'
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY'
 
 // content mutation types

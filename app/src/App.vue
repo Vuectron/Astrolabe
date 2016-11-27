@@ -23,14 +23,10 @@
 
 <template>
   <div id="app">
-    <div class="login animated fadeIn" v-if="!isLogin">
-      <login></login>
-    </div>
-    <div class="animated fadeIn" v-else>
     <transition name="fade" mode="out-in">
-      <layout></layout>
+      <login v-if="!isLogin"></login>
+      <layout v-else></layout>
     </transition>
-    </div>
   </div>
 </template>
 
@@ -40,7 +36,16 @@
 @import '~material-design-icons/iconfont/material-icons.css';
 @import '~highlight.js/styles/github.css';
 @import '~devicons/css/devicons.min.css';
+@import '~animate.css/animate.min.css';
 body {
   font-family: Lato,Roboto,sans-serif;
+}
+
+.fade-enter-active .fade-leave-active {
+  transition: all .2s ease;
+}
+
+.fade-enter .fade-leave-active {
+  opacity: 0;
 }
 </style>

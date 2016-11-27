@@ -58,9 +58,9 @@
     data () {
       return {
         repoReadme: '',
-        distance: 100,
         loading: false,
-        scroller: null
+        scroller: null,
+        activeTab: 'tab1'
       }
     },
 
@@ -70,12 +70,12 @@
         reposCount: state => state.github.reposCount,
         langGroup: state => state.github.langGroup,
         lazyRepos: state => state.github.lazyRepos,
+        searchQuery: state => state.github.searchQuery,
         loadingRepos: state => state.content.loadingRepos,
         loadingReadme: state => state.content.loadingReadme,
         activeRepo: state => state.content.activeRepo,
         repoKey: state => state.content.repoKey,
         order: state => state.content.order,
-        searchQuery: state => state.sidebar.searchQuery,
         filterFields: state => state.sidebar.filterFields,
         limitCount: state => state.global.limitCount
       })
@@ -110,6 +110,9 @@
       },
       filterByLanguage (searchQuery) {
         return this.$store.dispatch('filterByLanguage', { searchQuery: searchQuery })
+      },
+      orderedRepos (orderField) {
+        return this.$store.dispatch('orderedRepos', {orderField: orderField})
       },
       openInBrowser (url) {
         shell.openExternal(url)
@@ -167,6 +170,9 @@
             self.setLazyRepos(lazyRepos)
           })
         }, 1000)
+      },
+      handleTabChange (val) {
+        this.activeTab = val
       }
     },
 
@@ -192,9 +198,18 @@
 <template>
   <div class="content">
     <aside id= "repos-desc" class="repos-desc">
+      <mu-tabs :value="activeTab" @change="handleTabChange">
+        <mu-tab value="tab1" icon="schedule" title="Time" @click="orderedRepos('repo_idx')"/>
+        <mu-tab value="tab2" icon="person" title="Owner" @click="orderedRepos('owner_name')"/>
+        <mu-tab value="tab3" icon="archive" title="Repo" @click="orderedRepos('repo_name')"/>
+        <mu-tab value="tab4" icon="star" title="Star" @click="orderedRepos('stargazers_count')"/>
+      </mu-tabs>
       <template v-for="repo in lazyRepos" @click="showReadme(repo)">
         <mu-card>
-          <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/>
+          <div class="mu-card-title-container">
+            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
+          </div>
+          <!-- <mu-card-title :title="repo.owner_name+'/'+repo.repo_name"/> -->
           <mu-card-text v-text="repo.description"></mu-card-text>
           <mu-card-actions>
             <mu-chip class="demo-chip" backgroundColor="grey200"
@@ -241,9 +256,6 @@
   text-align: center;
   line-height: 32px;
 }
-.mu-card {
-  margin-bottom: 8px;
-}
 .repos-desc {
   position: absolute;
   background: #fafafa;
@@ -281,24 +293,32 @@
     width: 100%;
   }
 }
+.mu-tabs {
+  margin-bottom: 8px;
+}
 .mu-card {
+  margin-bottom: 8px;
   .mu-card-title-container {
-      padding: 8px 16px;
-     .mu-card-title {
-      font-size: 18px !important;
-     }
+    padding: 8px 16px;
+    .mu-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #546e7a;
+    }
   }
   .mu-card-text {
-    padding: 8px 16px;
+    padding: 0 16px;
+    font-weight: 500;
+    color: #546e7a;
   }
   .mu-card-actions {
-    .mu-flat-button {
-      float: right;
-      .mu-flat-button-wrapper {
-        .mu-flat-button-label {
-          font-size: 12px;
-        }
-      }
+    .mu-chip {
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .mu-chip:hover {
+      color: #004D40;
+      text-decoration: underline;
     }
   }
 }
@@ -306,7 +326,7 @@
   border-top: 1px solid #eee;
   .repo-count {
     display: inline-flex;
-    margin-top: 2px;
+    padding-top: 2px;
     font-weight: bold;
     color: #546e7a;
     i{
@@ -326,12 +346,16 @@
   a {
     float: right;
     margin: 0px;
-    padding: 10px 0;
+    padding: 8px 0;
     transition: color .3s ease;
     color: #26a69a;
     font-size: 13px;
     font-weight: bold;
     text-transform: inherit;
+  }
+  a:hover {
+    color: #004D40;
+    text-decoration: underline;
   }
 }
 .card-content.white-text {

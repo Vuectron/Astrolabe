@@ -194,6 +194,12 @@ const mutations = {
     state.lazyRepos = _.isNull(lang) ? state.repos : _.filter(state.repos, _.matches({ 'language': lang }))
   },
 
+  [types.ORDERED_REPOS] (state, {orderField}) {
+    console.log(orderField)
+    state.lazyRepos = _.isNull(orderField) ? state.repos : _.orderBy(state.repos, 'stargazers_count')
+    console.log(state.lazyRepos)
+  },
+
   [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
     console.log(searchQuery)
     state.lazyRepos = _.isNull(searchQuery) ? state.repos : _.filter(state.repos, _.matches({ 'language': searchQuery }))

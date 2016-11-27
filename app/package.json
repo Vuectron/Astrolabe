@@ -4,6 +4,7 @@
   "description": "Manage your GitHub stars with the best one desktop app.",
   "main": "electron.js",
   "dependencies": {
+    "animate.css": "^3.5.2",
     "clipboard": "^1.5.15",
     "devicons": "^1.8.0",
     "electron-json-storage": "^2.1.0",
