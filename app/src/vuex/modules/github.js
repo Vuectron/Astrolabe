@@ -16,7 +16,8 @@ const state = {
   langGroup: [],
   reposCount: '0',
   untaggedCount: '0',
-  searchQuery: ''
+  searchQuery: '',
+  order: 1
 }
 // mutations
 const mutations = {
@@ -196,8 +197,10 @@ const mutations = {
 
   [types.ORDERED_REPOS] (state, {orderField}) {
     console.log(orderField)
-    state.lazyRepos = _.isNull(orderField) ? state.repos : _.orderBy(state.repos, orderField)
-    // console.log(state.lazyRepos)
+    state.lazyRepos = state.order > 0
+      ? _.orderBy(state.lazyRepos, orderField)
+      : _.orderBy(state.lazyRepos, orderField, 'desc')
+    state.order = state.order * -1
   },
 
   [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
