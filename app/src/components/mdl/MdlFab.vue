@@ -1,17 +1,7 @@
 <script>
   const { shell } = require('electron')
+  const { clipboard } = require('electron')
   import $ from 'jquery'
-  // import Clipboard from 'clipboard'
-  //
-  // const clipboard = new Clipboard('.btn')
-  //
-  // clipboard.on('success', function (e) {
-  //   console.info('Action:', e.action)
-  //   console.info('Text:', e.text)
-  //   console.info('Trigger:', e.trigger)
-  //
-  //   e.clearSelection()
-  // })
 
   export default {
     name: 'MdlFab',
@@ -33,6 +23,11 @@
     methods: {
       openInBrowser (url) {
         shell.openExternal(url)
+      },
+      copyToClipboard (url) {
+        clipboard.writeText(url)
+        shell.beep()
+        this.copyTooltip = 'Copied'
       },
       backToTop (name, speed) {
         if (!speed) speed = 300
@@ -69,7 +64,7 @@
       :data-clipboard-text="activeRepo.clone_url"
       :tooltip="copyTooltip"
       v-show="showCopy"
-      @click="copyTooltip = 'Copied'">
+      @click="copyToClipboard(activeRepo.clone_url)">
       <i class="material-icons">content_copy</i>
     </a>
     <a href="#" class="btn-fab btn-floating" tooltip="Download" v-show="showCopy" @click="openInBrowser(activeRepo.downloads_url)">
