@@ -60,7 +60,9 @@
         repoReadme: '',
         loading: false,
         scroller: null,
-        activeTab: 'tab1'
+        activeTab: 'tab1',
+        zDepth: '',
+        selectedRepo: ''
       }
     },
 
@@ -142,6 +144,7 @@
               }
             })
         }
+        this.selectedRepo = repo.repo_name
       },
       loadMore () {
         const self = this
@@ -177,10 +180,10 @@
     },
 
     watch: {
-      'langGroup': function (val, oldVal) {
+      langGroup (val) {
         this.toggleLoadingRepos()
       },
-      'loadingRepos': function (val, oldVal) {
+      loadingRepos (val) {
         if (val) {
           this.reload()
         }
@@ -199,58 +202,30 @@
   <div class="content">
     <aside id= "repos-desc" class="repos-desc animated fadeIn">
       <mu-tabs :value="activeTab" @change="handleTabChange">
-        <!-- <mu-tab value="tab1" icon="schedule" @click="orderedRepos('repo_idx')"/>
-        <mu-tab value="tab2" icon="person" @click="orderedRepos('owner_name')"/>
-        <mu-tab value="tab3" icon="archive" @click="orderedRepos('repo_name')"/>
-        <mu-tab value="tab4" icon="star" @click="orderedRepos('stargazers_count')"/> -->
         <mu-tab value="tab1" icon="schedule" title="Time" @click="orderedRepos('repo_idx')"/>
         <mu-tab value="tab2" icon="person" title="Owner" @click="orderedRepos('owner_name')"/>
         <mu-tab value="tab3" icon="archive" title="Repo" @click="orderedRepos('repo_name')"/>
         <mu-tab value="tab4" icon="star" title="Star" @click="orderedRepos('stargazers_count')"/>
       </mu-tabs>
       <template v-for="repo in lazyRepos">
-        <div class="mu-card" @click="showReadme(repo)">
-          <div class="mu-card-title-container">
-            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
-          </div>
-          <div class="mu-card-text" v-text="repo.description"></div>
-          <div class="mu-card-actions">
-            <div class="mu-chip demo-chip" v-text="repo.language" v-if="repo.language != 'null'" @click="filterByLanguage(repo.language)"></div>
-          </div>
-          <div class="mu-card-actions card-action">
-            <div class="repo-count">
-              <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
-              <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
+        <mu-paper class="demo-paper" :zDepth="selectedRepo == repo.repo_name ? 4 : 0">
+          <div class="mu-card" @click="showReadme(repo)">
+            <div class="mu-card-title-container">
+              <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
             </div>
-            <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
-          </div>
-        </div>
-
-        <!-- <mu-card  @click="showReadme(repo)">
-          <div class="mu-card-title-container">
-            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
-          </div>
-          <mu-card-text v-text="repo.description"></mu-card-text>
-          <mu-card-actions>
-            <mu-chip class="demo-chip" backgroundColor="grey200"
-              v-text="repo.language"
-              v-if="repo.language != 'null'"
-              @click="showReadme(repo)"></mu-chip>
-          </mu-card-actions>
-          <mu-card-actions class="card-action">
-            <div class="repo-count">
-              <div class="star">
-                <i class="material-icons">star</i>
-                <span> {{ repo.stargazers_count }}</span>
-              </div>
-              <div class="fork">
-                <i class="material-icons">star</i>
-                <span>{{ repo.forks_count }}</span>
-              </div>
+            <div class="mu-card-text" v-text="repo.description"></div>
+            <div class="mu-card-actions">
+              <div class="mu-chip demo-chip" v-text="repo.language" v-if="repo.language != 'null'" @click="filterByLanguage(repo.language)"></div>
             </div>
-            <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
-          </mu-card-actions>
-        </mu-card> -->
+            <div class="mu-card-actions card-action">
+              <div class="repo-count">
+                <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
+                <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
+              </div>
+              <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
+            </div>
+          </div>
+        </mu-papaer>
       </template>
       <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
     </aside>
