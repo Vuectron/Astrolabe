@@ -61,7 +61,7 @@
         loading: false,
         scroller: null,
         activeTab: 'tab1',
-        zDepth: '',
+        zDepth: 1,
         selectedRepo: ''
       }
     },
@@ -208,7 +208,7 @@
         <mu-tab value="tab4" icon="star" title="Star" @click="orderedRepos('stargazers_count')"/>
       </mu-tabs>
       <template v-for="repo in lazyRepos">
-        <mu-paper class="demo-paper" :zDepth="selectedRepo == repo.repo_name ? 4 : 0">
+        <mu-paper class="demo-paper" :zDepth="selectedRepo == repo.repo_name ? 3 : 1">
           <div class="mu-card" @click="showReadme(repo)">
             <div class="mu-card-title-container">
               <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
