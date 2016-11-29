@@ -4,6 +4,8 @@ const electron = require('electron')
 const path = require('path')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
+const ipcMain = electron.ipcMain
+const dialog = electron.dialog
 
 let mainWindow
 let config = {}
@@ -56,4 +58,18 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+// exit event
+ipcMain.on('exit', function(event, arg) {
+  dialog.showMessageBox({
+    type: 'question',
+    buttons: ['Yes', 'Cancel'],
+    title: 'Closing Astrolabe',
+    cancelId: 99,
+    message: 'Are you sure you want close Astrolabe?'
+  }, function(response) {
+    console.log('Exit: ' + response)
+    if (!response) app.quit()
+  })
 })
