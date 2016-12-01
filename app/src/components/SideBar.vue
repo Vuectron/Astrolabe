@@ -103,10 +103,6 @@ export default {
 
 <style lang="less">
 @import "~muse-ui/less/vars.less";
-// .sidebar-drawer {
-//   box-shadow: none;
-//   border-right: 1px solid @borderColor;
-// }
 .mu-drawer {
   &.open {
     min-width: 256px;
@@ -128,9 +124,9 @@ export default {
       white-space: nowrap;
     }
   }
-  .mu-item.selected {
-    background: #eaeaea;
-  }
+  // .mu-item.selected {
+  //   background: #eee;
+  // }
 }
 .sidebar-appbar.mu-appbar {
   background-color: @primaryColor;

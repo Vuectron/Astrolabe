@@ -12,7 +12,9 @@ export default {
   },
   data () {
     return {
-      title: 'Astrolabe'
+      title: 'Astrolabe',
+      isOpen: false,
+      trigger: null
     }
   },
   computed: {
@@ -25,6 +27,7 @@ export default {
   },
   watch: {},
   mounted () {
+    this.trigger = this.$refs.button.$el
   },
   methods: {
     ...mapActions([
@@ -32,6 +35,12 @@ export default {
     ]),
     exit () {
       ipcRenderer.send('exit', 'exit')
+    },
+    toggle () {
+      this.isOpen = !this.isOpen
+    },
+    handleClose (e) {
+      this.isOpen = false
     }
   },
   components: {
@@ -50,16 +59,21 @@ export default {
     </div>
     <div class="mu-appbar-title"><span v-text="title"></span></div>
     <div class="right">
-      <div class="userinfo">
-        <img :src="user.avatar_url" :alt="user.login">
-        <span v-text="user.login"></span>
-      </div>
-      <mu-icon-menu icon="more_vert" slot="right">
-        <mu-menu-item title="Profile" leftIcon="perm_contact_calendar"/>
-        <mu-menu-item title="Settings" leftIcon="settings"/>
-        <mu-divider />
-        <mu-menu-item title="Exit" leftIcon="exit_to_app" @click="exit"/>
-      </mu-icon-menu>
+      <mu-flat-button :label="user.login" class="demo-flat-button"
+        labelPosition="before" icon="expand_more"
+        ref="button" @click="toggle"/>
+        <!-- <div class="userinfo">
+          <img :src="user.avatar_url" :alt="user.login">
+        </div> -->
+      </mu-flat-button>
+      <mu-popover :trigger="trigger" :open="isOpen" @close="handleClose">
+        <mu-menu>
+          <mu-menu-item title="Profile" leftIcon="perm_contact_calendar"/>
+          <mu-menu-item title="Settings" leftIcon="settings"/>
+          <mu-divider />
+          <mu-menu-item title="Exit" leftIcon="exit_to_app" @click="exit"/>
+        </mu-menu>
+      </mu-popover>
     </div>
   </div>
 </template>
@@ -87,6 +101,7 @@ export default {
 }
 
 .userinfo img {
+  margin-left: 16px;
   width: 48px;
   height: 48px;
   float: left;
@@ -100,7 +115,6 @@ export default {
   display: inline-block;
   height: 48px;
   line-height: 48px;
-  margin-left: 16px;
   font-size: 16px;
 }
 </style>
