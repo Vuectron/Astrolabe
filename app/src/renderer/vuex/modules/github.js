@@ -196,7 +196,6 @@ const mutations = {
   },
 
   [types.ORDERED_REPOS] (state, {orderField}) {
-    console.log(orderField)
     state.lazyRepos = state.order > 0
       ? _.orderBy(state.lazyRepos, orderField)
       : _.orderBy(state.lazyRepos, orderField, 'desc')
@@ -204,8 +203,11 @@ const mutations = {
   },
 
   [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
-    console.log(searchQuery)
-    state.lazyRepos = _.isNull(searchQuery) ? state.repos : _.filter(state.repos, _.matches({ 'language': searchQuery }))
+    state.lazyRepos = _.isNull(searchQuery)
+      ? state.repos
+      : _.filter(state.repos, function (o) {
+        return _.includes(o.repo_name, searchQuery) || _.includes(o.description, searchQuery)
+      })
   }
 }
 

@@ -24,12 +24,11 @@ export default {
     ...mapState({
       reposCount: state => state.github.reposCount,
       untaggedCount: state => state.github.untaggedCount,
-      langGroup: state => state.github.langGroup,
-      searchQuery: state => state.sidebar.searchQuery
+      langGroup: state => state.github.langGroup
     }),
     searchVal: {
       get () {
-        return this.searchQuery
+        return this.$store.state.sidebar.searchQuery
       },
       set (val) {
         this.setSearchQuery(val)
@@ -116,6 +115,11 @@ export default {
   transform: translate3d(0, 0, 0);
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   visibility: visible;
+  .mu-appbar {
+    .mu-text-field-content {
+        padding-top: 12px;
+    }
+  }
   .mu-item {
     .mu-item-left {
       left: 20px;
