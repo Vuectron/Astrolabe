@@ -15,14 +15,14 @@
     "lodash": "^4.17.2",
     "markdown-it": "^8.1.0",
     "material-design-icons": "^3.0.1",
-    "muse-ui": "^2.0.0-beta.1",
+    "muse-ui": "^2.0.0-rc.5",
     "nedb": "^1.8.0",
     "superagent": "^3.0.0",
-    "vue": "^2.1.4",
+    "vue": "^2.1.10",
     "vue-electron": "^1.0.0",
-    "vue-router": "^2.0.2",
+    "vue-router": "^2.1.2",
     "vue-spinner": "^1.0.2",
-    "vuex": "^2.0.0"
+    "vuex": "^2.1.2"
   },
   "devDependencies": {},
   "author": "xiaoluoboding <xiaoluoboding@gmail.com>"
