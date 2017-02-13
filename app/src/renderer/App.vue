@@ -37,9 +37,7 @@
 @import '~highlight.js/styles/github.css';
 @import '~devicons/css/devicons.min.css';
 @import '~animate.css/animate.min.css';
-body {
-  font-family: Lato,Roboto,sans-serif;
-}
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
 
 .fade-enter-active .fade-leave-active {
   transition: all .2s ease;

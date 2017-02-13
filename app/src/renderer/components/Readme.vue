@@ -63,7 +63,7 @@
   kbd,
   pre,
   samp {
-    font: 1em Consolas, Monaco, Menlo, Courier, monospace
+    font: 0.9em Consolas, Monaco, Menlo, Courier, monospace
   }
 
   .repos-readme .empty-placeholder {

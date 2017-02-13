@@ -178,7 +178,7 @@
     margin-right: 10px;
     border-radius: 2px;
     color: #FFF;
-    font: 500 12px Roboto;
+    font: 500 12px Roboto, Lato, sans-serif;
     white-space: nowrap;
     position: absolute;
     bottom: 20%;

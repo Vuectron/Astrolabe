@@ -128,9 +128,9 @@ export default {
       white-space: nowrap;
     }
   }
-  .mu-item.selected {
-    background: #eee;
-  }
+  // .mu-item.selected {
+  //   background: #eee;
+  // }
 }
 .sidebar-appbar.mu-appbar {
   background-color: @primaryColor;

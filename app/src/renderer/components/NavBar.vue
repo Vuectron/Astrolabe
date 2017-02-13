@@ -1,7 +1,6 @@
 <script>
 import { mapActions } from 'vuex'
 import { ipcRenderer } from 'electron'
-import { MoonLoader } from 'vue-spinner/dist/vue-spinner.min.js'
 export default {
   name: 'NavBar',
   props: {
@@ -42,9 +41,6 @@ export default {
     handleClose (e) {
       this.isOpen = false
     }
-  },
-  components: {
-    MoonLoader
   }
 }
 </script>
@@ -53,7 +49,6 @@ export default {
   <div class="mu-appbar header-appbar" :class="{'nav-hide': !open}">
     <div class="left">
       <div class="brand-loading animated fadeIn" v-if="loadingRepos">
-        <moon-loader :loading="true" color="#fff" size="32px"></moon-loader>
         <span class="loading-stars">Syncing Stars...</span>
       </div>
     </div>
