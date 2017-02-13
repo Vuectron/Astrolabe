@@ -192,7 +192,10 @@ const mutations = {
   },
 
   [types.FILTER_BY_LANGUAGE] (state, {lang}) {
-    state.lazyRepos = _.isNull(lang) ? state.repos : _.filter(state.repos, _.matches({ 'language': lang }))
+    console.log(lang)
+    state.lazyRepos = _.isNull(lang)
+      ? state.repos
+      : _.filter(state.repos, _.matches({ 'language': lang }))
   },
 
   [types.ORDERED_REPOS] (state, {orderField}) {

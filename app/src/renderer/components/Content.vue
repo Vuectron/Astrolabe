@@ -69,16 +69,12 @@
     computed: {
       ...mapState({
         github: state => state.github.github,
-        reposCount: state => state.github.reposCount,
         langGroup: state => state.github.langGroup,
         lazyRepos: state => state.github.lazyRepos,
-        searchQuery: state => state.github.searchQuery,
         loadingRepos: state => state.content.loadingRepos,
         loadingReadme: state => state.content.loadingReadme,
         activeRepo: state => state.content.activeRepo,
         repoKey: state => state.content.repoKey,
-        order: state => state.content.order,
-        filterFields: state => state.sidebar.filterFields,
         limitCount: state => state.global.limitCount
       })
     },
@@ -110,8 +106,8 @@
       setLazyRepos (lazyRepos) {
         return this.$store.dispatch('setLazyRepos', { lazyRepos: lazyRepos })
       },
-      filterByLanguage (searchQuery) {
-        return this.$store.dispatch('filterByLanguage', { searchQuery: searchQuery })
+      filterByLanguage (lang) {
+        return this.$store.dispatch('filterByLanguage', { lang: lang })
       },
       orderedRepos (orderField) {
         return this.$store.dispatch('orderedRepos', {orderField: orderField})
@@ -215,14 +211,15 @@
             </div>
             <div class="mu-card-text" v-text="repo.description"></div>
             <div class="mu-card-actions">
-              <div class="mu-chip demo-chip" v-text="repo.language" v-if="repo.language != 'null'" @click="filterByLanguage(repo.language)"></div>
+              <div class="mu-chip demo-chip" v-text="repo.language" v-if="repo.language != 'null'"
+                   @click.stop="filterByLanguage(repo.language)"></div>
             </div>
             <div class="mu-card-actions card-action">
               <div class="repo-count">
                 <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
                 <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
               </div>
-              <a href="#" @click="openInBrowser(repo.html_url)">View on GitHub</a>
+              <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
             </div>
           </div>
         </mu-papaer>
