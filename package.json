@@ -64,7 +64,7 @@
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "^2.0.1",
     "less": "^2.7.2",
-    "less-loader": "^2.2.3"
+    "less-loader": "^2.2.3",
     "webpack-merge": "^2.4.0",
     "require-dir": "^0.3.0",
     "spectron": "^3.4.0",
@@ -80,3 +80,4 @@
     "webpack": "^2.2.0",
     "webpack-dev-server": "^2.2.0"
   }
+}

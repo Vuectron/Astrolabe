@@ -15,22 +15,6 @@
       $(document).ready(function () {
         // dealwith table style
         $('table').addClass('bordered striped')
-
-        // numbering for pre>code blocks
-        $('pre code').each(function () {
-          var lines = $(this).text().split('\n').length - 1
-          var $numbering = $('<ul/>').addClass('pre-numbering')
-          $(this)
-            .addClass('has-numbering')
-            .parent()
-            .append($numbering)
-          if (!$(this).hasClass('hljs')) {
-            $(this).addClass('hljs')
-          }
-          for (let i = 1; i <= lines; i++) {
-            $numbering.append($('<li/>').text(i))
-          }
-        })
       })
 
       // prevent default click action instead of execute openInBrowser()
@@ -152,27 +136,5 @@
     color: #880E4F;
     padding: 0.1em 0.2em;
     font-family: Consolas, Monaco, Menlo, Courier, monospace;
-  }
-
-  code.has-numbering {
-    margin-left: 32px;
-  }
-
-  pre .pre-numbering {
-    padding-left: 0px !important;
-  }
-
-  .pre-numbering {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 32px;
-    margin: 0;
-    padding: 0.5em 0.5em 1.6em 0.5em;
-    border-right: 1px solid #23241F;
-    background-color: rgba(35, 36, 31, 0.9);
-    text-align: right;
-    font-size: 1em;
-    color: #999;
   }
 </style>
