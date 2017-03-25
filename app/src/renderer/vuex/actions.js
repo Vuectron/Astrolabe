@@ -66,6 +66,9 @@ export const toggleLoadingReadme = ({ commit }) => {
 export const setActiveRepo = ({ commit }, data) => {
   commit(types.SET_ACTIVE_REPO, data)
 }
+export const setRepoReadme = ({ commit }, data) => {
+  commit(types.SET_REPO_README, data)
+}
 export const orderRepo = ({ commit }, data) => {
   commit(types.ORDER_REPO, data)
 }

@@ -9,6 +9,7 @@ import store from './vuex/store'
 Vue.use(Electron)
 Vue.use(VueRouter)
 Vue.use(MuseUI)
+
 Vue.config.debug = true
 
 const router = new VueRouter({
