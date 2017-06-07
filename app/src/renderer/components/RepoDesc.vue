@@ -204,7 +204,7 @@ export default {
             <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
           </div>
         </div>
-      </mu-papaer>
+      </mu-paper>
     </template>
     <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore" loadingText="Loading... ..."/>
   </div>
