@@ -66,15 +66,10 @@ export function authGithub (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispat
 
     // If there is a code, proceed to get token from github
     if (code) {
-      dispatch('getToken', {authOptions, code}).then(() => {
-        // If get token successful, proceed to get user from github
-        dispatch('getUser').then(() => {
-          // If get user successful, proceed to get repos from github
-          dispatch('getRepos').then(() => {
-            console.log('Excellent, Login Successful!')
-          })
-        })
-      })
+      dispatch('getToken', {authOptions, code})
+        .then(() => {})
+        .then(() => { dispatch('getUser') })    // If get token successful, proceed to get user from github
+        .then(() => { dispatch('getRepos') })   // If get user successful, proceed to get repos from github
     } else if (error) {
       alert('Oops! Something went wrong and we couldn\'t ' +
         'log you in using Github. Please try again.')
