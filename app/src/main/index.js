@@ -51,6 +51,8 @@ ipcMain.on('exit', function (event, arg) {
     message: 'Are you sure you want close Astrolabe?'
   }, function (response) {
     console.log('Exit: ' + response)
-    if (!response) app.quit()
+    if (!response) {
+      app.quit()
+    }
   })
 })

@@ -66,7 +66,7 @@
         let path = window.location.hash
         if (path && path.length > 1) path = path.substring(1)
         for (let i = 0; i < this.routes.length; i++) {
-          var route = this.routes[i]
+          const route = this.routes[i]
           if (route.path === path) {
             this.title = route.title || ''
             return

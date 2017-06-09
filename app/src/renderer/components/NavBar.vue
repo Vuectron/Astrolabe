@@ -32,10 +32,10 @@ export default {
     ...mapActions([
       'toggleSidebar'
     ]),
-    exit () {
+    handleExit () {
       ipcRenderer.send('exit', 'exit')
     },
-    toggle () {
+    toggleOpen () {
       this.isOpen = !this.isOpen
     },
     handleClose (e) {
@@ -56,7 +56,7 @@ export default {
     <div class="right">
       <mu-flat-button :label="user.login" class="demo-flat-button"
         labelPosition="before" icon="expand_more"
-        ref="button" @click="toggle"/>
+        ref="button" @click="toggleOpen"/>
         <div class="userinfo">
           <img :src="user.avatar_url" :alt="user.login">
         </div>
@@ -66,7 +66,7 @@ export default {
           <mu-menu-item title="Profile" leftIcon="perm_contact_calendar"/>
           <mu-menu-item title="Settings" leftIcon="settings"/>
           <mu-divider />
-          <mu-menu-item title="Exit" leftIcon="exit_to_app" @click="exit"/>
+          <mu-menu-item title="Exit" leftIcon="exit_to_app" @click="handleExit"/>
         </mu-menu>
       </mu-popover>
     </div>
