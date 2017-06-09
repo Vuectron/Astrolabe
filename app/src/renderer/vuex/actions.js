@@ -46,27 +46,30 @@ export const getToken = ({ commit, state }, payload) => {
           resolve()
         } else {
           commit(types.TOGGLE_CONNECTING)
+          reject()
         }
       })
   })
 }
 
 export const getLocalToken = ({ dispatch, commit, state }, payload) => {
-  storage.get('oauth2', (error, data) => {
-    const { token } = data
-    if (token) {
-      const github = new Github({
-        token: data.token,
-        auth: 'oauth'
-      })
-      commit(types.TOGGLE_LOADING)
-      commit(types.SET_TOKEN, {token})
-      commit(types.SET_GITHUB, {github})
-      dispatch('getRepos').then(() => {
-        dispatch('getUser').then(() => {
+  return new Promise((resolve, reject) => {
+    storage.get('oauth2', (error, data) => {
+      const { token } = data
+      if (token) {
+        const github = new Github({
+          token: data.token,
+          auth: 'oauth'
         })
-      })
-    }
+        commit(types.SET_TOKEN, {token})
+        commit(types.SET_GITHUB, {github})
+        commit(types.TOGGLE_LOADING)
+        resolve()
+      } else {
+        commit(types.TOGGLE_CONNECTING)
+        reject()
+      }
+    })
   })
 }
 
@@ -82,15 +85,21 @@ export const getUser = ({ commit, state }, payload) => {
       .end((error, response) => {
         if (!error && response.statusCode === 200) {
           const user = response.body
+          console.group('Github User Group Begin')
+          console.log(user)
+          console.groupEnd('Github User Group End')
           commit(types.SET_USER, {user})
-          resolve()
+          resolve(user)
+        } else {
+          reject(error)
         }
       })
   })
 }
 
-export const getRepos = ({ commit, state }, payload) => {
-  const { github, user } = state.github
+export const getRepos = ({ commit, state }, user) => {
+  const { github } = state.github
+  user = user || state.github.user
 
   const githubUser = github.getUser(user.login)
 
@@ -98,7 +107,7 @@ export const getRepos = ({ commit, state }, payload) => {
     if (_.isNull(doc)) {
       return new Promise((resolve, reject) => {
         githubUser.getStarredRepos((err, repos) => {
-          commit(types.INIT_REPOS, repos)
+          commit(types.INIT_REPOS, {repos})
           commit(types.TOGGLE_LOGIN)
           resolve()
         })
@@ -106,28 +115,30 @@ export const getRepos = ({ commit, state }, payload) => {
     } else {
       // fetch all repos into repos state
       db.fetchAllRepos().then(repos => {
+        console.log(_.isEmpty(repos))
         if (_.isEmpty(repos)) {
           return new Promise((resolve, reject) => {
             githubUser.getStarredRepos((err, repos) => {
-              commit(types.INIT_REPOS, repos)
+              console.log(repos)
+              commit(types.INIT_REPOS, {repos})
               commit(types.TOGGLE_LOGIN)
               resolve()
             })
           })
         } else {
-          commit(types.SET_REPOS, repos)
+          commit(types.SET_REPOS, {repos})
         }
       })
       db.fetchLangGroup().then(langGroup => {
         if (!_.isEmpty(langGroup)) {
-          commit(types.SET_LANG_GROUP, langGroup)
+          commit(types.SET_LANG_GROUP, {langGroup})
         }
       })
     }
   })
   return new Promise((resolve, reject) => {
     githubUser.getStarredRepos((err, repos) => {
-      commit(types.INIT_REPOS, user, repos)
+      commit(types.INIT_REPOS, {user, repos})
       commit(types.TOGGLE_LOGIN)
       resolve()
     })

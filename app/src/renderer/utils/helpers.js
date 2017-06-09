@@ -71,7 +71,7 @@ export function authGithub (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispat
         dispatch('getUser').then(() => {
           // If get user successful, proceed to get repos from github
           dispatch('getRepos').then(() => {
-            //
+            console.log('Excellent, Login Successful!')
           })
         })
       })

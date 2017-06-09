@@ -9,7 +9,7 @@ const userDataDir = remote.app.getPath('userData')
 // initial state
 const state = {
   github: '',
-  user: '',
+  user: {},
   repos: [],
   lazyRepos: [],
   langGroup: [],
@@ -65,11 +65,7 @@ const mutations = {
       }
       initRepos.push(repo)
       db.findOneRepo(repo._id).then(doc => {
-        if (_.isNull(doc)) {
-          db.addRepo(repo, docs => {})
-        } else {
-          db.updateRepo(repo)
-        }
+        _.isNull(doc) ? db.addRepo(repo, docs => {}) : db.updateRepo(repo)
       })
       apiReposArray.push(repos[i].id)
     }

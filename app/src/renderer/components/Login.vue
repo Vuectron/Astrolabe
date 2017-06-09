@@ -14,12 +14,19 @@
     },
 
     mounted () {
-      this.getLocalToken()
+      this.getLocalToken().then(() => {
+        this.getUser().then((user) => {
+          this.getRepos(user).then(() => {
+          })
+        })
+      })
     },
 
     methods: {
       ...mapActions([
-        'getLocalToken'
+        'getLocalToken',
+        'getUser',
+        'getRepos'
       ])
     },
 
