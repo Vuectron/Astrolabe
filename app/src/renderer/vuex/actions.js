@@ -5,9 +5,6 @@ import db from '../services/db'
 import storage from 'electron-json-storage'
 
 import * as types from './mutation-types'
-// import { apiRequestAuth } from '../utils/api-requests'
-// import { generateGitHubAPIUrl } from '../../utils/helpers'
-// import Constants from '../../utils/constants'
 
 const makeAction = (type) => {
   return ({ commit }, ...args) => commit(type, ...args)
@@ -42,7 +39,7 @@ export const getToken = ({ commit, state }, payload) => {
             token: token,
             auth: 'oauth'
           })
-          // storage.set('oauth2', { code, token }, (error) => { if (error) throw error })
+          storage.set('oauth2', { code, token }, (error) => { if (error) throw error })
           commit(types.SET_TOKEN, {token})
           commit(types.SET_GITHUB, {github})
           commit(types.TOGGLE_LOADING)
@@ -62,10 +59,12 @@ export const getLocalToken = ({ dispatch, commit, state }, payload) => {
         token: data.token,
         auth: 'oauth'
       })
+      commit(types.TOGGLE_LOADING)
       commit(types.SET_TOKEN, {token})
       commit(types.SET_GITHUB, {github})
-      dispatch('getUser').then(() => {
-        commit('getRepos')
+      dispatch('getRepos').then(() => {
+        dispatch('getUser').then(() => {
+        })
       })
     }
   })
@@ -95,7 +94,6 @@ export const getRepos = ({ commit, state }, payload) => {
 
   const githubUser = github.getUser(user.login)
 
-  // commit(types.TOGGLE_LOADING)
   db.findOneUser(user.id).then(doc => {
     if (_.isNull(doc)) {
       return new Promise((resolve, reject) => {
@@ -129,7 +127,7 @@ export const getRepos = ({ commit, state }, payload) => {
   })
   return new Promise((resolve, reject) => {
     githubUser.getStarredRepos((err, repos) => {
-      commit(types.INIT_REPOS, repos)
+      commit(types.INIT_REPOS, user, repos)
       commit(types.TOGGLE_LOGIN)
       resolve()
     })
