@@ -1,190 +1,18 @@
 <script>
-  import Github from 'github-api'
-  import { remote } from 'electron'
-  const BrowserWindow = remote.BrowserWindow
-  import storage from 'electron-json-storage'
-  import request from 'superagent'
-  import { isNull, isEmpty } from 'lodash'
-  import db from '../services/db'
-  import { mapActions } from 'vuex'
+  import { authGithub } from '../utils/helpers'
+  import Constants from '../utils/constants'
 
   export default {
     data () {
       return {
-        appName: 'Astrolabe',
-        options: {
-          client_id: 'd4a28554213774aa83cc',
-          client_secret: 'a737f660e30ca4559069ec484658c45cb2a247a4',
-          scope: ['user:email', 'public_repo']
-        },
+        appName: Constants.APP_NAME,
         isOpen: false
       }
     },
 
-    computed: {
-      github () {
-        return this.$store.state.github.github
-      }
-    },
-
     methods: {
-      ...mapActions([
-        'toggleConnecting',
-        'toggleLoading',
-        'toggleLogin'
-      ]),
-      setToken (token) {
-        return this.$store.dispatch('setToken', { token: token })
-      },
-      setGithub (github) {
-        return this.$store.dispatch('setGithub', { github: github })
-      },
-      setUser (user) {
-        return this.$store.dispatch('setUser', { user: user })
-      },
-      setRepos (repos) {
-        return this.$store.dispatch('setRepos', { repos: repos })
-      },
-      setLangGroup (langGroup) {
-        return this.$store.dispatch('setLangGroup', { langGroup: langGroup })
-      },
-      initRepos (repos) {
-        return this.$store.dispatch('initRepos', { repos: repos })
-      },
-      githubAuth () {
-        console.log('into github auth func')
-        let self = this
-        // Build the OAuth consent page URL
-        let githubUrl = 'https://github.com/login/oauth/authorize?'
-        let authUrl = githubUrl + 'client_id=' + this.options.client_id + '&scope=' + this.options.scope
-        let authWindow = null
-
-        // Open auth window
-        authWindow = new BrowserWindow({
-          width: 1024,
-          height: 768,
-          show: true,
-          'web-preferences': {
-            'node-integration': false
-          }
-        })
-
-        authWindow.loadURL(authUrl)
-
-        authWindow.webContents.on('will-navigate', function (event, url) {
-          self.getCode(url, authWindow)
-        })
-
-        authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-          self.getCode(newUrl, authWindow)
-        })
-
-        // If "Done" button is pressed, hide "Loading"
-        authWindow.on('close', function () {
-          authWindow.destroy()
-        })
-      },
-      getCode (url, authWindow) {
-        let rawCode = /code=([^&]*)/.exec(url) || null
-        let code = (rawCode && rawCode.length > 1) ? rawCode[1] : null
-        let error = /\?error=(.+)$/.exec(url)
-        if (code || error) {
-          // Close the browser if code found or error
-          authWindow.destroy()
-        }
-
-        // If there is a code, proceed to get token from github
-        if (code) {
-          console.log('code:' + code)
-          this.code = code
-          this.getToken(this.options, code)
-          storage.set('oauth2', {
-            code: code
-          }, function (error) {
-            if (error) throw error
-          })
-        } else if (error) {
-          alert('Oops! Something went wrong and we couldn\'t' +
-            'log you in using Github. Please try again.')
-        }
-      },
-      getToken (option, code) {
-        let self = this
-        let postData = {
-          client_id: option.client_id,
-          client_secret: option.client_secret,
-          code: code
-        }
-        function callback (error, response) {
-          if (!error && response.statusCode === 200) {
-            let info = response.body
-            console.log('token:' + info.access_token)
-            self.setToken(info.access_token)
-            const github = new Github({
-              token: info.access_token,
-              auth: 'oauth'
-            })
-            self.setGithub(github)
-            self.getUser(info.access_token)
-            storage.set('oauth2', {
-              code: code,
-              token: info.access_token
-            }, function (error) {
-              if (error) throw error
-            })
-          }
-        }
-        request.post('https://github.com/login/oauth/access_token')
-          .accept('application/json')
-          .send(postData)
-          .end(callback)
-      },
-      getUser (token) {
-        let self = this
-        this.toggleConnecting()
-        function callback (error, response) {
-          if (!error && response.statusCode === 200) {
-            let user = response.body
-            self.setUser(user)
-            self.getRepos(user)
-          }
-        }
-        request.get('https://api.github.com/user')
-          .accept('application/json')
-          .auth('token', token)
-          .end(callback)
-      },
-      getRepos (user) {
-        let self = this
-        this.toggleLoading()
-        let githubUser = this.github.getUser(user.login)
-        db.findOneUser(user.id).then(doc => {
-          if (isNull(doc)) {
-            githubUser.getStarredRepos(function (err, repos) {
-              self.initRepos(repos)
-            })
-          } else {
-            // fetch all repos into repos state
-            db.fetchAllRepos().then(repos => {
-              if (isEmpty(repos)) {
-                githubUser.getStarredRepos(function (err, repos) {
-                  self.initRepos(user, repos)
-                })
-              } else {
-                self.setRepos(repos)
-              }
-            })
-            db.fetchLangGroup().then(langGroup => {
-              if (!isEmpty(langGroup)) {
-                self.setLangGroup(langGroup)
-              }
-            })
-          }
-        })
-        githubUser.getStarredRepos(function (err, repos) {
-          self.initRepos(user, repos)
-        })
-        this.toggleLogin()
+      authGithub () {
+        return authGithub(undefined, this.$store.dispatch)
       }
     }
   }
@@ -194,7 +22,7 @@
   <div class="panel">
     <h2><span v-text="appName"></span></h2>
     <div class="formset">
-      <button class="loginBtn" @click="githubAuth()">Log in with GitHub</button>
+      <button class="loginBtn" @click="authGithub()">Log in with GitHub</button>
     </div>
   </div>
 </template>

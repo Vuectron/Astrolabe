@@ -11,7 +11,7 @@
     // },
     computed: {
       isLogin () {
-        return this.$store.state.login.isLogin
+        return this.$store.state.auth.isLogin
       }
     },
     components: {

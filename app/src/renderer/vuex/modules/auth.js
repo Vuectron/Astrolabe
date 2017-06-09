@@ -1,23 +1,25 @@
 import * as types from '../mutation-types'
 
 const state = {
-  connecting: false,
-  loading: false,
+  token: null,
+  isConnecting: false,
+  isLoading: false,
   isLogin: false
 }
 
 const mutations = {
+  [types.SET_TOKEN] (state, {token}) {
+    state.token = token
+  },
   [types.TOGGLE_CONNECTING] (state) {
-    state.connecting = true
+    state.isConnecting = !state.isConnecting
   },
-
   [types.TOGGLE_LOADING] (state) {
-    state.connecting = !state.connecting
-    state.loading = true
+    state.isConnecting = false
+    state.isLoading = !state.isLoading
   },
-
   [types.TOGGLE_LOGIN] (state) {
-    state.loading = !state.loading
+    state.isLoading = false
     state.isLogin = true
   }
 }

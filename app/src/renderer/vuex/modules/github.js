@@ -8,7 +8,6 @@ const userDataDir = remote.app.getPath('userData')
 
 // initial state
 const state = {
-  token: '',
   github: '',
   user: '',
   repos: [],
@@ -21,15 +20,12 @@ const state = {
 }
 // mutations
 const mutations = {
-  [types.SET_TOKEN] (state, {token}) {
-    state.token = token
-  },
-
   [types.SET_GITHUB] (state, {github}) {
     state.github = github
   },
 
   [types.SET_USER] (state, {user}) {
+    console.log(userDataDir)
     db.findOneUser(user.id).then(doc => {
       if (_.isNull(doc)) {
         // when change user delete all db file

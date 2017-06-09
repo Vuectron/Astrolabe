@@ -27,6 +27,13 @@ export default {
       })
     })
   },
+  removeUser () {
+    return new Promise((resolve, reject) => {
+      user.remove({}, {}, (err, numRemoved) => {
+        if (err) {}
+      })
+    })
+  },
   // repos.db CRUD
   addRepo (repoData, callback) {
     repo.insert(repoData, (err, docs) => {
