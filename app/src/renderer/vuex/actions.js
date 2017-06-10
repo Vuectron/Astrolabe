@@ -103,28 +103,25 @@ export const getRepos = ({ commit, state }, user) => {
 
   const githubUser = github.getUser(user.login)
 
+  const getStarredRepos = () => {
+    return new Promise((resolve, reject) => {
+      githubUser.getStarredRepos((err, repos) => {
+        commit(types.INIT_REPOS, {repos})
+        commit(types.TOGGLE_LOGIN)
+        resolve()
+      })
+    })
+  }
+
   db.findOneUser(user.id).then(doc => {
     if (_.isNull(doc)) {
-      return new Promise((resolve, reject) => {
-        githubUser.getStarredRepos((err, repos) => {
-          commit(types.INIT_REPOS, {repos})
-          commit(types.TOGGLE_LOGIN)
-          resolve()
-        })
-      })
+      getStarredRepos()
     } else {
       // fetch all repos into repos state
       db.fetchAllRepos().then(repos => {
         console.log(_.isEmpty(repos))
         if (_.isEmpty(repos)) {
-          return new Promise((resolve, reject) => {
-            githubUser.getStarredRepos((err, repos) => {
-              console.log(repos)
-              commit(types.INIT_REPOS, {repos})
-              commit(types.TOGGLE_LOGIN)
-              resolve()
-            })
-          })
+          getStarredRepos()
         } else {
           commit(types.SET_REPOS, {repos})
         }
@@ -136,13 +133,7 @@ export const getRepos = ({ commit, state }, user) => {
       })
     }
   })
-  return new Promise((resolve, reject) => {
-    githubUser.getStarredRepos((err, repos) => {
-      commit(types.INIT_REPOS, {user, repos})
-      commit(types.TOGGLE_LOGIN)
-      resolve()
-    })
-  })
+  getStarredRepos()
 }
 
 export const loginRequest = makeAction('LOGIN_REQUEST')

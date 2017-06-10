@@ -1,8 +1,9 @@
-import * as types from '../mutation-types'
 import _ from 'lodash'
-import db from '../../services/db'
 import jetpack from 'fs-jetpack'
 import { remote } from 'electron'
+import db from '../../services/db'
+import Constants from '../../utils/constants'
+import * as types from '../mutation-types'
 
 const userDataDir = remote.app.getPath('userData')
 
@@ -47,7 +48,7 @@ const mutations = {
     let initRepos = []
     let apiReposArray = []
     for (let i in repos) {
-      let repo = {
+      const repo = {
         '_id': repos[i].id,
         'repo_idx': parseInt(i),
         'owner_name': repos[i].full_name.split('\/').shift(),
@@ -95,49 +96,18 @@ const mutations = {
 
     let langGroup = []
 
+    const devicons = Constants.DEVICONS
+
     for (let lang in countLangs) {
       if (countLangs.hasOwnProperty(lang)) {
         let icon = ''
-        switch (lang) {
-          case 'CSS':
-            icon = 'devicon-css3-plain'
-            break
-          case 'HTML':
-            icon = 'devicon-html5-plain'
-            break
-          case 'Shell':
-            icon = 'devicons devicons-terminal'
-            break
-          case 'PowerShell':
-            icon = 'devicons devicons-terminal'
-            break
-          case 'C++':
-            icon = 'devicon-cplusplus-plain'
-            break
-          case 'C#':
-            icon = 'devicon-csharp-plain'
-            break
-          case 'Swift':
-            icon = 'devicons devicons-swift'
-            break
-          case 'Objective-C':
-            icon = 'devicon-apple-plain'
-            break
-          case 'GCC Machine Description':
-            icon = 'devicons devicons-gnu'
-            break
-          case 'VimL':
-            icon = 'devicon-vim-plain'
-            break
-          case 'TypeScript':
-            icon = 'devicons devicons-terminal_badge'
-            break
-          case 'Vue':
-            icon = 'devicons devicons-terminal_badge'
-            break
-          default:
-            icon = 'devicon-' + _.toLower(lang) + '-plain'
-        }
+
+        Object.keys(devicons).map((k) => {
+          icon = k === lang ? devicons[k] : `devicon-${_.toLower(lang)}-plain`
+          return icon
+        })
+
+        console.log(icon)
 
         let langCount = {
           '_id': lang,

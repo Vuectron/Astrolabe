@@ -193,8 +193,12 @@ export default {
           </div>
           <div class="mu-card-text" v-text="repo.description"></div>
           <div class="mu-card-actions">
-            <div class="mu-chip demo-chip" v-text="repo.language" v-if="repo.language != 'null'"
-                 @click.stop="filterByLanguage(repo.language)"></div>
+            <div
+              class="mu-chip demo-chip"
+              v-text="repo.language"
+              v-if="repo.language != 'null'"
+              @click.stop="filterByLanguage(repo.language)"
+            />
           </div>
           <div class="mu-card-actions card-action">
             <div class="repo-count">
