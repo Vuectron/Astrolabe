@@ -89,11 +89,15 @@ export default {
     </mu-list>
     <mu-divider />
     <mu-list :value="menuVal" @change="handleMenuChange">
-      <mu-list-item :title="group.lang" :value="group.lang"
+      <mu-list-item
+        :title="group.lang"
+        :value="group.lang"
         v-for="group in langGroup"
         v-if="group.count >= 5 && group.lang != 'null'"
-        @click="filterByLanguage(group.lang)">
-        <mu-icon slot="left" value="grade"/>
+        @click="filterByLanguage(group.lang)"
+      >
+        <!-- <mu-icon slot="left" value="grade"/> -->
+        <div class="mu-item-left"><i :class="group.icon"></i> </div>
         <mu-badge :content="group.count" secondary slot="right"/>
       </mu-list-item>
     </mu-list>

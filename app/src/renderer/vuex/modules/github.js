@@ -103,7 +103,7 @@ const mutations = {
         let icon = ''
 
         Object.keys(devicons).map((k) => {
-          icon = k === lang ? devicons[k] : `devicon-${_.toLower(lang)}-plain`
+          icon = k === lang ? devicons[k] : devicons['default']
           return icon
         })
 

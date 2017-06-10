@@ -10,9 +10,6 @@ const makeAction = (type) => {
   return ({ commit }, ...args) => commit(type, ...args)
 }
 
-// global actions
-export const increaseLimit = makeAction('INCREASE_LIMIT')
-
 // auth actions, axios can not cors for now, use superagent instead.
 export const getToken = ({ commit, state }, payload) => {
   const { authOptions, code } = payload
@@ -136,9 +133,8 @@ export const getRepos = ({ commit, state }, user) => {
   getStarredRepos()
 }
 
-export const loginRequest = makeAction('LOGIN_REQUEST')
-export const loginSuccess = makeAction('LOGIN_SUCCESS')
-export const loginFailure = makeAction('LOGIN_FAILURE')
+// global actions
+export const increaseLimit = makeAction('INCREASE_LIMIT')
 
 // login actions
 export const toggleLoading = makeAction('TOGGLE_LOADING')

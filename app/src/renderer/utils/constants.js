@@ -21,6 +21,6 @@ export default {
     VimL: 'devicon-vim-plain',
     TypeScript: 'devicons devicons-terminal_badge',
     Vue: 'devicons devicons-terminal_badge',
-    default: 'devicon-plain'
+    default: 'devicons devicons-code'
   }
 }
