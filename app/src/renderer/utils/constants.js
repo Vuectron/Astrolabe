@@ -9,19 +9,23 @@ export default {
   },
   REPO_SLUG: 'Vuectron/Astrolabe',
   DEVICONS: {
+    C: 'devicon-c-plain',
     CSS: 'devicon-css3-plain',
+    CoffeeScript: 'devicon-coffeescript-original',
+    Default: 'devicon-devicon-plain',
+    Go: 'devicon-go-plain',
     HTML: 'devicon-html5-plain',
     JavaScript: 'devicon-javascript-plain',
     Java: 'devicon-java-plain',
-    Php: 'devicon-php-plain',
+    PHP: 'devicon-php-plain',
     Python: 'devicon-python-plain',
+    Ruby: 'devicon-ruby-plain',
     Swift: 'devicon-swift-plain',
+    TypeScript: 'devicon-typescript-plain',
+    Vue: 'devicon-vuejs-plain',
     'C++': 'devicon-cplusplus-plain',
     'C#': 'devicon-csharp-plain',
     'Objective-C': 'devicon-apple-plain',
-    TypeScript: 'devicon-typescript-plain',
-    VimL: 'devicon-vim-plain',
-    Vue: 'devicon-vuejs-plain',
-    default: 'devicon-devicon-plain'
+    'Vim script': 'devicon-vim-plain'
   }
 }

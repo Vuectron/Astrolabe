@@ -105,7 +105,7 @@ const mutations = {
           '_id': lang,
           'lang': lang,
           'count': _.toString(countLangs[lang]),
-          'icon': devicons[lang] || devicons['default']
+          'icon': devicons[lang] || devicons['Default']
         }
         langGroup.push(langCount)
         db.findOneLangGroup(lang).then(doc => {

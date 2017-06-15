@@ -2,7 +2,8 @@ import * as types from '../mutation-types'
 
 const state = {
   version: '0.0.1',
-  limitCount: 10
+  limitCount: 10,
+  minLangCount: 1
 }
 
 const mutations = {

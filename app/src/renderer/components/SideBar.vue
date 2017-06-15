@@ -22,6 +22,7 @@ export default {
       version: 'globalVersion'
     }),
     ...mapState({
+      minLangCount: state => state.global.minLangCount,
       reposCount: state => state.github.reposCount,
       untaggedCount: state => state.github.untaggedCount,
       langGroup: state => state.github.langGroup,
@@ -94,7 +95,7 @@ export default {
         :title="group.lang"
         :value="group.lang"
         v-for="group in langGroup"
-        v-if="group.count >= 1 && group.lang != 'null'"
+        v-if="group.count >= minLangCount && group.lang != 'null'"
         @click="filterByLanguage(group.lang)"
       >
         <mu-icon slot="left" value=""/>
