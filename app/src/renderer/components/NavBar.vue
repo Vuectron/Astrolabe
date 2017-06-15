@@ -30,8 +30,16 @@ export default {
   },
   methods: {
     ...mapActions([
-      'toggleSidebar'
+      'toggleSidebar',
+      'userSignout'
     ]),
+    handleSignout () {
+      this.userSignout()
+        .then(() => {
+          console.log('send ipc signout')
+          ipcRenderer.send('signout', 'signout')
+        })
+    },
     handleExit () {
       ipcRenderer.send('exit', 'exit')
     },
@@ -66,6 +74,7 @@ export default {
           <mu-menu-item title="Profile" leftIcon="perm_contact_calendar"/>
           <mu-menu-item title="Settings" leftIcon="settings"/>
           <mu-divider />
+          <mu-menu-item title="Sign out" leftIcon="power_settings_new" @click="handleSignout"/>
           <mu-menu-item title="Exit" leftIcon="exit_to_app" @click="handleExit"/>
         </mu-menu>
       </mu-popover>

@@ -6,6 +6,7 @@ export const SET_TOKEN = 'SET_TOKEN'
 export const TOGGLE_CONNECTING = 'TOGGLE_CONNECTING'
 export const TOGGLE_LOADING = 'TOGGLE_LOADING'
 export const TOGGLE_LOGIN = 'TOGGLE_LOGIN'
+export const USER_SIGNOUT = 'USER_SIGNOUT'
 
 // sidebar mutation types
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'

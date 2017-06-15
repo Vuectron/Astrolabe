@@ -1,3 +1,4 @@
+import storage from 'electron-json-storage'
 import * as types from '../mutation-types'
 
 const state = {
@@ -21,6 +22,16 @@ const mutations = {
   [types.TOGGLE_LOGIN] (state) {
     state.isLoading = false
     state.isLogin = true
+  },
+  [types.USER_SIGNOUT] (state) {
+    return new Promise((resolve, reject) => {
+      storage.remove('oauth2', (err) => {
+        if (err) reject()
+        state.isLoading = false
+        state.isLogin = false
+        resolve()
+      })
+    })
   }
 }
 

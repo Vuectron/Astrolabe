@@ -31,6 +31,7 @@ export default {
     return new Promise((resolve, reject) => {
       user.remove({}, {}, (err, numRemoved) => {
         if (err) {}
+        return resolve(numRemoved)
       })
     })
   },

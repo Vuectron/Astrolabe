@@ -74,6 +74,19 @@ export default {
     })
   },
 
+  watch: {
+    langGroup (val) {
+      if (val) {
+        this.toggleLoadingRepos()
+      }
+    },
+    loadingRepos (val) {
+      if (val) {
+        this.reload()
+      }
+    }
+  },
+
   mounted () {
     this.scroller = this.$el
     $(document).ready(function () {
@@ -105,7 +118,7 @@ export default {
       return this.$store.dispatch('setRepoReadme', { repoReadme: repoReadme })
     },
     orderedRepos (orderField) {
-      return this.$store.dispatch('orderedRepos', {orderField: orderField})
+      return this.$store.dispatch('orderedRepos', { orderField: orderField })
     },
     handleTabChange (val) {
       this.activeTab = val
@@ -113,9 +126,10 @@ export default {
     reload () {
       const self = this
       setTimeout(() => {
-        db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
-          self.setLazyRepos(lazyRepos)
-        })
+        db.fetchLazyRepos(self.limitCount)
+          .then(lazyRepos => {
+            self.setLazyRepos(lazyRepos)
+          })
       }, 1000)
     },
     filterByLanguage (lang) {
@@ -130,9 +144,9 @@ export default {
         const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
         request.get(readmeUrl)
           .accept('application/json')
-          .end(function (err, res) {
+          .end((err, res) => {
             if (!err && res) {
-              githubRepo.getContents('master', res.body.name, true, function (err, data) {
+              githubRepo.getContents('master', res.body.name, true, (err, data) => {
                 if (err) {
                   console.dir(err.status)
                   // TODO dealwith 404
@@ -153,25 +167,15 @@ export default {
       this.loading = true
       this.increaseLimit()
       setTimeout(() => {
-        db.fetchLazyRepos(self.limitCount).then(lazyRepos => {
-          self.setLazyRepos(lazyRepos)
-        })
+        db.fetchLazyRepos(self.limitCount)
+          .then(lazyRepos => {
+            self.setLazyRepos(lazyRepos)
+          })
         self.loading = false
       }, 2000)
     },
     openInBrowser (url) {
       shell.openExternal(url)
-    }
-  },
-
-  watch: {
-    langGroup (val) {
-      this.toggleLoadingRepos()
-    },
-    loadingRepos (val) {
-      if (val) {
-        this.reload()
-      }
     }
   }
 }
@@ -187,7 +191,7 @@ export default {
     </mu-tabs>
     <template v-for="repo in lazyRepos">
       <mu-paper class="demo-paper" :zDepth="selectedRepo == repo.repo_name ? 3 : 1">
-        <div class="mu-card" @click="showReadme(repo)">
+        <div class="mu-card" @click.stop="showReadme(repo)">
           <div class="mu-card-title-container">
             <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
           </div>

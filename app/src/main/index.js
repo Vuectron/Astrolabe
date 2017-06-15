@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, session } from 'electron'
 
 let mainWindow
 // let config = {}
@@ -39,6 +39,14 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+// signout event
+ipcMain.on('signout', (event, arg) => {
+  session.defaultSession.clearCache((error) => {
+    if (error) console.error(error)
+  })
+  session.defaultSession.clearStorageData()
 })
 
 // exit event

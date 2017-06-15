@@ -52,19 +52,25 @@ export const getToken = ({ commit, state }, payload) => {
 export const getLocalToken = ({ dispatch, commit, state }, payload) => {
   return new Promise((resolve, reject) => {
     storage.get('oauth2', (error, data) => {
-      const { token } = data
-      if (token) {
-        const github = new Github({
-          token: data.token,
-          auth: 'oauth'
-        })
-        commit(types.SET_TOKEN, {token})
-        commit(types.SET_GITHUB, {github})
-        commit(types.TOGGLE_LOADING)
-        resolve()
-      } else {
+      if (error) {
         commit(types.TOGGLE_CONNECTING)
         reject()
+      }
+      if (!_.isEmpty(data)) {
+        const { token } = data
+        if (token) {
+          const github = new Github({
+            token: data.token,
+            auth: 'oauth'
+          })
+          commit(types.SET_TOKEN, {token})
+          commit(types.SET_GITHUB, {github})
+          commit(types.TOGGLE_LOADING)
+          resolve()
+        } else {
+          commit(types.TOGGLE_CONNECTING)
+          reject()
+        }
       }
     })
   })
@@ -116,7 +122,6 @@ export const getRepos = ({ commit, state }, user) => {
     } else {
       // fetch all repos into repos state
       db.fetchAllRepos().then(repos => {
-        console.log(_.isEmpty(repos))
         if (_.isEmpty(repos)) {
           getStarredRepos()
         } else {
@@ -139,6 +144,7 @@ export const increaseLimit = makeAction('INCREASE_LIMIT')
 // login actions
 export const toggleLoading = makeAction('TOGGLE_LOADING')
 export const toggleLogin = makeAction('TOGGLE_LOGIN')
+export const userSignout = makeAction('USER_SIGNOUT')
 
 // sidebar actions
 export const toggleSidebar = makeAction('TOGGLE_SIDEBAR')
