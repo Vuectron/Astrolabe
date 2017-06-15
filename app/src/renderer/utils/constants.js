@@ -11,16 +11,17 @@ export default {
   DEVICONS: {
     CSS: 'devicon-css3-plain',
     HTML: 'devicon-html5-plain',
-    Shell: 'devicons devicons-terminal',
-    PowerShell: 'devicons devicons-terminal',
+    JavaScript: 'devicon-javascript-plain',
+    Java: 'devicon-java-plain',
+    Php: 'devicon-php-plain',
+    Python: 'devicon-python-plain',
+    Swift: 'devicon-swift-plain',
     'C++': 'devicon-cplusplus-plain',
     'C#': 'devicon-csharp-plain',
-    Swift: 'devicons devicons-swift',
     'Objective-C': 'devicon-apple-plain',
-    'GCC Machine Description': 'devicons devicons-gnu',
+    TypeScript: 'devicon-typescript-plain',
     VimL: 'devicon-vim-plain',
-    TypeScript: 'devicons devicons-terminal_badge',
-    Vue: 'devicons devicons-terminal_badge',
-    default: 'devicons devicons-code'
+    Vue: 'devicon-vuejs-plain',
+    default: 'devicon-devicon-plain'
   }
 }

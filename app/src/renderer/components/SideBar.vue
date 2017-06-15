@@ -24,7 +24,8 @@ export default {
     ...mapState({
       reposCount: state => state.github.reposCount,
       untaggedCount: state => state.github.untaggedCount,
-      langGroup: state => state.github.langGroup
+      langGroup: state => state.github.langGroup,
+      activeLang: state => state.github.activeLang
     }),
     searchVal: {
       get () {
@@ -93,11 +94,11 @@ export default {
         :title="group.lang"
         :value="group.lang"
         v-for="group in langGroup"
-        v-if="group.count >= 5 && group.lang != 'null'"
+        v-if="group.count >= 1 && group.lang != 'null'"
         @click="filterByLanguage(group.lang)"
       >
-        <!-- <mu-icon slot="left" value="grade"/> -->
-        <div class="mu-item-left"><i :class="group.icon"></i> </div>
+        <mu-icon slot="left" value=""/>
+        <div class="mu-item-left"><i class="mu-icon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
         <mu-badge :content="group.count" secondary slot="right"/>
       </mu-list-item>
     </mu-list>

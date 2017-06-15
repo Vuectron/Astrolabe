@@ -35,6 +35,8 @@
 // @import '~muse-ui/dist/theme-teal.css';
 @import '~material-design-icons/iconfont/material-icons.css';
 @import '~highlight.js/styles/github.css';
+@import '../../icons/devicon-2.2/devicon.min.css';
+@import '../../icons/devicon-2.2/devicon-colors.css';
 @import '~devicons/css/devicons.min.css';
 @import '~animate.css/animate.min.css';
 @import '~roboto-fontface/css/roboto/roboto-fontface.css';

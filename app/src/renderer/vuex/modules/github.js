@@ -17,7 +17,8 @@ const state = {
   reposCount: '0',
   untaggedCount: '0',
   searchQuery: '',
-  order: 1
+  order: 1,
+  activeLang: ''
 }
 // mutations
 const mutations = {
@@ -92,28 +93,19 @@ const mutations = {
     })
 
     // build lang_group
-    let countLangs = _.countBy(initRepos, 'language')
+    const countLangs = _.countBy(initRepos, 'language')
 
-    let langGroup = []
+    const langGroup = []
 
     const devicons = Constants.DEVICONS
 
     for (let lang in countLangs) {
       if (countLangs.hasOwnProperty(lang)) {
-        let icon = ''
-
-        Object.keys(devicons).map((k) => {
-          icon = k === lang ? devicons[k] : devicons['default']
-          return icon
-        })
-
-        console.log(icon)
-
         let langCount = {
           '_id': lang,
           'lang': lang,
           'count': _.toString(countLangs[lang]),
-          'icon': icon
+          'icon': devicons[lang] || devicons['default']
         }
         langGroup.push(langCount)
         db.findOneLangGroup(lang).then(doc => {
@@ -154,10 +146,10 @@ const mutations = {
   },
 
   [types.FILTER_BY_LANGUAGE] (state, {lang}) {
-    console.log(lang)
     state.lazyRepos = _.isNull(lang)
       ? state.repos
       : _.filter(state.repos, _.matches({ 'language': lang }))
+    state.activeLang = lang
   },
 
   [types.ORDERED_REPOS] (state, {orderField}) {
