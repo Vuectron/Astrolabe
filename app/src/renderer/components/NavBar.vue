@@ -13,7 +13,9 @@ export default {
     return {
       title: 'Astrolabe',
       isOpen: false,
-      trigger: null
+      isOpenDialog: false,
+      trigger: null,
+      dialogTitle: 'Sign out'
     }
   },
   computed: {
@@ -37,6 +39,7 @@ export default {
       this.userSignout()
         .then(() => {
           console.log('send ipc signout')
+          this.toggleDailogOpen()
           ipcRenderer.send('signout', 'signout')
         })
     },
@@ -45,6 +48,9 @@ export default {
     },
     toggleOpen () {
       this.isOpen = !this.isOpen
+    },
+    toggleDailogOpen () {
+      this.isOpenDialog = !this.isOpenDialog
     },
     handleClose (e) {
       this.isOpen = false
@@ -74,10 +80,15 @@ export default {
           <mu-menu-item title="Profile" leftIcon="perm_contact_calendar"/>
           <mu-menu-item title="Settings" leftIcon="settings"/>
           <mu-divider />
-          <mu-menu-item title="Sign out" leftIcon="power_settings_new" @click="handleSignout"/>
-          <mu-menu-item title="Exit" leftIcon="exit_to_app" @click="handleExit"/>
+          <mu-menu-item title="Sign out" leftIcon="exit_to_app" @click="toggleDailogOpen"/>
+          <mu-menu-item title="Exit" leftIcon="power_settings_new" @click="handleExit"/>
         </mu-menu>
       </mu-popover>
+      <mu-dialog :open="isOpenDialog" :title="dialogTitle" @close="toggleDailogOpen" dialogClass="signout-dailog">
+        Are you sure you want sign out Astrolabe?
+        <mu-flat-button slot="actions" primary @click="toggleDailogOpen" label="Cancel"/>
+        <mu-flat-button slot="actions" primary @click="handleSignout" label="Yes"/>
+      </mu-dialog>
     </div>
   </div>
 </template>
@@ -120,5 +131,9 @@ export default {
   height: 48px;
   line-height: 48px;
   font-size: 16px;
+}
+
+.signout-dailog {
+  width: 480px;
 }
 </style>

@@ -1,10 +1,12 @@
 <script>
-const { shell } = require('electron')
+import { shell } from 'electron'
 import $ from 'jquery'
 import hljs from 'highlight.js'
-import MarkdownIt from 'markdown-it'
-import db from '../services/db'
+import _ from 'lodash'
 import request from 'superagent'
+import MarkdownIt from 'markdown-it'
+import storage from 'electron-json-storage'
+import db from '../services/db'
 import { mapState, mapActions } from 'vuex'
 // import marked, { Renderer } from 'marked'
 
@@ -137,28 +139,41 @@ export default {
     },
     showReadme (repo) {
       const self = this
+      const repoSlug = `${repo.owner_name}_${repo.repo_name}`
+      let renderMarkdown
       if (repo._id !== this.activeRepo._id) {
         this.setActiveRepo(repo)
         this.toggleLoadingReadme()
-        const githubRepo = this.github.getRepo(repo.owner_name, repo.repo_name)
-        const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
-        request.get(readmeUrl)
-          .accept('application/json')
-          .end((err, res) => {
-            if (!err && res) {
-              githubRepo.getContents('master', res.body.name, true, (err, data) => {
-                if (err) {
-                  console.dir(err.status)
-                  // TODO dealwith 404
+
+        storage.get(repoSlug, (error, data) => {
+          if (error) console.error(error)
+          if (!_.isEmpty(data)) {
+            this.setRepoReadme(data)
+            this.toggleLoadingReadme()
+          } else {
+            const githubRepo = this.github.getRepo(repo.owner_name, repo.repo_name)
+            const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
+            request.get(readmeUrl)
+              .accept('application/json')
+              .end((err, res) => {
+                if (!err && res) {
+                  githubRepo.getContents('master', res.body.name, true, (err, data) => {
+                    if (err) {
+                      console.dir(err.status)
+                      // TODO dealwith 404
+                    }
+                    // self.repoReadme = marked(data)
+                    renderMarkdown = md.render(data)
+                    self.setRepoReadme(renderMarkdown)
+                    storage.set(repoSlug, renderMarkdown, (error) => { if (error) throw error })
+                    self.toggleLoadingReadme()
+                  })
+                } else {
+                  console.log('Something went wrong fetching from GitHub', err)
                 }
-                // self.repoReadme = marked(data)
-                self.setRepoReadme(md.render(data))
-                self.toggleLoadingReadme()
               })
-            } else {
-              console.log('Something went wrong fetching from GitHub', err)
-            }
-          })
+          }
+        })
       }
       this.selectedRepo = repo.repo_name
     },
