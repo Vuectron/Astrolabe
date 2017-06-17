@@ -1,62 +1,15 @@
 <script>
-import { shell } from 'electron'
 import $ from 'jquery'
-import hljs from 'highlight.js'
-import _ from 'lodash'
-import request from 'superagent'
-import MarkdownIt from 'markdown-it'
-import storage from 'electron-json-storage'
-import db from '../services/db'
+import { shell } from 'electron'
 import { mapState, mapActions } from 'vuex'
-// import marked, { Renderer } from 'marked'
+import db from '../services/db'
 
-const md = new MarkdownIt({
-  html: true,
-  linkify: true,
-  typographer: true,
-  langPrefix: 'lang-',
-  highlight: (code, language) => {
-    // Check whether the given language is valid for highlight.js.
-    const validLang = !!(language && hljs.getLanguage(language))
-    // Highlight only if the language is valid.
-    const highlighted = validLang ? hljs.highlight(language, code).value : code
-    // Render the highlighted code with `hljs` class.
-    return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`
-  }
-})
-
-// // Create your custom renderer.
-// const renderer = new Renderer();
-//
-// renderer.code = (code, language) => {
-//   // Check whether the given language is valid for highlight.js.
-//   const validLang = !!(language && hljs.getLanguage(language));
-//   // Highlight only if the language is valid.
-//   const highlighted = validLang ? hljs.highlight(language, code).value : code;
-//   // Render the highlighted code with `hljs` class.
-//   return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`;
-// };
-//
-// marked.setOptions({
-//   renderer,
-//   gfm: true,
-//   tables: true,
-//   breaks: false,
-//   pedantic: false,
-//   sanitize: true,
-//   smartLists: true,
-//   smartypants: false,
-//   highlight: function(code) {
-//     return hljs.highlightAuto(code).value;
-//   }
-// })
 export default {
   name: 'RepoDesc',
 
   data () {
     return {
       zDepth: 1,
-      selectedRepo: '',
       activeTab: 'tab1',
       loading: false,
       scroller: null
@@ -65,12 +18,10 @@ export default {
 
   computed: {
     ...mapState({
-      github: state => state.github.github,
       langGroup: state => state.github.langGroup,
       lazyRepos: state => state.github.lazyRepos,
       loadingRepos: state => state.content.loadingRepos,
-      loadingReadme: state => state.content.loadingReadme,
-      activeRepo: state => state.content.activeRepo,
+      selectedRepo: state => state.content.selectedRepo,
       repoKey: state => state.content.repoKey,
       limitCount: state => state.global.limitCount
     })
@@ -103,21 +54,15 @@ export default {
 
   methods: {
     ...mapActions([
+      'showReadme',
       'toggleLoadingRepos',
-      'toggleLoadingReadme',
       'increaseLimit'
     ]),
-    setActiveRepo (repo) {
-      return this.$store.dispatch('setActiveRepo', { repo: repo })
-    },
     orderRepo (repoKey) {
       return this.$store.dispatch('orderRepo', { repoKey: repoKey })
     },
     setLazyRepos (lazyRepos) {
       return this.$store.dispatch('setLazyRepos', { lazyRepos: lazyRepos })
-    },
-    setRepoReadme (repoReadme) {
-      return this.$store.dispatch('setRepoReadme', { repoReadme: repoReadme })
     },
     orderedRepos (orderField) {
       return this.$store.dispatch('orderedRepos', { orderField: orderField })
@@ -136,46 +81,6 @@ export default {
     },
     filterByLanguage (lang) {
       return this.$store.dispatch('filterByLanguage', { lang: lang })
-    },
-    showReadme (repo) {
-      const self = this
-      const repoSlug = `${repo.owner_name}_${repo.repo_name}`
-      let renderMarkdown
-      if (repo._id !== this.activeRepo._id) {
-        this.setActiveRepo(repo)
-        this.toggleLoadingReadme()
-
-        storage.get(repoSlug, (error, data) => {
-          if (error) console.error(error)
-          if (!_.isEmpty(data)) {
-            this.setRepoReadme(data)
-            this.toggleLoadingReadme()
-          } else {
-            const githubRepo = this.github.getRepo(repo.owner_name, repo.repo_name)
-            const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
-            request.get(readmeUrl)
-              .accept('application/json')
-              .end((err, res) => {
-                if (!err && res) {
-                  githubRepo.getContents('master', res.body.name, true, (err, data) => {
-                    if (err) {
-                      console.dir(err.status)
-                      // TODO dealwith 404
-                    }
-                    // self.repoReadme = marked(data)
-                    renderMarkdown = md.render(data)
-                    self.setRepoReadme(renderMarkdown)
-                    storage.set(repoSlug, renderMarkdown, (error) => { if (error) throw error })
-                    self.toggleLoadingReadme()
-                  })
-                } else {
-                  console.log('Something went wrong fetching from GitHub', err)
-                }
-              })
-          }
-        })
-      }
-      this.selectedRepo = repo.repo_name
     },
     loadMore () {
       const self = this

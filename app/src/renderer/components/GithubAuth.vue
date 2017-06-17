@@ -5,8 +5,7 @@
   export default {
     data () {
       return {
-        appName: Constants.APP_NAME,
-        isOpen: false
+        appName: Constants.APP_NAME
       }
     },
 

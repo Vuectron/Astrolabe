@@ -1,10 +1,12 @@
 import _ from 'lodash'
+// import jetpack from 'fs-jetpack'
 import request from 'superagent'
 import Github from 'github-api'
 import db from '../services/db'
 import storage from 'electron-json-storage'
 
 import * as types from './mutation-types'
+import { md } from '../utils/helpers'
 
 const makeAction = (type) => {
   return ({ commit }, ...args) => commit(type, ...args)
@@ -138,6 +140,51 @@ export const getRepos = ({ commit, state }, user) => {
   getStarredRepos()
 }
 
+export const showReadme = ({ commit, state }, repo) => {
+  const { github } = state.github
+  const { activeRepo } = state.content
+  const repoSlug = `${repo.owner_name}_${repo.repo_name}`
+  let renderMarkdown
+
+  if (repo._id !== activeRepo._id) {
+    commit(types.SET_ACTIVE_REPO, {repo})
+    commit(types.TOGGLE_LOADING_README)
+
+    storage.get(repoSlug, (error, data) => {
+      if (error) console.error(error)
+      console.log(!_.isEmpty(data))
+      if (!_.isEmpty(data)) {
+        commit(types.SET_REPO_README, {repoReadme: data})
+        commit(types.TOGGLE_LOADING_README)
+      } else {
+        const githubRepo = github.getRepo(repo.owner_name, repo.repo_name)
+        const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
+        request.get(readmeUrl)
+          .accept('application/json')
+          .end((err, res) => {
+            if (!err && res) {
+              githubRepo.getContents('master', res.body.name, true, (err, data) => {
+                if (err) {
+                  console.dir(err.status)
+                  // TODO dealwith 404
+                }
+                // self.repoReadme = marked(data)
+                console.log(md())
+                renderMarkdown = md().render(data)
+                commit(types.SET_REPO_README, {repoReadme: renderMarkdown})
+                storage.set(repoSlug, renderMarkdown, (error) => { if (error) throw error })
+                commit(types.TOGGLE_LOADING_README)
+              })
+            } else {
+              console.log('Something went wrong fetching from GitHub', err)
+            }
+          })
+      }
+    })
+  }
+  commit(types.SET_SELECTED_REPO, {repoName: repo.repo_name})
+}
+
 // global actions
 export const increaseLimit = makeAction('INCREASE_LIMIT')
 
@@ -165,5 +212,6 @@ export const setSearchQuery = makeAction('SET_SEARCH_QUERY')
 export const toggleLoadingRepos = makeAction('TOGGLE_LOADING_REPOS')
 export const toggleLoadingReadme = makeAction('TOGGLE_LOADING_README')
 export const setActiveRepo = makeAction('SET_ACTIVE_REPO')
+export const setSelectedRepo = makeAction('SET_SELECTED_REPO')
 export const setRepoReadme = makeAction('SET_REPO_README')
 export const orderRepo = makeAction('ORDER_REPO')

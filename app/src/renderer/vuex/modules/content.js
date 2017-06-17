@@ -5,6 +5,7 @@ const state = {
   loadingReadme: false,
   repoReadme: '',
   activeRepo: {},
+  selectedRepo: '',
   repoKey: '',
   order: 1
 }
@@ -20,6 +21,10 @@ const mutations = {
 
   [types.SET_ACTIVE_REPO] (state, {repo}) {
     state.activeRepo = repo
+  },
+
+  [types.SET_SELECTED_REPO] (state, {repoName}) {
+    state.selectedRepo = repoName
   },
 
   [types.SET_REPO_README] (state, {repoReadme}) {

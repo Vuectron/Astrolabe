@@ -1,23 +1,51 @@
 import { parse } from 'url'
-const electron = require('electron')
-const remote = electron.remote
-const BrowserWindow = remote.BrowserWindow
-const dialog = remote.dialog
-
+import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
+import { remote, BrowserWindow } from 'electron'
 import Constants from './constants'
 
-export function getEnterpriseAccountToken (hostname, accounts) {
+const dialog = remote.dialog
+
+// import marked, { Renderer } from 'marked'
+
+// // Create your custom renderer.
+// const renderer = new Renderer();
+//
+// renderer.code = (code, language) => {
+//   // Check whether the given language is valid for highlight.js.
+//   const validLang = !!(language && hljs.getLanguage(language));
+//   // Highlight only if the language is valid.
+//   const highlighted = validLang ? hljs.highlight(language, code).value : code;
+//   // Render the highlighted code with `hljs` class.
+//   return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`;
+// };
+//
+// marked.setOptions({
+//   renderer,
+//   gfm: true,
+//   tables: true,
+//   breaks: false,
+//   pedantic: false,
+//   sanitize: true,
+//   smartLists: true,
+//   smartypants: false,
+//   highlight: function(code) {
+//     return hljs.highlightAuto(code).value;
+//   }
+// })
+
+export const getEnterpriseAccountToken = (hostname, accounts) => {
   return accounts
     .find(obj => obj.get('hostname') === hostname)
     .get('token')
 }
 
-export function generateGitHubAPIUrl (hostname) {
+export const generateGitHubAPIUrl = (hostname) => {
   const isEnterprise = hostname !== Constants.DEFAULT_AUTH_OPTIONS.hostname
   return isEnterprise ? `https://${hostname}/api/v3/` : `https://api.${hostname}/`
 }
 
-export function generateGitHubWebUrl (url) {
+export const generateGitHubWebUrl = (url) => {
   const { hostname } = parse(url)
   const isEnterprise = hostname !== `api.${Constants.DEFAULT_AUTH_OPTIONS.hostname}`
 
@@ -37,7 +65,7 @@ export function generateGitHubWebUrl (url) {
   return newUrl
 }
 
-export function authGithub (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatch) {
+export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatch) => {
   // Build the OAuth consent page URL
   const authWindow = new BrowserWindow({
     width: 1024,
@@ -54,7 +82,7 @@ export function authGithub (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispat
 
   authWindow.loadURL(authUrl)
 
-  function handleCallback (url) {
+  const handleCallback = (url) => {
     const rawCode = /code=([^&]*)/.exec(url) || null
     const code = (rawCode && rawCode.length > 1) ? rawCode[1] : null
     const error = /\?error=(.+)$/.exec(url)
@@ -81,7 +109,7 @@ export function authGithub (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispat
     authWindow.destroy()
   })
 
-  authWindow.webContents.on('did-fail-load', function (event, errorCode, errorDescription, validatedURL) {
+  authWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
     if (validatedURL.includes(authOptions.hostname)) {
       authWindow.destroy()
 
@@ -92,15 +120,32 @@ export function authGithub (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispat
     }
   })
 
-  authWindow.webContents.on('will-navigate', function (event, url) {
+  authWindow.webContents.on('will-navigate', (event, url) => {
     handleCallback(url)
   })
 
-  authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
+  authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
     handleCallback(newUrl)
   })
 }
 
-export function isUserEitherLoggedIn (auth) {
+export const isUserEitherLoggedIn = (auth) => {
   return auth.get('token') !== null || auth.get('enterpriseAccounts').size > 0
+}
+
+export const md = () => {
+  return new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+    langPrefix: 'lang-',
+    highlight: (code, language) => {
+      // Check whether the given language is valid for highlight.js.
+      const validLang = !!(language && hljs.getLanguage(language))
+      // Highlight only if the language is valid.
+      const highlighted = validLang ? hljs.highlight(language, code).value : code
+      // Render the highlighted code with `hljs` class.
+      return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`
+    }
+  })
 }
