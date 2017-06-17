@@ -1,10 +1,10 @@
 import { parse } from 'url'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
-import { remote, BrowserWindow } from 'electron'
+import { remote } from 'electron'
 import Constants from './constants'
 
-const dialog = remote.dialog
+const {BrowserWindow, dialog} = remote
 
 // import marked, { Renderer } from 'marked'
 

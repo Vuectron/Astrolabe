@@ -187,13 +187,11 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
   const { limitCount } = state.global
   const { reposCount } = state.github
   if (limitCount > reposCount) return
-  console.log(isInfinite)
   if (isInfinite) {
     commit(types.TOGGLE_IS_INFINITE)
     commit(types.INCREASE_LIMIT)
   }
   setTimeout(() => {
-    console.log(limitCount)
     db.fetchLazyRepos(limitCount)
       .then(lazyRepos => {
         commit(types.SET_LAZY_REPOS, {lazyRepos})
@@ -203,6 +201,7 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
     }
   }, 2000)
 }
+
 // global actions
 export const increaseLimit = makeAction('INCREASE_LIMIT')
 export const toggleIsInfinite = makeAction('TOGGLE_IS_INFINITE')

@@ -26,7 +26,6 @@ export default {
 
   watch: {
     langGroup (val) {
-      console.log(val)
       if (val) {
         this.toggleLoadingRepos()
       }
