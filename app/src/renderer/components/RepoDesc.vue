@@ -2,7 +2,6 @@
 import $ from 'jquery'
 import { shell } from 'electron'
 import { mapState, mapActions } from 'vuex'
-import db from '../services/db'
 
 export default {
   name: 'RepoDesc',
@@ -11,31 +10,30 @@ export default {
     return {
       zDepth: 1,
       activeTab: 'tab1',
-      loading: false,
       scroller: null
     }
   },
 
   computed: {
     ...mapState({
+      isInfinite: state => state.global.isInfinite,
       langGroup: state => state.github.langGroup,
       lazyRepos: state => state.github.lazyRepos,
       loadingRepos: state => state.content.loadingRepos,
-      selectedRepo: state => state.content.selectedRepo,
-      repoKey: state => state.content.repoKey,
-      limitCount: state => state.global.limitCount
+      selectedRepo: state => state.content.selectedRepo
     })
   },
 
   watch: {
     langGroup (val) {
+      console.log(val)
       if (val) {
         this.toggleLoadingRepos()
       }
     },
     loadingRepos (val) {
       if (val) {
-        this.reload()
+        this.reloadRepos(false)
       }
     }
   },
@@ -50,49 +48,26 @@ export default {
     // $(window).resize(function () {
     //   $('.repos-desc').css('height', $(this).height() - 124)
     // })
+    this.reloadRepos(false)
   },
 
   methods: {
     ...mapActions([
       'showReadme',
       'toggleLoadingRepos',
-      'increaseLimit'
+      'reloadRepos'
     ]),
-    orderRepo (repoKey) {
-      return this.$store.dispatch('orderRepo', { repoKey: repoKey })
-    },
     setLazyRepos (lazyRepos) {
-      return this.$store.dispatch('setLazyRepos', { lazyRepos: lazyRepos })
+      return this.$store.dispatch('setLazyRepos', { lazyRepos })
     },
     orderedRepos (orderField) {
-      return this.$store.dispatch('orderedRepos', { orderField: orderField })
+      return this.$store.dispatch('orderedRepos', { orderField })
+    },
+    filterByLanguage (lang) {
+      return this.$store.dispatch('filterByLanguage', { lang })
     },
     handleTabChange (val) {
       this.activeTab = val
-    },
-    reload () {
-      const self = this
-      setTimeout(() => {
-        db.fetchLazyRepos(self.limitCount)
-          .then(lazyRepos => {
-            self.setLazyRepos(lazyRepos)
-          })
-      }, 1000)
-    },
-    filterByLanguage (lang) {
-      return this.$store.dispatch('filterByLanguage', { lang: lang })
-    },
-    loadMore () {
-      const self = this
-      this.loading = true
-      this.increaseLimit()
-      setTimeout(() => {
-        db.fetchLazyRepos(self.limitCount)
-          .then(lazyRepos => {
-            self.setLazyRepos(lazyRepos)
-          })
-        self.loading = false
-      }, 2000)
     },
     openInBrowser (url) {
       shell.openExternal(url)
@@ -134,7 +109,7 @@ export default {
         </div>
       </mu-paper>
     </template>
-    <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore" loadingText="Loading... ..."/>
+    <mu-infinite-scroll :scroller="scroller" :loading="isInfinite" @load="reloadRepos(true)" loadingText="Loading... ..."/>
   </div>
 </template>
 
@@ -232,5 +207,13 @@ export default {
   a {
     color: #ffab40;
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
 }
 </style>

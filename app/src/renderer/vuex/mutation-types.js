@@ -1,5 +1,6 @@
 // global mutation types
 export const INCREASE_LIMIT = 'INCREASE_LIMIT'
+export const TOGGLE_IS_INFINITE = 'TOGGLE_IS_INFINITE'
 
 // auth mutation types
 export const SET_TOKEN = 'SET_TOKEN'

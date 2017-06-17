@@ -152,7 +152,6 @@ export const showReadme = ({ commit, state }, repo) => {
 
     storage.get(repoSlug, (error, data) => {
       if (error) console.error(error)
-      console.log(!_.isEmpty(data))
       if (!_.isEmpty(data)) {
         commit(types.SET_REPO_README, {repoReadme: data})
         commit(types.TOGGLE_LOADING_README)
@@ -169,7 +168,6 @@ export const showReadme = ({ commit, state }, repo) => {
                   // TODO dealwith 404
                 }
                 // self.repoReadme = marked(data)
-                console.log(md())
                 renderMarkdown = md().render(data)
                 commit(types.SET_REPO_README, {repoReadme: renderMarkdown})
                 storage.set(repoSlug, renderMarkdown, (error) => { if (error) throw error })
@@ -185,8 +183,29 @@ export const showReadme = ({ commit, state }, repo) => {
   commit(types.SET_SELECTED_REPO, {repoName: repo.repo_name})
 }
 
+export const reloadRepos = ({ commit, state }, isInfinite) => {
+  const { limitCount } = state.global
+  const { reposCount } = state.github
+  if (limitCount > reposCount) return
+  console.log(isInfinite)
+  if (isInfinite) {
+    commit(types.TOGGLE_IS_INFINITE)
+    commit(types.INCREASE_LIMIT)
+  }
+  setTimeout(() => {
+    console.log(limitCount)
+    db.fetchLazyRepos(limitCount)
+      .then(lazyRepos => {
+        commit(types.SET_LAZY_REPOS, {lazyRepos})
+      })
+    if (isInfinite) {
+      commit(types.TOGGLE_IS_INFINITE)
+    }
+  }, 2000)
+}
 // global actions
 export const increaseLimit = makeAction('INCREASE_LIMIT')
+export const toggleIsInfinite = makeAction('TOGGLE_IS_INFINITE')
 
 // login actions
 export const toggleLoading = makeAction('TOGGLE_LOADING')
