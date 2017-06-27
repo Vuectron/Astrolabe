@@ -2,6 +2,10 @@
 
 > Manage your GitHub Stars with One App
 
+# Preview
+
+![img](app/imgs/preview.png)
+
 ## Tech Stack
 
 * Electron
