@@ -2,7 +2,7 @@
 
 > Manage your GitHub Stars with One App
 
-# Preview
+## Preview
 
 ![img](app/imgs/preview.png)
 
