@@ -104,7 +104,8 @@ const mutations = {
         let langCount = {
           '_id': lang,
           'lang': lang,
-          'count': _.toString(countLangs[lang]),
+          // 'count': _.toString(countLangs[lang]),
+          'count': countLangs[lang],
           'icon': devicons[lang] || devicons['Default']
         }
         langGroup.push(langCount)
@@ -119,7 +120,7 @@ const mutations = {
     }
 
     // set lang_group
-    state.langGroup = langGroup
+    state.langGroup = _.orderBy(langGroup, 'count', 'desc')
 
     // set init repos
     state.repos = initRepos

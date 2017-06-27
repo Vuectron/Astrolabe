@@ -100,7 +100,7 @@ export default {
       >
         <mu-icon slot="left" value=""/>
         <div class="mu-item-left"><i class="mu-icon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
-        <mu-badge :content="group.count" secondary slot="right"/>
+        <mu-badge :content="group.count + ''" secondary slot="right"/>
       </mu-list-item>
     </mu-list>
   </mu-drawer>

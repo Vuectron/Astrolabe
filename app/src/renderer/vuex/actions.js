@@ -132,7 +132,8 @@ export const getRepos = ({ commit, state }, user) => {
       })
       db.fetchLangGroup().then(langGroup => {
         if (!_.isEmpty(langGroup)) {
-          commit(types.SET_LANG_GROUP, {langGroup})
+          const orderedLangGroup = _.orderBy(langGroup, 'count', 'desc')
+          commit(types.SET_LANG_GROUP, {orderedLangGroup})
         }
       })
     }
