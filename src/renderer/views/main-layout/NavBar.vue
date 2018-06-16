@@ -1,39 +1,58 @@
 <template>
-  <div class="mu-appbar header-appbar" :class="{'nav-hide': !open}">
-    <div class="left">
+  <mu-appbar class="header-appbar" color="primary" :class="{'nav-hide': !open}">
+    <div class="left" slot="left">
       <div class="brand-loading animated fadeIn" v-if="loadingRepos">
         <span class="loading-stars">Syncing Stars...</span>
       </div>
+      <div class="mu-appbar-title"><span v-text="title"></span></div>
     </div>
-    <div class="mu-appbar-title"><span v-text="title"></span></div>
-    <div class="right">
+    <mu-menu slot="right" placement="bottom-end">
       <mu-button
         flat
-        class="demo-flat-button"
         labelPosition="before"
-        ref="button"
+        ref="popoverButton"
         :label="user.login"
         @click="toggleOpen">
         <div class="userinfo">
           <img :src="user.avatar_url" :alt="user.login">
         </div>
       </mu-button>
-      <!-- <mu-popover :trigger="trigger" :open="isOpen" @close="handleClose">
-        <mu-menu desktop>
-          <mu-menu-item title="Profile" leftIcon="perm_contact_calendar"/>
-          <mu-menu-item title="Settings" leftIcon="settings"/>
+      <mu-popover :trigger="trigger" :open.sync="isOpen" @close="handleClose">
+        <mu-list>
+          <mu-list-item button>
+            <mu-list-item-action>
+              <mu-icon value="perm_contact_calendar"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>Profile</mu-list-item-title>
+          </mu-list-item>
+          <mu-list-item button>
+            <mu-list-item-action>
+              <mu-icon value="settings"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>Settings</mu-list-item-title>
+          </mu-list-item>
           <mu-divider />
-          <mu-menu-item title="Sign out" leftIcon="exit_to_app" @click="toggleDailogOpen"/>
-          <mu-menu-item title="Exit" leftIcon="power_settings_new" @click="handleExit"/>
-        </mu-menu>
+          <mu-list-item button @click="toggleDailogOpen">
+            <mu-list-item-action>
+              <mu-icon value="exit_to_app"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>Sign out</mu-list-item-title>
+          </mu-list-item>
+          <mu-list-item button @click="handleExit">
+            <mu-list-item-action>
+              <mu-icon value="power_settings_new"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>Exit</mu-list-item-title>
+          </mu-list-item>
+        </mu-list>
       </mu-popover>
       <mu-dialog :open="isOpenDialog" :title="dialogTitle" @close="toggleDailogOpen" dialogClass="signout-dailog">
         Are you sure you want sign out Astrolabe?
-        <mu-flat-button slot="actions" primary @click="toggleDailogOpen" label="Cancel"/>
-        <mu-flat-button slot="actions" primary @click="handleSignout" label="Yes"/>
-      </mu-dialog> -->
-    </div>
-  </div>
+        <mu-button flat slot="actions" primary @click="toggleDailogOpen" label="Cancel"/>
+        <mu-button flat slot="actions" primary @click="handleSignout" label="Yes"/>
+      </mu-dialog>
+    </mu-menu>
+  </mu-appbar>
 </template>
 
 <script>
@@ -92,7 +111,7 @@ export default {
     }
   },
   mounted () {
-    // this.trigger = this.$refs.button.$el
+    this.trigger = this.$refs.popoverButton.$el
   }
 }
 </script>
@@ -120,7 +139,6 @@ export default {
 }
 
 .userinfo img {
-  margin-left: 16px;
   width: 48px;
   height: 48px;
   float: left;

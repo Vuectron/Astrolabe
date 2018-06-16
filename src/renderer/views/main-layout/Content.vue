@@ -15,8 +15,8 @@
 <script>
   import RepoDesc from './RepoDesc'
   import Readme from './Readme'
-  import MdlLoading from './mdl/MdlLoading'
-  import MdlFab from './mdl/MdlFab'
+  import MdlLoading from '@/components/MdlLoading'
+  import MdlFab from '@/components/MdlFab'
   import { mapState } from 'vuex'
 
   export default {

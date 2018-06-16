@@ -11,19 +11,30 @@
       <mu-text-field class="appbar-search-field" slot="left" hintText="Search" v-model="searchVal"/>
     </mu-appbar>
     <mu-divider/>
-    <mu-list :value="menuVal" @change="handleMenuChange">
-      <mu-list-item title="All Stars" value="allStars" @click="filterByLanguage(null)">
-        <mu-icon slot="left" value="grade"/>
-        <mu-badge :content="reposCount" secondary slot="right"/>
+    <mu-list :value="menuVal" @change="handleMenuChange" :ripple="false">
+      <mu-list-item button value="allStars" @click="filterByLanguage(null)">
+        <mu-list-item-action>
+          <mu-icon value="star" color="pink"></mu-icon>
+        </mu-list-item-action>
+        <mu-list-item-title>All Stars</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-badge :content="reposCount" color="secondary" />
+        </mu-list-item-action>
       </mu-list-item>
-      <mu-list-item title="Untagged Stars" value="untaggedStars" @click="filterByLanguage('null')">
-        <mu-icon slot="left" value="bookmark_border"/>
-        <mu-badge :content="untaggedCount" secondary slot="right"/>
+      <mu-list-item button value="untaggedStars" @click="filterByLanguage('null')">
+        <mu-list-item-action>
+          <mu-icon value="bookmark_border" color="pink"></mu-icon>
+        </mu-list-item-action>
+        <mu-list-item-title>Untagged Stars</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-badge :content="untaggedCount" color="secondary" />
+        </mu-list-item-action>
       </mu-list-item>
     </mu-list>
     <mu-divider />
     <mu-list :value="menuVal" @change="handleMenuChange">
       <mu-list-item
+        button
         v-for="group in langGroup"
         :title="group.lang"
         :value="group.lang"
@@ -31,9 +42,14 @@
         v-if="group.count >= minLangCount && group.lang != 'null'"
         @click="filterByLanguage(group.lang)"
       >
-        <mu-icon slot="left" value=""/>
-        <div class="mu-item-left"><i class="mu-icon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
-        <mu-badge :content="group.count + ''" secondary slot="right"/>
+        <mu-list-item-action>
+          <!-- <mu-icon value="bookmark_border" color="pink"></mu-icon> -->
+          <div class="mu-item-left"><i class="mu-icon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
+        </mu-list-item-action>
+        <mu-list-item-title>{{group.lang}}</mu-list-item-title>
+        <mu-list-item-action>
+          <mu-badge :content="group.count + ''" color="secondary" />
+        </mu-list-item-action>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
@@ -116,7 +132,7 @@ export default {
 <style lang="less">
 // @import "~muse-ui/less/vars.less";
 .mu-drawer {
-  &.open {
+  &.is-open {
     min-width: 256px;
     width: 256px;
     .mu-item {
@@ -146,14 +162,14 @@ export default {
   // }
 }
 .sidebar-appbar.mu-appbar {
-  // background-color: @primaryColor;
-  // color: @dialogBackgroundColor;
+  background-color: #2196f3;
+  color: #fff;
   .mu-icon-button {
     margin-right: 8px;
   }
 }
 .sidebar-appbar-title {
-  // color: @dialogBackgroundColor;
+  color: #fff;
 }
 .sidebar-sub-header {
   padding-left: 34px;

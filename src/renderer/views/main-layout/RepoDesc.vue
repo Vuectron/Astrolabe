@@ -1,10 +1,22 @@
 <template>
   <div id= "repos-desc" class="repos-desc animated fadeIn">
-    <mu-tabs :value="activeTab" @change="handleTabChange">
-      <mu-tab value="tab1" icon="schedule" title="Time" @click="orderedRepos('repo_idx')"/>
-      <mu-tab value="tab2" icon="person" title="Owner" @click="orderedRepos('owner_name')"/>
-      <mu-tab value="tab3" icon="archive" title="Repo" @click="orderedRepos('repo_name')"/>
-      <mu-tab value="tab4" icon="star" title="Star" @click="orderedRepos('stargazers_count')"/>
+    <mu-tabs :value="activeTab" center @change="handleTabChange">
+      <mu-tab value="tab1" @click="orderedRepos('repo_idx')">
+        <mu-icon value="schedule" />
+        Time
+      </mu-tab>
+      <mu-tab value="tab2" @click="orderedRepos('owner_name')">
+        <mu-icon value="person" />
+        Owner
+      </mu-tab>
+      <mu-tab value="tab3" @click="orderedRepos('repo_name')">
+        <mu-icon value="archive" />
+        Repo
+      </mu-tab>
+      <mu-tab value="tab4" @click="orderedRepos('stargazers_count')">
+        <mu-icon value="star" />
+        Star
+      </mu-tab>
     </mu-tabs>
     <template v-for="repo in lazyRepos">
       <mu-paper class="demo-paper" :zDepth="selectedRepo == repo.repo_name ? 3 : 1" :key="repo.repo_name">
@@ -135,6 +147,9 @@ export default {
 }
 .mu-tabs {
   margin-bottom: 8px;
+  .mu-tab {
+    min-width: 72px;
+  }
 }
 .mu-card {
   margin-bottom: 8px;

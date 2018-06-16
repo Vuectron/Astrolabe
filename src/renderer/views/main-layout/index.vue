@@ -1,8 +1,6 @@
 <template>
   <div class="animated">
-    <header class="header">
-      <nav-bar :open="open" />
-    </header>
+    <nav-bar :open="open" />
     <main>
       <aside class="sidebar">
         <side-bar @change="handleMenuChange" @close="toggleSidebar" :open="open" :docked="docked" />
@@ -107,7 +105,7 @@ export default {
   right: 0;
   top: 0;
   width: auto;
-  // transition: all .45s @easeOutFunction;
+  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   &.nav-hide {
     left: 64px;
     // left: 0;
@@ -116,22 +114,22 @@ export default {
 .wrapper {
   padding-top: 56px;
   padding-left: 256px;
-  // transition: all .45s @easeOutFunction;
+  transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   &.nav-hide {
     padding-left: 64px;
     // padding-left: 0;
   }
   .repos-desc {
     left: 256px;
-    // transition: all .45s @easeOutFunction;
+    transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   }
   .repos-readme {
     left: 576px;
-    // transition: all .45s @easeOutFunction;
+    transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   }
   .showbox {
     left: 576px;
-    // transition: all .45s @easeOutFunction;
+    transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   }
   &.nav-hide .repos-desc {
     left: 64px;

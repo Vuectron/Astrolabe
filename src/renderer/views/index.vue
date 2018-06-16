@@ -14,11 +14,11 @@ export default {
     Login,
     MainLayout
   },
-  // data () {
-  //   return {
-  //     isLogin: true
-  //   }
-  // },
+  data () {
+    return {
+      // isLogin: true
+    }
+  },
   computed: {
     isLogin () {
       return this.$store.state.auth.isLogin

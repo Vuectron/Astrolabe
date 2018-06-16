@@ -5,6 +5,8 @@ import { remote } from 'electron'
 
 const userDataDir = remote.app.getPath('userData')
 
+// console.log(userDataDir)
+
 export default class {
   constructor () {
     this.db = null
