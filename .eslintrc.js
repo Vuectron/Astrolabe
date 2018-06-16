@@ -9,6 +9,9 @@ module.exports = {
     node: true
   },
   extends: 'standard',
+  globals: {
+    __static: true
+  },
   plugins: [
     'html'
   ],
@@ -17,10 +20,6 @@ module.exports = {
     'arrow-parens': 0,
     // allow async-await
     'generator-star-spacing': 0,
-    // handle-callback-err
-    'handle-callback-err': 0,
-    // no-useless-escape
-    'no-useless-escape': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }

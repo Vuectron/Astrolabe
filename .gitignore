@@ -1,7 +1,8 @@
 .DS_Store
-app/dist/*
-builds/*
-coverage
+dist/electron/*
+dist/web/*
+build/*
+!build/icons
 node_modules/
 npm-debug.log
 npm-debug.log.*
