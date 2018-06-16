@@ -8,7 +8,14 @@
       <mu-button icon small color="primary" @click="toggleSidebar" slot="left">
         <mu-icon value="menu"></mu-icon>
       </mu-button>
-      <mu-text-field class="appbar-search-field" slot="left" hintText="Search" v-model="searchVal"/>
+      <mu-text-field
+        slot="right"
+        class="appbar-search-field"
+        color="#fff"
+        action-icon="search"
+        placeholder="Search"
+        v-model="searchVal"
+        @change="handleChangeSearchVal" />
     </mu-appbar>
     <mu-divider/>
     <mu-list :value="menuVal" @change="handleMenuChange" :ripple="false">
@@ -121,6 +128,9 @@ export default {
     },
     filterByLanguage (lang) {
       return this.$store.dispatch('filterByLanguage', { lang: lang })
+    },
+    handleChangeSearchVal (val) {
+      console.log(val)
     }
   },
   mounted () {
@@ -157,43 +167,27 @@ export default {
       white-space: nowrap;
     }
   }
-  // .mu-item.selected {
-  //   background: #eee;
-  // }
 }
 .sidebar-appbar.mu-appbar {
   background-color: #2196f3;
   color: #fff;
-  .mu-icon-button {
-    margin-right: 8px;
+  .mu-appbar-left {
+    padding: 0 16px;
   }
-}
-.sidebar-appbar-title {
-  color: #fff;
-}
-.sidebar-sub-header {
-  padding-left: 34px;
+  .mu-appbar-title {
+    display: none;
+  }
 }
 .appbar-search-field {
   color: #fff;
   margin-bottom: 0;
-  &.mu-text-field {
+  &.mu-input {
     width: 176px;
-    &.has-icon {
+  }
+  .mu-text-field {
+    input {
       color: #fff;
     }
-  }
-  &.focus-state {
-    color: #fff;
-  }
-  .mu-text-field-hint {
-    color: fade(#fff, 54%);
-  }
-  .mu-text-field-input {
-    color: #fff;
-  }
-  .mu-text-field-focus-line {
-    background-color: #fff;
   }
 }
 </style>
