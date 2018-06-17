@@ -221,6 +221,7 @@ export const toggleSidebar = makeAction('TOGGLE_SIDEBAR')
 export const setSidebar = makeAction('SET_SIDEBAR')
 
 // github actions
+export const setGithubState = makeAction('SET_GITHUB_STATE')
 export const setGithub = makeAction('SET_GITHUB')
 export const setUser = makeAction('SET_USER')
 export const initRepos = makeAction('INIT_REPOS')

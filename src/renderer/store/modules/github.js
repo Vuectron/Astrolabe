@@ -22,6 +22,10 @@ const state = {
 }
 // mutations
 const mutations = {
+  [types.SET_GITHUB_STATE] (state, payload) {
+    Object.assign(state, payload)
+  },
+
   [types.SET_GITHUB] (state, {github}) {
     state.github = github
   },

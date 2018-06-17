@@ -15,7 +15,8 @@
         action-icon="search"
         placeholder="Search"
         v-model="searchVal"
-        @change="handleChangeSearchVal" />
+        @change="handleChangeSearchVal"
+      />
     </mu-appbar>
     <mu-divider/>
     <mu-list :value="menuVal" @change="handleMenuChange" :ripple="false">
@@ -39,18 +40,41 @@
       </mu-list-item>
     </mu-list>
     <mu-divider />
-    <mu-list :value="menuVal" @change="handleMenuChange">
-      <mu-list-item
-        button
+    <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list">
+      <li
         v-for="group in langGroup"
+        class="mu-list__langtag"
+        :title="group.lang"
+        :key="group.lang"
+        @click="filterByLanguage(group.lang)"
+      >
+        <a class="mu-item-wrapper">
+          <div class="mu-item">
+            <div class="mu-item-action">
+              <div class="mu-item-left"><i class="mu-icon devicon-javascript-plain"></i></div>
+            </div>
+            <div class="mu-item-title">{{group.lang}}</div>
+            <div class="mu-item-action">
+              <div class="mu-badge-container">
+                <em class="mu-badge  mu-secondary-color mu-inverse">38</em>
+              </div>
+            </div>
+          </div>
+        </a>
+      </li>
+    </draggable>
+    <!-- <mu-list :value="menuVal" @change="handleMenuChange">
+      <mu-list-item
+        v-for="group in langGroup"
+        v-if="group.count >= minLangCount && group.lang != 'null'"
+        button
+        class="mu-list__langtag"
         :title="group.lang"
         :value="group.lang"
         :key="group.lang"
-        v-if="group.count >= minLangCount && group.lang != 'null'"
         @click="filterByLanguage(group.lang)"
       >
         <mu-list-item-action>
-          <!-- <mu-icon value="bookmark_border" color="pink"></mu-icon> -->
           <div class="mu-item-left"><i class="mu-icon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
         </mu-list-item-action>
         <mu-list-item-title>{{group.lang}}</mu-list-item-title>
@@ -58,15 +82,20 @@
           <mu-badge :content="group.count + ''" color="secondary" />
         </mu-list-item-action>
       </mu-list-item>
-    </mu-list>
+    </mu-list> -->
   </mu-drawer>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 
+import Draggable from 'vuedraggable'
+
 export default {
   name: 'Sidebar',
+  components: {
+    Draggable
+  },
   props: {
     open: {
       type: Boolean,
@@ -79,7 +108,12 @@ export default {
   },
   data () {
     return {
-      menuVal: 'allStars'
+      menuVal: 'allStars',
+      dragOptions: {
+        animation: 150,
+        group: 'langTag',
+        ghostClass: 'ghost'
+      }
     }
   },
   computed: {
@@ -90,7 +124,6 @@ export default {
       minLangCount: state => state.global.minLangCount,
       reposCount: state => state.github.reposCount,
       untaggedCount: state => state.github.untaggedCount,
-      langGroup: state => state.github.langGroup,
       activeLang: state => state.github.activeLang
     }),
     searchVal: {
@@ -99,6 +132,16 @@ export default {
       },
       set (val) {
         this.setSearchQuery(val)
+      }
+    },
+    langGroup: {
+      get () {
+        return this.$store.state.github.langGroup
+      },
+      set (val) {
+        this.$store.dispatch('setGithubState', {
+          langGroup: val
+        })
       }
     }
   },

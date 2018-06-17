@@ -18,33 +18,33 @@
         Star
       </mu-tab>
     </mu-tabs>
-    <template v-for="repo in lazyRepos">
-      <mu-paper :zDepth="selectedRepo == repo.repo_name ? 3 : 1" :key="repo.repo_name">
-        <div class="mu-card repos-desc-card" @click.stop="showReadme(repo)">
-          <div class="mu-card-title-container">
-            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name">
-
+    <mu-load-more :loading="isInfinite" @load="reloadRepos(true)" loading-text="Loading... ...">
+      <template v-for="repo in lazyRepos">
+        <mu-paper :zDepth="selectedRepo == repo.repo_name ? 3 : 1" :key="repo._id">
+          <div class="mu-card repos-desc-card" @click.stop="showReadme(repo)">
+            <div class="mu-card-title-container">
+              <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
+            </div>
+            <div class="mu-card-text" v-text="repo.description"></div>
+            <div class="mu-card-actions tag-action">
+              <mu-badge
+                v-if="repo.language != 'null'" 
+                :content="repo.language"
+                @click.stop="filterByLanguage(repo.language)"
+              />
+            </div>
+            <div class="mu-card-actions card-action">
+              <div class="repo-count">
+                <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
+                <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
+              </div>
+              <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
             </div>
           </div>
-          <div class="mu-card-text" v-text="repo.description"></div>
-          <div class="mu-card-actions tag-action">
-            <mu-badge
-              v-if="repo.language != 'null'" 
-              :content="repo.language"
-              @click.stop="filterByLanguage(repo.language)"
-            />
-          </div>
-          <div class="mu-card-actions card-action">
-            <div class="repo-count">
-              <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
-              <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
-            </div>
-            <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
-          </div>
-        </div>
-      </mu-paper>
-    </template>
-    <mu-infinite-scroll :scroller="scroller" :loading="isInfinite" @load="reloadRepos(true)" loadingText="Loading... ..."/>
+        </mu-paper>
+      </template>
+    </mu-load-more>
+    <!-- <mu-infinite-scroll :scroller="scroller" :loading="isInfinite" @load="reloadRepos(true)" loadingText="Loading... ..."/> -->
   </div>
 </template>
 
@@ -87,19 +87,6 @@ export default {
     }
   },
 
-  mounted () {
-    this.scroller = this.$el
-    $(document).ready(function () {
-      $('body').css('overflow', 'hidden')
-      // $('[data-toggle="tooltip"]').tooltip()
-      // $('.repos-desc').css('height', $(window).height() - 124)
-    })
-    // $(window).resize(function () {
-    //   $('.repos-desc').css('height', $(this).height() - 124)
-    // })
-    this.reloadRepos(false)
-  },
-
   methods: {
     ...mapActions([
       'showReadme',
@@ -121,6 +108,19 @@ export default {
     openInBrowser (url) {
       shell.openExternal(url)
     }
+  },
+
+  mounted () {
+    this.scroller = this.$el
+    $(document).ready(function () {
+      $('body').css('overflow', 'hidden')
+      // $('[data-toggle="tooltip"]').tooltip()
+      // $('.repos-desc').css('height', $(window).height() - 124)
+    })
+    // $(window).resize(function () {
+    //   $('.repos-desc').css('height', $(this).height() - 124)
+    // })
+    this.reloadRepos(false)
   }
 }
 </script>

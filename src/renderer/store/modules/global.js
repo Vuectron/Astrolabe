@@ -3,7 +3,7 @@ import * as types from '../mutation-types'
 const state = {
   version: '0.0.1',
   limitCount: 10,
-  minLangCount: 5,
+  minLangCount: 0,
   isInfinite: false
 }
 

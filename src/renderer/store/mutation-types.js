@@ -14,6 +14,7 @@ export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
 export const SET_SIDEBAR = 'SET_SIDEBAR'
 
 // github mutation types
+export const SET_GITHUB_STATE = 'SET_GITHUB_STATE'
 export const SET_GITHUB = 'SET_GITHUB'
 export const SET_USER = 'SET_USER'
 export const INIT_REPOS = 'INIT_REPOS'

@@ -135,10 +135,10 @@ export default {
     left: 64px;
   }
   &.nav-hide .repos-readme {
-    left: 384px;
+    left: 544px;
   }
   &.nav-hide .showbox {
-    left: 384px;
+    left: 544px;
   }
 }
 @media (min-width: 480px) {

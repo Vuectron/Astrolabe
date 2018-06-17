@@ -1,60 +1,3 @@
-<script>
-  import $ from 'jquery'
-const { shell } = require('electron')
-const { clipboard } = require('electron')
-
-  export default {
-    name: 'MdlFab',
-
-    data () {
-      return {
-        copyTooltip: 'Copy clone link to clipboard',
-        showCopy: false,
-        operateIcon: 'add'
-      }
-    },
-
-    computed: {
-      activeRepo () {
-        return this.$store.state.content.activeRepo
-      }
-    },
-
-    methods: {
-      openInBrowser (url) {
-        shell.openExternal(url)
-      },
-      copyToClipboard (url) {
-        clipboard.writeText(url)
-        shell.beep()
-        this.copyTooltip = 'Copied'
-      },
-      backToTop (name, speed) {
-        if (!speed) speed = 300
-        if (!name) {
-          $('#repos-readme').animate({
-            scrollTop: 0
-          }, speed)
-        } else {
-          if ($(name).length > 0) {
-            $('#repos-readme').animate({
-              scrollTop: $(name).offset().top
-            }, speed)
-          }
-        }
-      }
-    },
-
-    watch: {
-      activeRepo (val) {
-        if (typeof (val) !== 'undefined') {
-          this.showCopy = true
-        }
-      }
-    }
-  }
-</script>
-
 <template>
   <div class="fab">
     <a href="#" class="btn-fab btn-floating" tooltip="View on GitHub" v-show="showCopy" @click="openInBrowser(activeRepo.html_url)">
@@ -78,6 +21,54 @@ const { clipboard } = require('electron')
     </a>
   </div>
 </template>
+
+<script>
+import $ from 'jquery'
+const { shell } = require('electron')
+const { clipboard } = require('electron')
+
+export default {
+  name: 'MdlFab',
+
+  data () {
+    return {
+      copyTooltip: 'Copy clone link to clipboard',
+      showCopy: false,
+      operateIcon: 'add'
+    }
+  },
+
+  computed: {
+    activeRepo () {
+      return this.$store.state.content.activeRepo
+    }
+  },
+
+  watch: {
+    activeRepo (val) {
+      if (typeof (val) !== 'undefined') {
+        this.showCopy = true
+      }
+    }
+  },
+
+  methods: {
+    openInBrowser (url) {
+      shell.openExternal(url)
+    },
+    copyToClipboard (url) {
+      clipboard.writeText(url)
+      shell.beep()
+      this.copyTooltip = 'Copied'
+    },
+    backToTop () {
+      $('#repos-readme').animate({
+        scrollTop: 0
+      }, 300)
+    }
+  }
+}
+</script>
 
 <style scope>
   .fab {
