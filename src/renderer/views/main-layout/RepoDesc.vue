@@ -1,5 +1,5 @@
 <template>
-  <div id= "repos-desc" class="repos-desc animated fadeIn">
+  <div id="repos-desc" class="repos-desc animated fadeIn">
     <mu-tabs :value="activeTab" center @change="handleTabChange">
       <mu-tab value="tab1" @click="orderedRepos('repo_idx')">
         <mu-icon value="schedule" />
@@ -19,17 +19,18 @@
       </mu-tab>
     </mu-tabs>
     <template v-for="repo in lazyRepos">
-      <mu-paper class="demo-paper" :zDepth="selectedRepo == repo.repo_name ? 3 : 1" :key="repo.repo_name">
-        <div class="mu-card" @click.stop="showReadme(repo)">
+      <mu-paper :zDepth="selectedRepo == repo.repo_name ? 3 : 1" :key="repo.repo_name">
+        <div class="mu-card repos-desc-card" @click.stop="showReadme(repo)">
           <div class="mu-card-title-container">
-            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
+            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name">
+
+            </div>
           </div>
           <div class="mu-card-text" v-text="repo.description"></div>
-          <div class="mu-card-actions">
-            <div
-              class="mu-chip demo-chip"
-              v-text="repo.language"
-              v-if="repo.language != 'null'"
+          <div class="mu-card-actions tag-action">
+            <mu-badge
+              v-if="repo.language != 'null'" 
+              :content="repo.language"
               @click.stop="filterByLanguage(repo.language)"
             />
           </div>
@@ -128,12 +129,6 @@ export default {
 .mt8 {
   margin-top: 8px;
 }
-.flex-demo {
-  height: 32px;
-  background-color: #e0e0e0;
-  text-align: center;
-  line-height: 32px;
-}
 .repos-desc {
   position: absolute;
   background: #fafafa;
@@ -141,21 +136,24 @@ export default {
   padding: 8px;
   top: 64px;
   bottom: 0;
-  width: 320px;
+  width: 480px;
   overflow-x: hidden;
   overflow-y: auto;
 }
 .mu-tabs {
   margin-bottom: 8px;
   .mu-tab {
-    min-width: 72px;
+    min-width: 112px;
   }
 }
 .mu-card {
   margin-bottom: 8px;
   cursor: pointer;
-  .mu-card-title-container {
+  &.repos-desc-card {
     padding: 8px 16px;
+  }
+  .mu-card-title-container {
+    padding: 0;
     .mu-card-title {
       font-size: 18px;
       font-weight: 700;
@@ -163,24 +161,16 @@ export default {
     }
   }
   .mu-card-text {
-    padding: 0 16px;
+    padding: 8px 0;
     font-weight: 500;
     color: #546e7a;
   }
-  .mu-card-actions {
-    .mu-chip {
-      cursor: pointer;
-      font-size: 12px;
-      color: #546e7a;
-      background-color: rgb(238, 238, 238);
-    }
-    .mu-chip:hover {
-      color: #004D40;
-      text-decoration: underline;
-    }
+  .tag-action {
+    padding: 8px 0;
   }
 }
 .card-action {
+  padding: 8px 0 0 0;
   border-top: 1px solid #eee;
   .repo-count {
     display: inline-flex;
@@ -192,10 +182,10 @@ export default {
     }
     .star {
       margin-right: 4px;
-      padding: 5px 0;
+      padding: 4px 0;
     }
     .fork {
-      padding: 5px 0;
+      padding: 4px 0;
     }
     span {
       float: right;
@@ -204,7 +194,7 @@ export default {
   a {
     float: right;
     margin: 0px;
-    padding: 8px 0;
+    padding: 4px 0;
     transition: color .3s ease;
     color: #26a69a;
     font-size: 13px;

@@ -124,24 +124,21 @@ export default {
     transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   }
   .repos-readme {
-    left: 576px;
+    left: 736px;
     transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   }
   .showbox {
-    left: 576px;
+    left: 736px;
     transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
   }
   &.nav-hide .repos-desc {
     left: 64px;
-    // left: 0;
   }
   &.nav-hide .repos-readme {
     left: 384px;
-    // left: 320px;
   }
   &.nav-hide .showbox {
     left: 384px;
-    // left: 320px;
   }
 }
 @media (min-width: 480px) {
@@ -154,7 +151,6 @@ export default {
     left: 256px;
     &.nav-hide {
       left: 64px;
-      // left: 0;
     }
   }
   .wrapper {

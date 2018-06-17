@@ -171,6 +171,7 @@ export default {
 .sidebar-appbar.mu-appbar {
   background-color: #2196f3;
   color: #fff;
+  padding: 0;
   .mu-appbar-left {
     padding: 0 16px;
   }

@@ -7,13 +7,9 @@
       <div class="mu-appbar-title"><span v-text="title"></span></div>
     </div>
     <mu-menu slot="right" placement="bottom-end">
-      <mu-button
-        flat
-        labelPosition="before"
-        ref="popoverButton"
-        :label="user.login"
-        @click="toggleOpen">
+      <mu-button flat ref="popoverButton" @click="toggleOpen">
         <div class="userinfo">
+          <span v-text="user.login"></span>
           <img :src="user.avatar_url" :alt="user.login">
         </div>
       </mu-button>
@@ -48,8 +44,8 @@
       </mu-popover>
       <mu-dialog :open="isOpenDialog" :title="dialogTitle" @close="toggleDailogOpen" dialogClass="signout-dailog">
         Are you sure you want sign out Astrolabe?
-        <mu-button flat slot="actions" primary @click="toggleDailogOpen" label="Cancel"/>
-        <mu-button flat slot="actions" primary @click="handleSignout" label="Yes"/>
+        <mu-button flat slot="actions" primary @click="toggleDailogOpen">No</mu-button>
+        <mu-button flat slot="actions" primary @click="handleSignout">Yes</mu-button>
       </mu-dialog>
     </mu-menu>
   </mu-appbar>
@@ -116,7 +112,7 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="less">
 .brand-loading {
   position: absolute;
   display: inline-block;
@@ -138,22 +134,24 @@ export default {
   opacity: .7;
 }
 
-.userinfo img {
-  width: 48px;
-  height: 48px;
-  float: left;
-  border: 3px solid rgba(0, 0, 0, 0.14);
-  border-radius: 50%;
-  -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-
-.userinfo span {
-  display: inline-block;
-  height: 48px;
-  line-height: 48px;
-  font-size: 16px;
-}
+.userinfo {
+  span {
+    display: inline-block;
+    height: 48px;
+    line-height: 48px;
+    padding-right: 16px;
+    font-size: 16px;
+  }
+  img {
+    width: 48px;
+    height: 48px;
+    float: right;
+    border: 3px solid rgba(0, 0, 0, 0.14);
+    border-radius: 50%;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+  }
+} 
 
 .signout-dailog {
   width: 480px;
