@@ -1,55 +1,59 @@
 <template>
   <div id="repos-desc" class="repos-desc animated fadeIn">
-    <mu-tabs :value="activeTab" center @change="handleTabChange">
-      <mu-tab value="tab1" @click="orderedRepos('repo_idx')">
-        <mu-icon value="schedule" />
-        Time
-      </mu-tab>
-      <mu-tab value="tab2" @click="orderedRepos('owner_name')">
-        <mu-icon value="person" />
-        Owner
-      </mu-tab>
-      <mu-tab value="tab3" @click="orderedRepos('repo_name')">
-        <mu-icon value="archive" />
-        Repo
-      </mu-tab>
-      <mu-tab value="tab4" @click="orderedRepos('stargazers_count')">
-        <mu-icon value="star" />
-        Star
-      </mu-tab>
-    </mu-tabs>
-    <mu-load-more :loading="isInfinite" @load="reloadRepos(true)" loading-text="Loading... ...">
-      <template v-for="repo in lazyRepos">
-        <mu-paper :zDepth="selectedRepo == repo.repo_name ? 3 : 1" :key="repo._id">
-          <div class="mu-card repos-desc-card" @click.stop="showReadme(repo)">
-            <div class="mu-card-title-container">
-              <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
-            </div>
-            <div class="mu-card-text" v-text="repo.description"></div>
-            <div class="mu-card-actions tag-action">
-              <mu-badge
-                v-if="repo.language != 'null'" 
-                :content="repo.language"
-                @click.stop="filterByLanguage(repo.language)"
-              />
-            </div>
-            <div class="mu-card-actions card-action">
-              <div class="repo-count">
-                <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
-                <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
-              </div>
-              <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
-            </div>
+    <div class="repos-desc__header">
+      <mu-tabs :value="activeTab" center @change="handleTabChange">
+        <mu-tab value="tab1" @click="orderedRepos('repo_idx')">
+          <mu-icon value="schedule" />
+          Time
+        </mu-tab>
+        <mu-tab value="tab2" @click="orderedRepos('owner_name')">
+          <mu-icon value="person" />
+          Owner
+        </mu-tab>
+        <mu-tab value="tab3" @click="orderedRepos('repo_name')">
+          <mu-icon value="archive" />
+          Repo
+        </mu-tab>
+        <mu-tab value="tab4" @click="orderedRepos('stargazers_count')">
+          <mu-icon value="star" />
+          Star
+        </mu-tab>
+      </mu-tabs>
+    </div>
+    <div class="repos-desc__content">
+      <mu-load-more :loading="isInfinite" @load="reloadRepos(true)" loading-text="Loading... ...">
+        <div
+          v-for="repo in lazyRepos"
+          class="mu-card repos-desc-card"
+          :class="{'mu-card__raised': selectedRepo === repo.repo_name}"
+          :key="repo._id"
+          @click.stop="showReadme(repo)">
+          <div class="mu-card-title-container">
+            <div class="mu-card-title" v-text="repo.owner_name+'/'+repo.repo_name"></div>
           </div>
-        </mu-paper>
-      </template>
-    </mu-load-more>
+          <div class="mu-card-text" v-text="repo.description"></div>
+          <div class="mu-card-actions tag-action">
+            <mu-badge
+              v-if="repo.language != 'null'" 
+              :content="repo.language"
+              @click.stop="filterByLanguage(repo.language)"
+            />
+          </div>
+          <div class="mu-card-actions card-action">
+            <div class="repo-count">
+              <div class="star"><i class="material-icons">star</i> <span v-text="repo.stargazers_count"></span></div>
+              <div class="fork"><i class="material-icons">star</i> <span v-text="repo.forks_count"></span></div>
+            </div>
+            <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
+          </div>
+        </div>
+      </mu-load-more>
+    </div>
     <!-- <mu-infinite-scroll :scroller="scroller" :loading="isInfinite" @load="reloadRepos(true)" loadingText="Loading... ..."/> -->
   </div>
 </template>
 
 <script>
-import $ from 'jquery'
 import { shell } from 'electron'
 import { mapState, mapActions } from 'vuex'
 
@@ -112,26 +116,14 @@ export default {
 
   mounted () {
     this.scroller = this.$el
-    $(document).ready(function () {
-      $('body').css('overflow', 'hidden')
-      // $('[data-toggle="tooltip"]').tooltip()
-      // $('.repos-desc').css('height', $(window).height() - 124)
-    })
-    // $(window).resize(function () {
-    //   $('.repos-desc').css('height', $(this).height() - 124)
-    // })
     this.reloadRepos(false)
   }
 }
 </script>
 
 <style lang="less" scoped>
-.mt8 {
-  margin-top: 8px;
-}
 .repos-desc {
   position: absolute;
-  background: #fafafa;
   border-right: 1px solid rgba(55,53,112,0.08);
   padding: 8px;
   top: 64px;
@@ -139,13 +131,31 @@ export default {
   width: 480px;
   overflow-x: hidden;
   overflow-y: auto;
-}
-.mu-tabs {
-  margin-bottom: 8px;
-  .mu-tab {
-    min-width: 112px;
+  .repos-desc__header {
+    display: flex;
+  }
+  // tabs style
+  .mu-tabs {
+    margin-bottom: 8px;
+    .mu-tab {
+      min-width: 112px;
+    }
+  }
+  .repos-desc__content {
+    position: absolute;
+    top: 88px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 8px;
+    overflow-y: auto;
+  }
+  .mu-load-more {
+    overflow: visible;
   }
 }
+
+// card style
 .mu-card {
   margin-bottom: 8px;
   cursor: pointer;

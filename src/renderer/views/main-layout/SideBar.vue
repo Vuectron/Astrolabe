@@ -43,46 +43,25 @@
     <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list">
       <li
         v-for="group in langGroup"
+        v-if="group.count >= minLangCount && group.lang != 'null'"
         class="mu-list__langtag"
         :title="group.lang"
         :key="group.lang"
         @click="filterByLanguage(group.lang)"
       >
-        <a class="mu-item-wrapper">
-          <div class="mu-item">
+        <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="handleHovered(group.lang)" @mouseout="handleHovered(group.lang)">
+          <div class="mu-item" :class="{'is-selected': activeLang === group.lang}">
             <div class="mu-item-action">
-              <div class="mu-item-left"><i class="mu-icon devicon-javascript-plain"></i></div>
+              <div class="mu-item-left"><i class="mu-icon devicon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
             </div>
             <div class="mu-item-title">{{group.lang}}</div>
             <div class="mu-item-action">
-              <div class="mu-badge-container">
-                <em class="mu-badge  mu-secondary-color mu-inverse">38</em>
-              </div>
+              <mu-badge :content="group.count + ''" color="secondary" />
             </div>
           </div>
         </a>
       </li>
     </draggable>
-    <!-- <mu-list :value="menuVal" @change="handleMenuChange">
-      <mu-list-item
-        v-for="group in langGroup"
-        v-if="group.count >= minLangCount && group.lang != 'null'"
-        button
-        class="mu-list__langtag"
-        :title="group.lang"
-        :value="group.lang"
-        :key="group.lang"
-        @click="filterByLanguage(group.lang)"
-      >
-        <mu-list-item-action>
-          <div class="mu-item-left"><i class="mu-icon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
-        </mu-list-item-action>
-        <mu-list-item-title>{{group.lang}}</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-badge :content="group.count + ''" color="secondary" />
-        </mu-list-item-action>
-      </mu-list-item>
-    </mu-list> -->
   </mu-drawer>
 </template>
 
@@ -113,7 +92,8 @@ export default {
         animation: 150,
         group: 'langTag',
         ghostClass: 'ghost'
-      }
+      },
+      hoveredLink: ''
     }
   },
   computed: {
@@ -174,6 +154,9 @@ export default {
     },
     handleChangeSearchVal (val) {
       console.log(val)
+    },
+    handleHovered (lang) {
+      this.hoveredLink = lang
     }
   },
   mounted () {
@@ -183,7 +166,6 @@ export default {
 </script>
 
 <style lang="less">
-// @import "~muse-ui/less/vars.less";
 .mu-drawer {
   &.is-open {
     min-width: 256px;
@@ -199,10 +181,15 @@ export default {
   visibility: visible;
   .mu-appbar {
     .mu-text-field-content {
-        padding-top: 12px;
+      padding-top: 12px;
     }
   }
   .mu-item {
+    padding: 0 20px;
+    .devicon {
+      font-size: 16px;
+      padding: 4px;
+    }
     .mu-item-left {
       left: 20px;
     }
