@@ -42,14 +42,16 @@ export default {
       'getLocalToken',
       'getUser',
       'getRepos'
-    ])
+    ]),
+    async initGithub () {
+      await this.getLocalToken()
+      const user = await this.getUser()
+      this.getRepos(user)
+    }
   },
 
   mounted () {
-    this.getLocalToken()
-      .then(() => {})
-      .then(() => { this.getUser().then(user => user) })
-      .then(user => { this.getRepos(user).then(() => {}) })
+    this.initGithub()
   }
 }
 </script>

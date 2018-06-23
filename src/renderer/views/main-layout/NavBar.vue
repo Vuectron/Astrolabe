@@ -7,13 +7,13 @@
       <div class="mu-appbar-title"><span v-text="title"></span></div>
     </div>
     <mu-menu slot="right" placement="bottom-end">
-      <mu-button flat ref="popoverButton" @click="toggleOpen">
+      <mu-button flat ref="popoverButton" @click="isOpen=!isOpen">
         <div class="userinfo">
           <span v-text="user.login"></span>
           <img :src="user.avatar_url" :alt="user.login">
         </div>
       </mu-button>
-      <mu-popover :trigger="trigger" :open.sync="isOpen" @close="handleClose">
+      <mu-popover :trigger="trigger" :open.sync="isOpen" @close="isOpen=false">
         <mu-list>
           <mu-list-item button>
             <mu-list-item-action>
@@ -85,25 +85,16 @@ export default {
       'toggleSidebar',
       'userSignout'
     ]),
-    handleSignout () {
-      this.userSignout()
-        .then(() => {
-          console.log('send ipc signout')
-          this.toggleDailogOpen()
-          ipcRenderer.send('signout', 'signout')
-        })
+    async handleSignout () {
+      await this.userSignout()
+      this.toggleDailogOpen()
+      ipcRenderer.send('signout', 'signout')
     },
     handleExit () {
       ipcRenderer.send('exit', 'exit')
     },
-    toggleOpen () {
-      this.isOpen = !this.isOpen
-    },
     toggleDailogOpen () {
       this.isOpenDialog = !this.isOpenDialog
-    },
-    handleClose (e) {
-      this.isOpen = false
     }
   },
   mounted () {

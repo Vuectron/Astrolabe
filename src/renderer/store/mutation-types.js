@@ -15,7 +15,6 @@ export const SET_SIDEBAR = 'SET_SIDEBAR'
 
 // github mutation types
 export const SET_GITHUB_STATE = 'SET_GITHUB_STATE'
-export const SET_USER = 'SET_USER'
 export const SET_REPOS = 'SET_REPOS'
 export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
 export const ORDERED_REPOS = 'ORDERED_REPOS'

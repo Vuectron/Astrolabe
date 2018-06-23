@@ -1,5 +1,5 @@
 import _ from 'lodash'
-// import jetpack from 'fs-jetpack'
+import jetpack from 'fs-jetpack'
 import { remote } from 'electron'
 import db from '../../services/db'
 import Constants from '../../utils/constants'
@@ -97,6 +97,22 @@ const actions = {
       untaggedCount: _.toString(_.size(_.filter(repos, _.matches({ 'language': null }))))
     })
     return initRepos
+  },
+  async setUser ({ commit, state }, payload) {
+    const { user } = payload
+    db.findOneUser(user.id).then(res => {
+      if (_.isNull(res)) {
+        // when change user delete all db file
+        jetpack
+          .find(userDataDir, { matching: ['*.db'] })
+          .forEach(jetpack.remove)
+        db.addUser(user)
+        commit(types.SET_GITHUB_STATE, { user })
+      } else {
+        db.updateUser(user)
+        commit(types.SET_GITHUB_STATE, { user })
+      }
+    })
   }
 }
 
@@ -106,22 +122,22 @@ const mutations = {
     Object.assign(state, payload)
   },
 
-  [types.SET_USER] (state, {user}) {
-    console.log(userDataDir)
-    state.user = user
-    // db.findOneUser(user.id).then(res => {
-    //   if (_.isNull(res)) {
-    //     // when change user delete all db file
-    //     jetpack.find(userDataDir, { matching: ['*.db'] }).forEach(jetpack.remove)
-    //     db.addUser(user, user => {
-    //       state.user = user
-    //     })
-    //   } else {
-    //     state.user = user
-    //     db.updateUser(user)
-    //   }
-    // })
-  },
+  // [types.SET_USER] (state, {user}) {
+  //   console.log(userDataDir)
+  //   state.user = user
+  //   db.findOneUser(user.id).then(res => {
+  //     if (_.isNull(res)) {
+  //       // when change user delete all db file
+  //       jetpack.find(userDataDir, { matching: ['*.db'] }).forEach(jetpack.remove)
+  //       db.addUser(user, user => {
+  //         state.user = user
+  //       })
+  //     } else {
+  //       state.user = user
+  //       db.updateUser(user)
+  //     }
+  //   })
+  // },
 
   [types.SET_REPOS] (state, {repos}) {
     state.repos = repos

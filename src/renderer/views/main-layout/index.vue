@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import NavBar from './NavBar.vue'
 import SideBar from './SideBar.vue'
 
@@ -48,24 +50,25 @@ export default {
     }
   },
   methods: {
-    toggleSidebar () {
-      this.$store.dispatch('toggleSidebar')
-    },
+    ...mapActions([
+      'setSidebar',
+      'toggleSidebar'
+    ]),
     resizeSidebar () {
       const desktop = isDesktop()
       console.log('resizeSidebar:' + desktop)
       this.docked = desktop
       if (desktop === this.desktop) return
       if (!desktop && this.desktop && this.open) {
-        this.$store.dispatch('setSidebar', { isDesktop: false })
+        this.setSidebar({ isDesktop: false })
       }
       if (desktop && !this.desktop && !this.open) {
-        this.$store.dispatch('setSidebar', { isDesktop: true })
+        this.setSidebar({ isDesktop: true })
       }
       this.desktop = desktop
     },
     handleMenuChange (path) {
-      if (!this.desktop) this.$store.dispatch('setSidebar', { isDesktop: false })
+      if (!this.desktop) this.setSidebar({ isDesktop: false })
     },
     setTitle () {
       let path = window.location.hash
@@ -80,7 +83,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('setSidebar', { isDesktop: isDesktop() })
+    this.setSidebar({ isDesktop: isDesktop() })
     this.routes = this.$router.options.routes
     this.setTitle()
     this.resizeSidebar()

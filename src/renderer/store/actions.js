@@ -52,7 +52,7 @@ export const getToken = ({ commit }, payload) => {
   })
 }
 
-export const getLocalToken = ({ dispatch, commit, state }, payload) => {
+export const getLocalToken = ({ commit, dispatch, state }, payload) => {
   return new Promise((resolve, reject) => {
     storage.get('oauth2', (error, data) => {
       if (error) {
@@ -79,7 +79,7 @@ export const getLocalToken = ({ dispatch, commit, state }, payload) => {
   })
 }
 
-export const getUser = ({ commit, state }, payload) => {
+export const getUser = ({ commit, dispatch, state }, payload) => {
   const { token } = state.auth
 
   const url = 'https://api.github.com/user'
@@ -94,7 +94,7 @@ export const getUser = ({ commit, state }, payload) => {
           console.group('Github User Group Begin')
           console.log(user)
           console.groupEnd('Github User Group End')
-          commit(types.SET_USER, {user})
+          dispatch('setUser', { user })
           resolve(user)
         } else {
           reject(error)
@@ -103,7 +103,7 @@ export const getUser = ({ commit, state }, payload) => {
   })
 }
 
-export const getRepos = ({ commit, dispatch, state }, user) => {
+export const getRepos = async ({ commit, dispatch, state }, user) => {
   const { github } = state.github
   user = user || state.github.user
 
@@ -123,27 +123,26 @@ export const getRepos = ({ commit, dispatch, state }, user) => {
     })
   }
 
-  db.findOneUser(user.id).then(doc => {
-    if (_.isNull(doc)) {
-      getStarredRepos()
-    } else {
-      // fetch all repos into repos state
-      db.fetchAllRepos().then(repos => {
-        if (_.isEmpty(repos)) {
-          getStarredRepos()
-        } else {
-          commit(types.SET_REPOS, {repos})
-        }
-      })
-      db.fetchLangGroup().then(langGroup => {
-        if (!_.isEmpty(langGroup)) {
-          const orderedLangGroup = _.orderBy(langGroup, 'count', 'desc')
-          commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
-        }
-      })
-    }
-  })
-  getStarredRepos()
+  // fetch user from db
+  const userInfo = await db.findOneUser(user.id)
+  // fetch langGroup from db
+  const langGroup = await db.fetchLangGroup()
+  // fetch all repos from db into repos state
+  const repos = await db.fetchAllRepos()
+
+  console.group('Github getRepos Begin')
+  console.log(userInfo)
+  console.log(repos)
+  console.groupEnd()
+
+  if (_.isNull(userInfo) && _.isEmpty(langGroup) && _.isEmpty(repos)) {
+    getStarredRepos()
+  } else {
+    const orderedLangGroup = _.orderBy(langGroup, 'count', 'desc')
+    commit(types.SET_REPOS, { repos })
+    commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
+    commit(types.TOGGLE_LOGIN)
+  }
 }
 
 export const showReadme = ({ commit, state }, repo) => {
@@ -223,7 +222,6 @@ export const setSidebar = makeAction('SET_SIDEBAR')
 
 // github actions
 export const setGithubState = makeAction('SET_GITHUB_STATE')
-export const setUser = makeAction('SET_USER')
 export const setRepos = makeAction('SET_REPOS')
 export const filterByLanguage = makeAction('FILTER_BY_LANGUAGE')
 export const orderedRepos = makeAction('ORDERED_REPOS')

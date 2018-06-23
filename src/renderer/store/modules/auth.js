@@ -9,6 +9,18 @@ const state = {
   isLogin: false
 }
 
+const actions = {
+  userSignout ({ commit, state }, payload) {
+    return new Promise((resolve, reject) => {
+      storage.remove('oauth2', error => {
+        if (error) reject(error)
+        commit(types.USER_SIGNOUT)
+        resolve()
+      })
+    })
+  }
+}
+
 const mutations = {
   [types.SET_TOKEN] (state, {token}) {
     state.token = token
@@ -25,18 +37,13 @@ const mutations = {
     state.isLogin = true
   },
   [types.USER_SIGNOUT] (state) {
-    return new Promise((resolve, reject) => {
-      storage.remove('oauth2', (err) => {
-        if (err) reject()
-        state.isLoading = false
-        state.isLogin = false
-        resolve()
-      })
-    })
+    state.isLoading = false
+    state.isLogin = false
   }
 }
 
 export default {
   state,
+  actions,
   mutations
 }
