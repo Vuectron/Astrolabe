@@ -44,8 +44,8 @@
       </mu-popover>
       <mu-dialog :open="isOpenDialog" :title="dialogTitle" @close="toggleDailogOpen" dialogClass="signout-dailog">
         Are you sure you want sign out Astrolabe?
-        <mu-button flat slot="actions" primary @click="toggleDailogOpen">No</mu-button>
-        <mu-button flat slot="actions" primary @click="handleSignout">Yes</mu-button>
+        <mu-button flat slot="actions" color="primary" @click="toggleDailogOpen">No</mu-button>
+        <mu-button flat slot="actions" color="primary" @click="handleSignout">Yes</mu-button>
       </mu-dialog>
     </mu-menu>
   </mu-appbar>
@@ -116,7 +116,7 @@ export default {
 .brand-loading {
   position: absolute;
   display: inline-block;
-  transform: translate3d(320px, 0, 0);
+  transform: translate3d(480px, 0, 0);
   transition: all 0.2s ease-in-out;
 }
 

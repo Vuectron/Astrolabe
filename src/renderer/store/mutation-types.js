@@ -15,15 +15,12 @@ export const SET_SIDEBAR = 'SET_SIDEBAR'
 
 // github mutation types
 export const SET_GITHUB_STATE = 'SET_GITHUB_STATE'
-export const SET_GITHUB = 'SET_GITHUB'
 export const SET_USER = 'SET_USER'
-export const INIT_REPOS = 'INIT_REPOS'
 export const SET_REPOS = 'SET_REPOS'
-export const SET_LAZY_REPOS = 'SET_LAZY_REPOS'
-export const SET_LANG_GROUP = 'SET_LANG_GROUP'
 export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
 export const ORDERED_REPOS = 'ORDERED_REPOS'
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY'
+export const SET_LANG_GROUP_DB = 'SET_LANG_GROUP_DB'
 
 // content mutation types
 export const TOGGLE_LOADING_REPOS = 'TOGGLE_LOADING_REPOS'

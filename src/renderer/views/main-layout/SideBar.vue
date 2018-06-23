@@ -18,9 +18,8 @@
         @change="handleChangeSearchVal"
       />
     </mu-appbar>
-    <mu-divider/>
     <mu-list :value="menuVal" @change="handleMenuChange" :ripple="false">
-      <mu-list-item button value="allStars" @click="filterByLanguage(null)">
+      <mu-list-item button value="allStars" @click="filterByLanguage({lang: null})">
         <mu-list-item-action>
           <mu-icon value="star" color="pink"></mu-icon>
         </mu-list-item-action>
@@ -29,7 +28,7 @@
           <mu-badge :content="reposCount" color="secondary" />
         </mu-list-item-action>
       </mu-list-item>
-      <mu-list-item button value="untaggedStars" @click="filterByLanguage('null')">
+      <mu-list-item button value="untaggedStars" @click="filterByLanguage({lang: 'null'})">
         <mu-list-item-action>
           <mu-icon value="bookmark_border" color="pink"></mu-icon>
         </mu-list-item-action>
@@ -40,16 +39,16 @@
       </mu-list-item>
     </mu-list>
     <mu-divider />
-    <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list">
+    <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list" @start="isSorted=true" @end="isSorted=false" @sort="handleSortTag">
       <li
         v-for="group in langGroup"
         v-if="group.count >= minLangCount && group.lang != 'null'"
         class="mu-list__langtag"
         :title="group.lang"
         :key="group.lang"
-        @click="filterByLanguage(group.lang)"
+        @click="filterByLanguage({lang: group.lang})"
       >
-        <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="handleHovered(group.lang)" @mouseout="handleHovered(group.lang)">
+        <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="handleHover(group.lang)" @mouseout="handleHover">
           <div class="mu-item" :class="{'is-selected': activeLang === group.lang}">
             <div class="mu-item-action">
               <div class="mu-item-left"><i class="mu-icon devicon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
@@ -62,11 +61,21 @@
         </a>
       </li>
     </draggable>
+    <mu-divider/>
+    <mu-flex justify-content="center" align-items="center">
+      <mu-button full-width flat color="secondary" class="mu-flat-button-fullwidth" ref="addBtn" @click="isOpenPopover = !isOpenPopover">
+        <mu-icon value="add"></mu-icon>
+      </mu-button>
+    </mu-flex>
+
+    <!-- <mu-popover :open.sync="isOpenPopover" :trigger="trigger">
+      <mu-text-field label-float label="New Tag" />
+    </mu-popover> -->
   </mu-drawer>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import Draggable from 'vuedraggable'
 
@@ -93,7 +102,10 @@ export default {
         group: 'langTag',
         ghostClass: 'ghost'
       },
-      hoveredLink: ''
+      isSorted: false,
+      hoveredLink: '',
+      isOpenPopover: false,
+      trigger: null
     }
   },
   computed: {
@@ -111,7 +123,7 @@ export default {
         return this.$store.state.sidebar.searchQuery
       },
       set (val) {
-        this.setSearchQuery(val)
+        this.setSearchQuery({ searchQuery: val })
       }
     },
     langGroup: {
@@ -119,13 +131,25 @@ export default {
         return this.$store.state.github.langGroup
       },
       set (val) {
-        this.$store.dispatch('setGithubState', {
-          langGroup: val
-        })
+        this.setGithubState({ langGroup: val })
+      }
+    }
+  },
+  watch: {
+    isSorted (newValue) {
+      if (!newValue) {
+        this.setLangGroupDB()
       }
     }
   },
   methods: {
+    ...mapActions([
+      'toggleSidebar',
+      'setSearchQuery',
+      'filterByLanguage',
+      'setGithubState',
+      'setLangGroupDB'
+    ]),
     handleMenuChange (val) {
       this.menuVal = val
       if (this.docked) {
@@ -135,31 +159,27 @@ export default {
       }
       this.$emit('change', val)
     },
-    handleClose () {
-      this.$emit('close')
-    },
     handleHide () {
       if (!this.changeHref) return
       window.location.hash = this.menuVal
       this.changeHref = false
     },
-    toggleSidebar () {
-      this.$store.dispatch('toggleSidebar')
-    },
-    setSearchQuery (searchQuery) {
-      return this.$store.dispatch('setSearchQuery', { searchQuery: searchQuery })
-    },
-    filterByLanguage (lang) {
-      return this.$store.dispatch('filterByLanguage', { lang: lang })
-    },
     handleChangeSearchVal (val) {
       console.log(val)
     },
-    handleHovered (lang) {
+    handleHover (lang) {
       this.hoveredLink = lang
+    },
+    handleSortTag ({ oldIndex, newIndex }) {
+      console.log(oldIndex)
+      console.log(newIndex)
+    },
+    handleAddTag () {
+      console.log('handle add tag')
     }
   },
   mounted () {
+    this.trigger = this.$refs.addBtn.$el
     console.log(this.version)
   }
 }
@@ -220,5 +240,12 @@ export default {
       color: #fff;
     }
   }
+}
+
+// flat button with full width
+.mu-flat-button-fullwidth {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 </style>

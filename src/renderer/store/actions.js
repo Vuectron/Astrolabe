@@ -40,8 +40,8 @@ export const getToken = ({ commit }, payload) => {
             auth: 'oauth'
           })
           storage.set('oauth2', { code, token }, (error) => { if (error) throw error })
-          commit(types.SET_TOKEN, {token})
-          commit(types.SET_GITHUB, {github})
+          commit(types.SET_TOKEN, { token })
+          commit(types.SET_GITHUB_STATE, { github })
           commit(types.TOGGLE_LOADING)
           resolve()
         } else {
@@ -57,7 +57,7 @@ export const getLocalToken = ({ dispatch, commit, state }, payload) => {
     storage.get('oauth2', (error, data) => {
       if (error) {
         commit(types.TOGGLE_CONNECTING)
-        reject()
+        reject(error)
       }
       if (!_.isEmpty(data)) {
         const { token } = data
@@ -66,13 +66,13 @@ export const getLocalToken = ({ dispatch, commit, state }, payload) => {
             token: data.token,
             auth: 'oauth'
           })
-          commit(types.SET_TOKEN, {token})
-          commit(types.SET_GITHUB, {github})
+          commit(types.SET_TOKEN, { token })
+          commit(types.SET_GITHUB_STATE, { github })
           commit(types.TOGGLE_LOADING)
-          resolve()
+          resolve(data)
         } else {
           commit(types.TOGGLE_CONNECTING)
-          reject()
+          reject(error)
         }
       }
     })
@@ -103,7 +103,7 @@ export const getUser = ({ commit, state }, payload) => {
   })
 }
 
-export const getRepos = ({ commit, state }, user) => {
+export const getRepos = ({ commit, dispatch, state }, user) => {
   const { github } = state.github
   user = user || state.github.user
 
@@ -111,13 +111,14 @@ export const getRepos = ({ commit, state }, user) => {
 
   const getStarredRepos = () => {
     return new Promise((resolve, reject) => {
-      githubUser.listStarredRepos((err, repos) => {
-        if (err) {
-          console.log(err)
+      githubUser.listStarredRepos((error, repos) => {
+        if (error) {
+          console.log(error)
+          reject(error)
         }
-        commit(types.INIT_REPOS, {repos})
+        dispatch('initRepos', { repos })
         commit(types.TOGGLE_LOGIN)
-        resolve()
+        resolve(repos)
       })
     })
   }
@@ -137,7 +138,7 @@ export const getRepos = ({ commit, state }, user) => {
       db.fetchLangGroup().then(langGroup => {
         if (!_.isEmpty(langGroup)) {
           const orderedLangGroup = _.orderBy(langGroup, 'count', 'desc')
-          commit(types.SET_LANG_GROUP, {orderedLangGroup})
+          commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
         }
       })
     }
@@ -199,7 +200,7 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
   setTimeout(() => {
     db.fetchLazyRepos(limitCount)
       .then(lazyRepos => {
-        commit(types.SET_LAZY_REPOS, {lazyRepos})
+        commit(types.SET_GITHUB_STATE, { lazyRepos })
       })
     if (isInfinite) {
       commit(types.TOGGLE_IS_INFINITE)
@@ -222,15 +223,12 @@ export const setSidebar = makeAction('SET_SIDEBAR')
 
 // github actions
 export const setGithubState = makeAction('SET_GITHUB_STATE')
-export const setGithub = makeAction('SET_GITHUB')
 export const setUser = makeAction('SET_USER')
-export const initRepos = makeAction('INIT_REPOS')
 export const setRepos = makeAction('SET_REPOS')
-export const setLazyRepos = makeAction('SET_LAZY_REPOS')
-export const setLangGroup = makeAction('SET_LANG_GROUP')
 export const filterByLanguage = makeAction('FILTER_BY_LANGUAGE')
 export const orderedRepos = makeAction('ORDERED_REPOS')
 export const setSearchQuery = makeAction('SET_SEARCH_QUERY')
+export const setLangGroupDB = makeAction('SET_LANG_GROUP_DB')
 
 // content actions
 export const toggleLoadingRepos = makeAction('TOGGLE_LOADING_REPOS')

@@ -20,69 +20,35 @@ const state = {
   order: 1,
   activeLang: ''
 }
-// mutations
-const mutations = {
-  [types.SET_GITHUB_STATE] (state, payload) {
-    Object.assign(state, payload)
-  },
 
-  [types.SET_GITHUB] (state, {github}) {
-    state.github = github
-  },
-
-  [types.SET_USER] (state, {user}) {
-    console.log(userDataDir)
-    state.user = user
-    // db.findOneUser(user.id).then(res => {
-    //   if (_.isNull(res)) {
-    //     // when change user delete all db file
-    //     jetpack.find(userDataDir, { matching: ['*.db'] }).forEach(jetpack.remove)
-    //     db.addUser(user, user => {
-    //       state.user = user
-    //     })
-    //   } else {
-    //     state.user = user
-    //     db.updateUser(user)
-    //   }
-    // })
-  },
-
-  [types.INIT_REPOS] (state, {repos}) {
+// actions
+const actions = {
+  async initRepos ({ commit, state }, payload) {
+    const { repos } = payload
     // insert repos
-    let initRepos = []
     let apiReposArray = []
-    for (let i in repos) {
+    const initRepos = repos.map((v, i) => {
       const repo = {
-        '_id': repos[i].id,
+        ...v,
+        '_id': v.id,
         'repo_idx': parseInt(i),
-        'owner_name': repos[i].full_name.split('/').shift(),
-        'repo_name': repos[i].full_name.split('/').pop(),
-        'description': repos[i].description,
-        'stargazers_count': repos[i].stargazers_count,
-        'forks_count': repos[i].forks_count,
-        'html_url': repos[i].html_url,
-        'clone_url': repos[i].clone_url,
-        'git_url': repos[i].git_url,
-        'downloads_url': repos[i].html_url + '/archive/' + repos[i].default_branch + '.zip',
-        'created_at': repos[i].created_at,
-        'updated_at': repos[i].updated_at,
-        'language': repos[i].language == null ? 'null' : repos[i].language
+        'owner_name': v.full_name.split('/').shift(),
+        'repo_name': v.full_name.split('/').pop(),
+        'downloads_url': v.html_url + '/archive/' + v.default_branch + '.zip',
+        'language': v.language == null ? 'null' : v.language
       }
-      initRepos.push(repo)
       db.findOneRepo(repo._id).then(doc => {
         _.isNull(doc) ? db.addRepo(repo, docs => {}) : db.updateRepo(repo)
       })
-      apiReposArray.push(repos[i].id)
-    }
+      apiReposArray.push(v.id)
+      return repo
+    })
     console.log('findOneAndUpdate [%d] repos', _.size(repos))
 
     // sync repos.db
     let diffRepos = []
     db.fetchAllRepos().then(dbRepos => {
-      let dbReposArray = []
-      for (let i in dbRepos) {
-        dbReposArray.push(dbRepos[i]._id)
-      }
+      const dbReposArray = dbRepos.map(v => v._id)
       // looking for difference
       diffRepos = _.xor(apiReposArray, dbReposArray)
       if (_.size(diffRepos) > 0) {
@@ -107,7 +73,6 @@ const mutations = {
         let langCount = {
           '_id': lang,
           'lang': lang,
-          // 'count': _.toString(countLangs[lang]),
           'count': countLangs[lang],
           'icon': devicons[lang] || devicons['Default']
         }
@@ -121,32 +86,47 @@ const mutations = {
         })
       }
     }
+    commit(types.SET_GITHUB_STATE, {
+      // set lang_group
+      langGroup: _.orderBy(langGroup, 'count', 'desc'),
+      // set init repos
+      repos: initRepos,
+      // set repos count
+      reposCount: _.toString(_.size(repos)),
+      // set untagged count
+      untaggedCount: _.toString(_.size(_.filter(repos, _.matches({ 'language': null }))))
+    })
+    return initRepos
+  }
+}
 
-    // set lang_group
-    state.langGroup = _.orderBy(langGroup, 'count', 'desc')
+// mutations
+const mutations = {
+  [types.SET_GITHUB_STATE] (state, payload) {
+    Object.assign(state, payload)
+  },
 
-    // set init repos
-    state.repos = initRepos
-
-    // set repos count
-    state.reposCount = _.toString(_.size(repos))
-
-    // set untagged count
-    state.untaggedCount = _.toString(_.size(_.filter(repos, _.matches({ 'language': null }))))
+  [types.SET_USER] (state, {user}) {
+    console.log(userDataDir)
+    state.user = user
+    // db.findOneUser(user.id).then(res => {
+    //   if (_.isNull(res)) {
+    //     // when change user delete all db file
+    //     jetpack.find(userDataDir, { matching: ['*.db'] }).forEach(jetpack.remove)
+    //     db.addUser(user, user => {
+    //       state.user = user
+    //     })
+    //   } else {
+    //     state.user = user
+    //     db.updateUser(user)
+    //   }
+    // })
   },
 
   [types.SET_REPOS] (state, {repos}) {
     state.repos = repos
     state.reposCount = _.toString(_.size(repos))
     state.untaggedCount = _.toString(_.size(_.filter(repos, _.matches({ 'language': 'null' }))))
-  },
-
-  [types.SET_LAZY_REPOS] (state, {lazyRepos}) {
-    state.lazyRepos = lazyRepos
-  },
-
-  [types.SET_LANG_GROUP] (state, {langGroup}) {
-    state.langGroup = langGroup
   },
 
   [types.FILTER_BY_LANGUAGE] (state, {lang}) {
@@ -169,10 +149,20 @@ const mutations = {
       : _.filter(state.repos, function (o) {
         return _.includes(o.repo_name, searchQuery) || _.includes(o.description, searchQuery)
       })
+  },
+
+  [types.SET_LANG_GROUP_DB] (state, payload) {
+    const { langGroup } = state
+    db.removeLangGroup().then(val => {
+      langGroup.forEach(v => {
+        db.addLangGroup(v, docs => {})
+      })
+    })
   }
 }
 
 export default {
   state,
+  actions,
   mutations
 }
