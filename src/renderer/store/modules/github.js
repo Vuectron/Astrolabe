@@ -62,33 +62,38 @@ const actions = {
     })
 
     // build lang_group
-    const countLangs = _.countBy(initRepos, 'language')
-
-    const langGroup = []
-
-    const devicons = Constants.DEVICONS
-
-    for (let lang in countLangs) {
-      if (countLangs.hasOwnProperty(lang)) {
-        let langCount = {
-          '_id': lang,
-          'lang': lang,
-          'count': countLangs[lang],
-          'icon': devicons[lang] || devicons['Default']
+    const getLangGroup = (repos) => {
+      const devicons = Constants.DEVICONS
+      const countedLangs = _.countBy(repos, 'language')
+      const langGroup = Object.keys(countedLangs).map(v => {
+        return {
+          _id: v,
+          lang: v,
+          count: countedLangs[v],
+          icon: devicons[v] || devicons['Default']
         }
-        langGroup.push(langCount)
-        db.findOneLangGroup(lang).then(doc => {
-          if (_.isNull(doc)) {
-            db.addLangGroup(langCount, docs => {})
-          } else {
-            db.updateLangGroup(langCount)
-          }
-        })
-      }
+      })
+      // ordered by count desc & lang asc
+      return _.orderBy(langGroup, ['count', 'lang'], ['desc', 'asc'])
     }
+
+    const orderedLangs = getLangGroup(initRepos)
+
+    // upsert the lang_group db
+    orderedLangs.forEach((v, i) => {
+      v._id = i + 1
+      db.findOneLangGroup(v.lang).then(data => {
+        if (_.isNull(data)) {
+          db.addLangGroup(v, _ => {})
+        } else {
+          db.updateLangGroup(v)
+        }
+      })
+    })
+
     commit(types.SET_GITHUB_STATE, {
       // set lang_group
-      langGroup: _.orderBy(langGroup, 'count', 'desc'),
+      langGroup: orderedLangs,
       // set init repos
       repos: initRepos,
       // set repos count
@@ -122,23 +127,6 @@ const mutations = {
     Object.assign(state, payload)
   },
 
-  // [types.SET_USER] (state, {user}) {
-  //   console.log(userDataDir)
-  //   state.user = user
-  //   db.findOneUser(user.id).then(res => {
-  //     if (_.isNull(res)) {
-  //       // when change user delete all db file
-  //       jetpack.find(userDataDir, { matching: ['*.db'] }).forEach(jetpack.remove)
-  //       db.addUser(user, user => {
-  //         state.user = user
-  //       })
-  //     } else {
-  //       state.user = user
-  //       db.updateUser(user)
-  //     }
-  //   })
-  // },
-
   [types.SET_REPOS] (state, {repos}) {
     state.repos = repos
     state.reposCount = _.toString(_.size(repos))
@@ -167,13 +155,25 @@ const mutations = {
       })
   },
 
-  [types.SET_LANG_GROUP_DB] (state, payload) {
+  [types.SET_LANG_GROUP] (state, payload) {
     const { langGroup } = state
-    db.removeLangGroup().then(val => {
-      langGroup.forEach(v => {
-        db.addLangGroup(v, docs => {})
-      })
+    db.removeLangGroup()
+    langGroup.forEach((v, i) => {
+      v._id = i + 1
+      db.addLangGroup(v, _ => {})
     })
+  },
+
+  [types.ADD_LANG_GROUP] (state, payload) {
+    const { langGroup } = state
+    const newTag = {
+      _id: langGroup.length + 1,
+      lang: payload,
+      count: 0,
+      icon: Constants.DEVICONS['Default']
+    }
+    langGroup.push(newTag)
+    db.addLangGroup(newTag, _ => {})
   }
 }
 

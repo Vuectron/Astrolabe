@@ -63,14 +63,16 @@
     </draggable>
     <mu-divider/>
     <mu-flex justify-content="center" align-items="center">
-      <mu-button full-width flat color="secondary" class="mu-flat-button-fullwidth" ref="addBtn" @click="isOpenPopover = !isOpenPopover">
+      <mu-button full-width flat color="secondary" class="mu-flat-button-fullwidth" ref="addBtn" @click="isOpenDialog = !isOpenDialog">
         <mu-icon value="add"></mu-icon>
       </mu-button>
     </mu-flex>
 
-    <!-- <mu-popover :open.sync="isOpenPopover" :trigger="trigger">
-      <mu-text-field label-float label="New Tag" />
-    </mu-popover> -->
+    <mu-dialog title="Add Custom Tag" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="isOpenDialog">
+      <mu-text-field v-model="tagName" label="Custom Tag Name" label-float full-width></mu-text-field>
+      <mu-button slot="actions" flat color="primary" @click="handleCancel">Cancel</mu-button>
+      <mu-button slot="actions" flat color="primary" @click="handleAddTag">Confrim</mu-button>
+    </mu-dialog>
   </mu-drawer>
 </template>
 
@@ -104,8 +106,9 @@ export default {
       },
       isSorted: false,
       hoveredLink: '',
-      isOpenPopover: false,
-      trigger: null
+      isOpenDialog: false,
+      trigger: null,
+      tagName: ''
     }
   },
   computed: {
@@ -135,20 +138,14 @@ export default {
       }
     }
   },
-  watch: {
-    isSorted (newValue) {
-      if (!newValue) {
-        this.setLangGroupDB()
-      }
-    }
-  },
   methods: {
     ...mapActions([
       'toggleSidebar',
       'setSearchQuery',
       'filterByLanguage',
       'setGithubState',
-      'setLangGroupDB'
+      'setLangGroup',
+      'addLangGroup'
     ]),
     handleMenuChange (val) {
       this.menuVal = val
@@ -171,11 +168,16 @@ export default {
       this.hoveredLink = lang
     },
     handleSortTag ({ oldIndex, newIndex }) {
-      console.log(oldIndex)
-      console.log(newIndex)
+      console.log(oldIndex, newIndex)
+      this.setLangGroup()
     },
     handleAddTag () {
-      console.log('handle add tag')
+      this.addLangGroup(this.tagName)
+      this.handleCancel()
+    },
+    handleCancel () {
+      this.isOpenDialog = false
+      this.tagName = ''
     }
   },
   mounted () {

@@ -91,9 +91,9 @@ export const getUser = ({ commit, dispatch, state }, payload) => {
       .end((error, response) => {
         if (!error && response.statusCode === 200) {
           const user = response.body
-          console.group('Github User Group Begin')
-          console.log(user)
-          console.groupEnd('Github User Group End')
+          // console.group('Github User Group Begin')
+          // console.log(user)
+          // console.groupEnd('Github User Group End')
           dispatch('setUser', { user })
           resolve(user)
         } else {
@@ -130,17 +130,17 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
   // fetch all repos from db into repos state
   const repos = await db.fetchAllRepos()
 
-  console.group('Github getRepos Begin')
-  console.log(userInfo)
-  console.log(repos)
-  console.groupEnd()
+  // console.group('Github getRepos Begin')
+  // console.log(userInfo)
+  // console.log(langGroup)
+  // console.log(repos)
+  // console.groupEnd()
 
-  if (_.isNull(userInfo) && _.isEmpty(langGroup) && _.isEmpty(repos)) {
+  if (_.isNull(userInfo) || _.isEmpty(langGroup) || _.isEmpty(repos)) {
     getStarredRepos()
   } else {
-    const orderedLangGroup = _.orderBy(langGroup, 'count', 'desc')
     commit(types.SET_REPOS, { repos })
-    commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
+    commit(types.SET_GITHUB_STATE, { langGroup })
     commit(types.TOGGLE_LOGIN)
   }
 }
@@ -226,7 +226,8 @@ export const setRepos = makeAction('SET_REPOS')
 export const filterByLanguage = makeAction('FILTER_BY_LANGUAGE')
 export const orderedRepos = makeAction('ORDERED_REPOS')
 export const setSearchQuery = makeAction('SET_SEARCH_QUERY')
-export const setLangGroupDB = makeAction('SET_LANG_GROUP_DB')
+export const setLangGroup = makeAction('SET_LANG_GROUP')
+export const addLangGroup = makeAction('ADD_LANG_GROUP')
 
 // content actions
 export const toggleLoadingRepos = makeAction('TOGGLE_LOADING_REPOS')

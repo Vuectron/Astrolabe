@@ -19,7 +19,8 @@ export const SET_REPOS = 'SET_REPOS'
 export const FILTER_BY_LANGUAGE = 'FILTER_BY_LANGUAGE'
 export const ORDERED_REPOS = 'ORDERED_REPOS'
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY'
-export const SET_LANG_GROUP_DB = 'SET_LANG_GROUP_DB'
+export const SET_LANG_GROUP = 'SET_LANG_GROUP'
+export const ADD_LANG_GROUP = 'ADD_LANG_GROUP'
 
 // content mutation types
 export const TOGGLE_LOADING_REPOS = 'TOGGLE_LOADING_REPOS'
