@@ -1,7 +1,7 @@
 {
-  "name": "Astrolabe",
+  "name": "astrolabe",
   "productName": "Astrolabe",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "xiaoluoboding <xiaoluoboding@gmail.com>",
   "description": "Manage your GitHub stars with the best one desktop app.",
   "license": "MIT",

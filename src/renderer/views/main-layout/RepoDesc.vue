@@ -122,9 +122,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../assets/variables.less';
+
 .repos-desc {
   position: absolute;
-  border-right: 1px solid rgba(55,53,112,0.08);
+  border-right: 1px solid rgba(55, 53, 112, 0.08);
   padding: 8px;
   top: 64px;
   bottom: 0;
@@ -167,13 +169,13 @@ export default {
     .mu-card-title {
       font-size: 18px;
       font-weight: 700;
-      color: #546e7a;
+      color: @card-font--color;
     }
   }
   .mu-card-text {
     padding: 8px 0;
     font-weight: 500;
-    color: #546e7a;
+    color: @card-font--color;
   }
   .tag-action {
     padding: 8px 0;
@@ -186,7 +188,7 @@ export default {
     display: inline-flex;
     padding-top: 2px;
     font-weight: bold;
-    color: #546e7a;
+    color: @card-font--color;
     i{
       font-size: 18px;
     }
@@ -206,13 +208,14 @@ export default {
     margin: 0px;
     padding: 4px 0;
     transition: color .3s ease;
-    color: #26a69a;
+    color: @secondary--color;
     font-size: 13px;
     font-weight: bold;
     text-transform: inherit;
   }
   a:hover {
-    color: #004D40;
+    color: @secondary--color;
+    opacity: .8;
     text-decoration: underline;
   }
 }

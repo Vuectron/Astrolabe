@@ -118,6 +118,18 @@ const actions = {
         commit(types.SET_GITHUB_STATE, { user })
       }
     })
+  },
+  async addLangGroup ({ commit, state }, payload) {
+    const { langGroup } = state
+    const newTag = {
+      _id: langGroup.length + 1,
+      lang: payload,
+      count: 0,
+      icon: Constants.DEVICONS['Default']
+    }
+    commit(types.ADD_LANG_GROUP, { newTag })
+    const res = db.addLangGroup(newTag, _ => {})
+    return res
   }
 }
 
@@ -165,15 +177,7 @@ const mutations = {
   },
 
   [types.ADD_LANG_GROUP] (state, payload) {
-    const { langGroup } = state
-    const newTag = {
-      _id: langGroup.length + 1,
-      lang: payload,
-      count: 0,
-      icon: Constants.DEVICONS['Default']
-    }
-    langGroup.push(newTag)
-    db.addLangGroup(newTag, _ => {})
+    state.langGroup.push(payload.newTag)
   }
 }
 

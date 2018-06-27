@@ -88,10 +88,14 @@ export default {
       })
     })
   },
-  addLangGroup (langData, callback) {
-    langGroup.insert(langData, (err, docs) => {
-      if (err) {}
-      return callback(docs)
+  addLangGroup (langData) {
+    return new Promise((resolve, reject) => {
+      langGroup.insert(langData, (err, docs) => {
+        if (err) {
+          reject(err)
+        }
+        return resolve(docs)
+      })
     })
   },
   updateLangGroup (langGroupData) {

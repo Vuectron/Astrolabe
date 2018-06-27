@@ -227,7 +227,6 @@ export const filterByLanguage = makeAction('FILTER_BY_LANGUAGE')
 export const orderedRepos = makeAction('ORDERED_REPOS')
 export const setSearchQuery = makeAction('SET_SEARCH_QUERY')
 export const setLangGroup = makeAction('SET_LANG_GROUP')
-export const addLangGroup = makeAction('ADD_LANG_GROUP')
 
 // content actions
 export const toggleLoadingRepos = makeAction('TOGGLE_LOADING_REPOS')

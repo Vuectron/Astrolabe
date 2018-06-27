@@ -1,6 +1,6 @@
 <template>
   <mu-drawer
-    class="app-drawer"
+    class="sidebar-drawer"
     :open="open"
     :docked="docked"
     :zDepth="1">
@@ -18,61 +18,66 @@
         @change="handleChangeSearchVal"
       />
     </mu-appbar>
-    <mu-list :value="menuVal" @change="handleMenuChange" :ripple="false">
-      <mu-list-item button value="allStars" @click="filterByLanguage({lang: null})">
-        <mu-list-item-action>
-          <mu-icon value="star" color="pink"></mu-icon>
-        </mu-list-item-action>
-        <mu-list-item-title>All Stars</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-badge :content="reposCount" color="secondary" />
-        </mu-list-item-action>
-      </mu-list-item>
-      <mu-list-item button value="untaggedStars" @click="filterByLanguage({lang: 'null'})">
-        <mu-list-item-action>
-          <mu-icon value="bookmark_border" color="pink"></mu-icon>
-        </mu-list-item-action>
-        <mu-list-item-title>Untagged Stars</mu-list-item-title>
-        <mu-list-item-action>
-          <mu-badge :content="untaggedCount" color="secondary" />
-        </mu-list-item-action>
-      </mu-list-item>
-    </mu-list>
-    <mu-divider />
-    <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list" @start="isSorted=true" @end="isSorted=false" @sort="handleSortTag">
-      <li
-        v-for="group in langGroup"
-        v-if="group.count >= minLangCount && group.lang != 'null'"
-        class="mu-list__langtag"
-        :title="group.lang"
-        :key="group.lang"
-        @click="filterByLanguage({lang: group.lang})"
-      >
-        <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="handleHover(group.lang)" @mouseout="handleHover">
-          <div class="mu-item" :class="{'is-selected': activeLang === group.lang}">
-            <div class="mu-item-action">
-              <div class="mu-item-left"><i class="mu-icon devicon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
+    <section class="sidebar-tags">
+      <mu-list :value="menuVal" @change="handleMenuChange" :ripple="false">
+        <mu-list-item button value="allStars" @click="filterByLanguage({lang: null})">
+          <mu-list-item-action>
+            <mu-icon value="star" color="pink"></mu-icon>
+          </mu-list-item-action>
+          <mu-list-item-title>All Stars</mu-list-item-title>
+          <mu-list-item-action>
+            <mu-badge :content="reposCount" color="secondary" />
+          </mu-list-item-action>
+        </mu-list-item>
+        <mu-list-item button value="untaggedStars" @click="filterByLanguage({lang: 'null'})">
+          <mu-list-item-action>
+            <mu-icon value="bookmark_border" color="pink"></mu-icon>
+          </mu-list-item-action>
+          <mu-list-item-title>Untagged Stars</mu-list-item-title>
+          <mu-list-item-action>
+            <mu-badge :content="untaggedCount" color="secondary" />
+          </mu-list-item-action>
+        </mu-list-item>
+      </mu-list>
+      <mu-divider />
+      <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list" @start="isSorted=true" @end="isSorted=false" @sort="handleSortTag">
+        <li
+          v-for="group in langGroup"
+          v-if="group.count >= minLangCount && group.lang != 'null'"
+          class="mu-list__langtag"
+          :title="group.lang"
+          :key="group.lang"
+          @click="filterByLanguage({lang: group.lang})"
+        >
+          <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="hoveredLink = group.lang" @mouseout="hoveredLink = ''">
+            <div class="mu-item" :class="{'is-selected': activeLang === group.lang}">
+              <div class="mu-item-action">
+                <div class="mu-item-left"><i class="mu-icon devicon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
+              </div>
+              <div class="mu-item-title">{{group.lang}}</div>
+              <div class="mu-item-action">
+                <mu-badge :content="group.count + ''" color="secondary" />
+              </div>
             </div>
-            <div class="mu-item-title">{{group.lang}}</div>
-            <div class="mu-item-action">
-              <mu-badge :content="group.count + ''" color="secondary" />
-            </div>
-          </div>
-        </a>
-      </li>
-    </draggable>
-    <mu-divider/>
-    <mu-flex justify-content="center" align-items="center">
+          </a>
+        </li>
+      </draggable>
+    </section>
+    <mu-flex justify-content="center" align-items="center" class="sidebar-action">
       <mu-button full-width flat color="secondary" class="mu-flat-button-fullwidth" ref="addBtn" @click="isOpenDialog = !isOpenDialog">
         <mu-icon value="add"></mu-icon>
       </mu-button>
     </mu-flex>
-
-    <mu-dialog title="Add Custom Tag" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="isOpenDialog">
-      <mu-text-field v-model="tagName" label="Custom Tag Name" label-float full-width></mu-text-field>
+    <mu-dialog title="Add Tag" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="isOpenDialog">
+      <mu-text-field v-model="tagName" label="Tag Name" label-float full-width></mu-text-field>
       <mu-button slot="actions" flat color="primary" @click="handleCancel">Cancel</mu-button>
-      <mu-button slot="actions" flat color="primary" @click="handleAddTag">Confrim</mu-button>
+      <mu-button slot="actions" flat color="primary" @click="handleAddTag">Save</mu-button>
     </mu-dialog>
+    <mu-snackbar :color="alertInfo.color" position="top" :open.sync="alertInfo.open">
+      <mu-icon left value="check_circle"></mu-icon>
+        {{alertInfo.msg}}
+      <mu-button flat slot="action" color="#fff" @click="alertInfo.open = false">Close</mu-button>
+    </mu-snackbar>
   </mu-drawer>
 </template>
 
@@ -108,7 +113,13 @@ export default {
       hoveredLink: '',
       isOpenDialog: false,
       trigger: null,
-      tagName: ''
+      tagName: '',
+      alertInfo: {
+        open: false,
+        color: 'success',
+        msg: '',
+        timeout: 3000
+      }
     }
   },
   computed: {
@@ -164,15 +175,24 @@ export default {
     handleChangeSearchVal (val) {
       console.log(val)
     },
-    handleHover (lang) {
-      this.hoveredLink = lang
-    },
     handleSortTag ({ oldIndex, newIndex }) {
       console.log(oldIndex, newIndex)
       this.setLangGroup()
     },
-    handleAddTag () {
-      this.addLangGroup(this.tagName)
+    async handleAddTag () {
+      const res = await this.addLangGroup(this.tagName)
+      if (this.alertInfo.timer) clearTimeout(this.alertInfo.timer)
+      this.alertInfo.open = true
+      if (res) {
+        this.alertInfo.color = 'success'
+        this.alertInfo.msg = `${res.lang} has been created sucessfully.`
+      } else {
+        this.alertInfo.color = 'error'
+        this.alertInfo.msg = `Something went wrong, try again.`
+      }
+      this.alertInfo.timer = setTimeout(() => {
+        this.alertInfo.open = false
+      }, this.alertInfo.timeout)
       this.handleCancel()
     },
     handleCancel () {
@@ -188,7 +208,7 @@ export default {
 </script>
 
 <style lang="less">
-.mu-drawer {
+.sidebar-drawer {
   &.is-open {
     min-width: 256px;
     width: 256px;
@@ -241,6 +261,23 @@ export default {
     input {
       color: #fff;
     }
+  }
+}
+
+.sidebar-drawer {
+  .sidebar-tags {
+    position: absolute;
+    top: 64px;
+    bottom: 36px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .sidebar-action {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid rgba(0,0,0,.12);
   }
 }
 
