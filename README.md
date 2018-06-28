@@ -8,16 +8,15 @@
 
 ## Tech Stack
 
-* Electron
-* Github Api
+* Electron 1.7.5
+* Github Api 3.0+
 * Lodash
 * Material Design
-* Muse-ui
+* Muse-ui 3.0+
 * Nedb
-* Node.js
 * Superagent
-* Vue.js 2.x
-* Webpack 2.x
+* Vue.js 2.5+
+* Webpack 3.5.2
 
 ---
 
