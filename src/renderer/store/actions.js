@@ -147,45 +147,65 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
 
 export const showReadme = ({ commit, state }, repo) => {
   const { github } = state.github
-  const { activeRepo } = state.content
+  const { activeRepo, loadingReadme } = state.content
   const repoSlug = `${repo.owner_name}_${repo.repo_name}`
   let renderMarkdown
 
+  const githubRepo = github.getRepo(repo.owner_name, repo.repo_name)
+  const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
+
+  const getReadme = () => request
+    .get(readmeUrl)
+    .accept('application/json')
+    .timeout(30000)
+    .then(res => {
+      /* responded in time */
+      githubRepo.getContents(
+        'master',
+        res.body.name,
+        true,
+        (err, data) => {
+          if (err) {
+            console.dir(err.status)
+            // TODO dealwith 404
+          }
+          // self.repoReadme = marked(data)
+          renderMarkdown = md().render(data)
+          storage.set(repoSlug, renderMarkdown, error => {
+            if (error) throw error
+          })
+          if (state.content.selectedRepo === repo.repo_name) {
+            commit(types.SET_REPO_README, { repoReadme: renderMarkdown })
+            commit(types.SET_CONTENT_STATE, { loadingReadme: false })
+          }
+        }
+      )
+    }, err => {
+      if (err.timeout) {
+        console.log('Fetching repos timeout.', err)
+      } else {
+        console.log('Something went wrong fetching from GitHub', err)
+      }
+      commit(types.SET_CONTENT_STATE, { loadingReadme: false })
+    })
+
+  commit(types.SET_ACTIVE_REPO, {repo})
+  commit(types.SET_SELECTED_REPO, {repoName: repo.repo_name})
   if (repo._id !== activeRepo._id) {
-    commit(types.SET_ACTIVE_REPO, {repo})
-    commit(types.TOGGLE_LOADING_README)
+    if (!loadingReadme) {
+      commit(types.SET_CONTENT_STATE, { loadingReadme: true })
+    }
 
     storage.get(repoSlug, (error, data) => {
       if (error) console.error(error)
       if (!_.isEmpty(data)) {
         commit(types.SET_REPO_README, {repoReadme: data})
-        commit(types.TOGGLE_LOADING_README)
+        commit(types.SET_CONTENT_STATE, { loadingReadme: false })
       } else {
-        const githubRepo = github.getRepo(repo.owner_name, repo.repo_name)
-        const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
-        request.get(readmeUrl)
-          .accept('application/json')
-          .end((err, res) => {
-            if (!err && res) {
-              githubRepo.getContents('master', res.body.name, true, (err, data) => {
-                if (err) {
-                  console.dir(err.status)
-                  // TODO dealwith 404
-                }
-                // self.repoReadme = marked(data)
-                renderMarkdown = md().render(data)
-                commit(types.SET_REPO_README, {repoReadme: renderMarkdown})
-                storage.set(repoSlug, renderMarkdown, (error) => { if (error) throw error })
-                commit(types.TOGGLE_LOADING_README)
-              })
-            } else {
-              console.log('Something went wrong fetching from GitHub', err)
-            }
-          })
+        getReadme()
       }
     })
   }
-  commit(types.SET_SELECTED_REPO, {repoName: repo.repo_name})
 }
 
 export const reloadRepos = ({ commit, state }, isInfinite) => {
