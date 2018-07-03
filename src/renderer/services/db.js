@@ -103,9 +103,9 @@ export default {
       if (err) {}
     })
   },
-  findOneLangGroup (id) {
+  findOneLangGroup (lang) {
     return new Promise((resolve, reject) => {
-      langGroup.findOne({_id: id}, (err, doc) => {
+      langGroup.findOne({lang: lang}, (err, doc) => {
         if (err) {}
         return resolve(doc)
       })

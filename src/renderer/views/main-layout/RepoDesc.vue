@@ -21,9 +21,9 @@
       </mu-tabs>
     </div>
     <div class="repos-desc__content">
-      <mu-load-more :loading="isInfinite" @load="reloadRepos(true)" loading-text="Loading... ...">
+      <!-- <mu-load-more :loading="isInfinite" @load="reloadRepos(true)" loading-text="Loading... ..."> -->
         <div
-          v-for="repo in lazyRepos"
+          v-for="repo in repos"
           class="mu-card repos-desc-card"
           :class="{'mu-card__raised': selectedRepo === repo.repo_name}"
           :key="repo._id"
@@ -47,7 +47,7 @@
             <a href="#" @click.stop="openInBrowser(repo.html_url)">View on GitHub</a>
           </div>
         </div>
-      </mu-load-more>
+      <!-- </mu-load-more> -->
     </div>
     <!-- <mu-infinite-scroll :scroller="scroller" :loading="isInfinite" @load="reloadRepos(true)" loadingText="Loading... ..."/> -->
   </div>
@@ -72,7 +72,8 @@ export default {
     ...mapState({
       isInfinite: state => state.global.isInfinite,
       langGroup: state => state.github.langGroup,
-      lazyRepos: state => state.github.lazyRepos,
+      // lazyRepos: state => state.github.lazyRepos,
+      repos: state => state.github.repos,
       loadingRepos: state => state.content.loadingRepos,
       selectedRepo: state => state.content.selectedRepo
     })
@@ -83,11 +84,6 @@ export default {
       if (val) {
         this.toggleLoadingRepos()
       }
-    },
-    loadingRepos (val) {
-      if (val) {
-        this.reloadRepos(false)
-      }
     }
   },
 
@@ -97,9 +93,9 @@ export default {
       'toggleLoadingRepos',
       'reloadRepos'
     ]),
-    setLazyRepos (lazyRepos) {
-      return this.$store.dispatch('setLazyRepos', { lazyRepos })
-    },
+    // setLazyRepos (lazyRepos) {
+    //   return this.$store.dispatch('setLazyRepos', { lazyRepos })
+    // },
     orderedRepos (orderField) {
       return this.$store.dispatch('orderedRepos', { orderField })
     },
@@ -116,7 +112,7 @@ export default {
 
   mounted () {
     this.scroller = this.$el
-    this.reloadRepos(false)
+    // this.reloadRepos(false)
   }
 }
 </script>

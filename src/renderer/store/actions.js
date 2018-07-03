@@ -9,6 +9,8 @@ import storage from 'electron-json-storage'
 import * as types from './mutation-types'
 import { md } from '../utils/helpers'
 
+const octokit = require('@octokit/rest')()
+
 const makeAction = (type) => {
   return ({ commit }, ...args) => commit(type, ...args)
 }
@@ -104,31 +106,30 @@ export const getUser = ({ commit, dispatch, state }, payload) => {
 }
 
 export const getRepos = async ({ commit, dispatch, state }, user) => {
-  const { github } = state.github
   user = user || state.github.user
 
-  const githubUser = github.getUser(user.login)
-
-  const getStarredRepos = () => {
-    return new Promise((resolve, reject) => {
-      githubUser.listStarredRepos((error, repos) => {
-        if (error) {
-          console.log(error)
-          reject(error)
-        }
-        dispatch('initRepos', { repos })
-        commit(types.TOGGLE_LOGIN)
-        resolve(repos)
-      })
+  const getStarredRepos = async (page = 1) => {
+    const result = await octokit.activity.getStarredReposForUser({
+      username: user.login,
+      page
     })
+    console.log(result)
+    if (result && result.status === 200) {
+      const repos = result.data.map(v => v.repo)
+      const res = await dispatch('loadRepos', { repos })
+      if (res && res.length > 0) {
+        getStarredRepos(page + 1)
+      }
+      commit(types.TOGGLE_LOGIN)
+    }
   }
-
   // fetch user from db
   const userInfo = await db.findOneUser(user.id)
   // fetch langGroup from db
   const langGroup = await db.fetchLangGroup()
   // fetch all repos from db into repos state
-  const repos = await db.fetchAllRepos()
+  // const repos = await db.fetchAllRepos()
+  const repos = []
 
   // console.group('Github getRepos Begin')
   // console.log(userInfo)
@@ -211,7 +212,7 @@ export const showReadme = ({ commit, state }, repo) => {
 export const reloadRepos = ({ commit, state }, isInfinite) => {
   const { limitCount } = state.global
   const { reposCount } = state.github
-  if (limitCount > reposCount) return
+  if (limitCount > parseInt(reposCount, 10)) return
   if (isInfinite) {
     commit(types.TOGGLE_IS_INFINITE)
     commit(types.INCREASE_LIMIT)
@@ -219,6 +220,7 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
   setTimeout(() => {
     db.fetchLazyRepos(limitCount)
       .then(lazyRepos => {
+        console.log(lazyRepos)
         commit(types.SET_GITHUB_STATE, { lazyRepos })
       })
     if (isInfinite) {

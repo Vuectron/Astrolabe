@@ -23,8 +23,13 @@ const state = {
 
 // actions
 const actions = {
-  async initRepos ({ commit, state }, payload) {
+  async loadRepos ({ commit, dispatch, state }, payload) {
     const { repos } = payload
+    // loading finish
+    if (repos.length === 0) {
+      commit(types.SET_GITHUB_STATE, { lazyRepos: state.repos })
+      dispatch('bulidLangGroup')
+    }
     // insert repos
     let apiReposArray = []
     const initRepos = repos.map((v, i) => {
@@ -61,47 +66,37 @@ const actions = {
       }
     })
 
-    // build lang_group
-    const getLangGroup = (repos) => {
-      const devicons = Constants.DEVICONS
-      const countedLangs = _.countBy(repos, 'language')
-      const langGroup = Object.keys(countedLangs).map(v => {
-        return {
-          _id: v,
-          lang: v,
-          count: countedLangs[v],
-          icon: devicons[v] || devicons['Default']
-        }
-      })
-      // ordered by count desc & lang asc
-      return _.orderBy(langGroup, ['count', 'lang'], ['desc', 'asc'])
-    }
+    const mergedRepos = [...state.repos, ...initRepos]
 
-    const orderedLangs = getLangGroup(initRepos)
-
+    commit(types.SET_REPOS, { repos: mergedRepos })
+    return initRepos
+  },
+  // build lang_group
+  async bulidLangGroup ({ commit, state }, payload) {
+    const { repos } = state
+    const devicons = Constants.DEVICONS
+    const countedLangs = _.countBy(repos, 'language')
+    const langGroup = Object.keys(countedLangs).map((v, i) => {
+      return {
+        lang: v,
+        count: countedLangs[v],
+        icon: devicons[v] || devicons['Default']
+      }
+    })
+    // ordered by count desc & lang asc
+    const orderedLangGroup = _.orderBy(langGroup, ['count', 'lang'], ['desc', 'asc'])
     // upsert the lang_group db
-    orderedLangs.forEach((v, i) => {
-      v._id = i + 1
+    orderedLangGroup.forEach((v, i) => {
       db.findOneLangGroup(v.lang).then(data => {
         if (_.isNull(data)) {
+          v._id = i + 1
           db.addLangGroup(v, _ => {})
         } else {
           db.updateLangGroup(v)
         }
       })
     })
-
-    commit(types.SET_GITHUB_STATE, {
-      // set lang_group
-      langGroup: orderedLangs,
-      // set init repos
-      repos: initRepos,
-      // set repos count
-      reposCount: _.toString(_.size(repos)),
-      // set untagged count
-      untaggedCount: _.toString(_.size(_.filter(repos, _.matches({ 'language': null }))))
-    })
-    return initRepos
+    commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
   },
   async setUser ({ commit, state }, payload) {
     const { user } = payload
@@ -139,29 +134,29 @@ const mutations = {
     Object.assign(state, payload)
   },
 
-  [types.SET_REPOS] (state, {repos}) {
+  [types.SET_REPOS] (state, { repos }) {
     state.repos = repos
     state.reposCount = _.toString(_.size(repos))
     state.untaggedCount = _.toString(_.size(_.filter(repos, _.matches({ 'language': 'null' }))))
   },
 
   [types.FILTER_BY_LANGUAGE] (state, {lang}) {
-    state.lazyRepos = _.isNull(lang)
-      ? state.repos
-      : _.filter(state.repos, _.matches({ 'language': lang }))
+    state.repos = _.isNull(lang)
+      ? state.lazyRepos
+      : _.filter(state.lazyRepos, _.matches({ 'language': lang }))
     state.activeLang = lang
   },
 
   [types.ORDERED_REPOS] (state, {orderField}) {
-    state.lazyRepos = state.order > 0
-      ? _.orderBy(state.lazyRepos, orderField)
-      : _.orderBy(state.lazyRepos, orderField, 'desc')
+    state.repos = state.order > 0
+      ? _.orderBy(state.repos, orderField)
+      : _.orderBy(state.repos, orderField, 'desc')
     state.order = state.order * -1
   },
 
   [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
-    state.lazyRepos = _.isNull(searchQuery)
-      ? state.repos
+    state.repos = _.isNull(searchQuery) || searchQuery === ''
+      ? state.lazyRepos
       : _.filter(state.repos, function (o) {
         return _.includes(o.repo_name, searchQuery) || _.includes(o.description, searchQuery)
       })

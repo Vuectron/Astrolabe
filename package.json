@@ -23,6 +23,7 @@
     "postinstall": "npm run lint:fix"
   },
   "dependencies": {
+    "@octokit/rest": "^15.9.4",
     "animate.css": "^3.6.1",
     "axios": "^0.18.0",
     "devicon": "^2.0.0",
