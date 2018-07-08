@@ -2,7 +2,7 @@
   <div id="repos-desc" class="repos-desc animated fadeIn">
     <div class="repos-desc__header">
       <mu-tabs :value="activeTab" center @change="handleTabChange">
-        <mu-tab value="tab1" @click="orderedRepos('repo_idx')">
+        <mu-tab value="tab1" @click="orderedRepos('starred_at')">
           <mu-icon value="schedule" />
           Time
         </mu-tab>

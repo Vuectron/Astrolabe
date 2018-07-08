@@ -114,8 +114,13 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
       page
     })
     if (result && result.status === 200) {
-      const repos = result.data.map(v => v.repo)
-      console.log(result)
+      const repos = result.data.map(v => {
+        return {
+          ...v.repo,
+          starred_at: v.starred_at
+        }
+      })
+      console.log(repos)
       commit(types.SET_GITHUB_STATE, { loadingRepos: true })
       const res = await dispatch('loadRepos', { repos })
       if (res && res.length > 0) {
