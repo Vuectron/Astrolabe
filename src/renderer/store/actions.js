@@ -113,9 +113,10 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
       username: user.login,
       page
     })
-    console.log(result)
     if (result && result.status === 200) {
       const repos = result.data.map(v => v.repo)
+      console.log(result)
+      commit(types.SET_GITHUB_STATE, { loadingRepos: true })
       const res = await dispatch('loadRepos', { repos })
       if (res && res.length > 0) {
         getStarredRepos(page + 1)
@@ -251,7 +252,6 @@ export const setSearchQuery = makeAction('SET_SEARCH_QUERY')
 export const setLangGroup = makeAction('SET_LANG_GROUP')
 
 // content actions
-export const toggleLoadingRepos = makeAction('TOGGLE_LOADING_REPOS')
 export const toggleLoadingReadme = makeAction('TOGGLE_LOADING_README')
 export const setActiveRepo = makeAction('SET_ACTIVE_REPO')
 export const setSelectedRepo = makeAction('SET_SELECTED_REPO')

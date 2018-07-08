@@ -74,7 +74,7 @@ export default {
   },
   computed: {
     loadingRepos () {
-      return this.$store.state.content.loadingRepos
+      return this.$store.state.github.loadingRepos
     },
     user () {
       return this.$store.state.github.user

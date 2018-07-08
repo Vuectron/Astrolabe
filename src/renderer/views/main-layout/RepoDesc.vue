@@ -79,18 +79,9 @@ export default {
     })
   },
 
-  watch: {
-    langGroup (val) {
-      if (val) {
-        this.toggleLoadingRepos()
-      }
-    }
-  },
-
   methods: {
     ...mapActions([
       'showReadme',
-      'toggleLoadingRepos',
       'reloadRepos'
     ]),
     // setLazyRepos (lazyRepos) {

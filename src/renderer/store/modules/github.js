@@ -18,7 +18,8 @@ const state = {
   untaggedCount: '0',
   searchQuery: '',
   order: 1,
-  activeLang: ''
+  activeLang: '',
+  loadingRepos: false
 }
 
 // actions
@@ -27,7 +28,10 @@ const actions = {
     const { repos } = payload
     // loading finish
     if (repos.length === 0) {
-      commit(types.SET_GITHUB_STATE, { lazyRepos: state.repos })
+      commit(types.SET_GITHUB_STATE, {
+        lazyRepos: state.repos,
+        loadingRepos: false
+      })
       dispatch('bulidLangGroup')
     }
     // insert repos

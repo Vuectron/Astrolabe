@@ -1,7 +1,6 @@
 import * as types from '../mutation-types'
 
 const state = {
-  loadingRepos: false,
   loadingReadme: false,
   repoReadme: '',
   activeRepo: {},
@@ -13,10 +12,6 @@ const state = {
 const mutations = {
   [types.SET_CONTENT_STATE] (state, payload) {
     Object.assign(state, payload)
-  },
-
-  [types.TOGGLE_LOADING_REPOS] (state) {
-    state.loadingRepos = !state.loadingRepos
   },
 
   [types.TOGGLE_LOADING_README] (state) {
