@@ -106,21 +106,16 @@ export const getUser = ({ commit, dispatch, state }, payload) => {
 }
 
 export const getRepos = async ({ commit, dispatch, state }, user) => {
+  console.log(user)
   user = user || state.github.user
 
   const getStarredRepos = async (page = 1) => {
-    const result = await octokit.activity.getStarredReposForUser({
+    const result = await octokit.activity.listReposStarredByUser({
       username: user.login,
       page
     })
     if (result && result.status === 200) {
-      const repos = result.data.map(v => {
-        return {
-          ...v.repo,
-          starred_at: v.starred_at
-        }
-      })
-      console.log(repos)
+      const repos = result.data
       commit(types.SET_GITHUB_STATE, { loadingRepos: true })
       const res = await dispatch('loadRepos', { repos })
       if (res && res.length > 0) {

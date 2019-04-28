@@ -110,7 +110,7 @@ const actions = {
         jetpack
           .find(userDataDir, { matching: ['*.db'] })
           .forEach(jetpack.remove)
-        db.addUser(user)
+        db.addUser(user, () => {})
         commit(types.SET_GITHUB_STATE, { user })
       } else {
         db.updateUser(user)
