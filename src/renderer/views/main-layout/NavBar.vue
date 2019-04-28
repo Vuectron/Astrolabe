@@ -21,7 +21,7 @@
             </mu-list-item-action>
             <mu-list-item-title>Profile</mu-list-item-title>
           </mu-list-item>
-          <mu-list-item button>
+          <mu-list-item button @click="handleOpenSettings">
             <mu-list-item-action>
               <mu-icon value="settings"></mu-icon>
             </mu-list-item-action>
@@ -48,15 +48,20 @@
         <mu-button flat slot="actions" color="primary" @click="handleSignout">Yes</mu-button>
       </mu-dialog>
     </mu-menu>
+    <setting-drawer :is-open="isOpenSettings" @close="isOpenSettings=false" />
   </mu-appbar>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import { ipcRenderer } from 'electron'
+import SettingDrawer from './SettingDrawer'
 
 export default {
   name: 'NavBar',
+  components: {
+    SettingDrawer
+  },
   props: {
     open: {
       type: Boolean,
@@ -68,6 +73,7 @@ export default {
       title: 'Astrolabe',
       isOpen: false,
       isOpenDialog: false,
+      isOpenSettings: false,
       trigger: null,
       dialogTitle: 'Sign out'
     }
@@ -95,6 +101,10 @@ export default {
     },
     toggleDailogOpen () {
       this.isOpenDialog = !this.isOpenDialog
+    },
+    handleOpenSettings () {
+      this.isOpen = false
+      this.isOpenSettings = true
     }
   },
   mounted () {
