@@ -71,10 +71,7 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
     width: 1024,
     height: 768,
     center: true,
-    show: true,
-    webPreferences: {
-      nodeIntegration: false
-    }
+    show: true
   })
 
   const githubUrl = `https://${authOptions.hostname}/login/oauth/authorize?`
@@ -93,6 +90,7 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
     }
 
     if (code) {
+      console.log(code)
       // If there is a code, proceed to get token from github
       await dispatch('getToken', {authOptions, code})
       // If get token successful, proceed to get user from github
@@ -109,17 +107,6 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
   authWindow.on('close', () => {
     authWindow.destroy()
   })
-
-  // authWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-  //   if (validatedURL.includes(authOptions.hostname)) {
-  //     authWindow.destroy()
-
-  //     dialog.showErrorBox(
-  //       'Invalid Hostname',
-  //       `Could not load https://${authOptions.hostname}/.`
-  //     )
-  //   }
-  // })
 
   authWindow.webContents.on('will-navigate', (event, url) => {
     console.log(url)

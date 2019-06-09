@@ -1,12 +1,6 @@
 'use strict'
 
-import {
-  app,
-  BrowserWindow,
-  ipcMain,
-  dialog,
-  session
-} from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, session } from 'electron'
 
 /**
  * Set `__static` path to static files in production
