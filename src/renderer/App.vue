@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="app">
     <router-view></router-view>
   </div>
 </template>
@@ -17,5 +17,8 @@
 // @import './assets/icons/devicon-2.2/devicon.min.css';
 @import '~devicon/devicon-colors.css';
 @import '~animate.css/animate.min.css';
-@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+#app {
+  height: 100%;
+  overflow: hidden;
+}
 </style>

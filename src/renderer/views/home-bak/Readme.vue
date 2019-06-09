@@ -5,43 +5,42 @@
 </template>
 
 <script>
-  import $ from 'jquery'
-  const { shell } = require('electron')
+const { shell } = require('electron')
 
-  export default {
-    name: 'Readme',
+export default {
+  name: 'Readme',
 
-    props: [
-      'repoReadme'
-    ],
+  props: [
+    'repoReadme'
+  ],
 
-    mounted () {
-      const self = this
+  mounted () {
+    // const self = this
 
-      $(document).ready(function () {
-        // dealwith table style
-        $('table').addClass('bordered striped')
-      })
+    // $(document).ready(function () {
+    //   // dealwith table style
+    //   $('table').addClass('bordered striped')
+    // })
 
-      // prevent default click action instead of execute openInBrowser()
-      $('.readme a').click(function (e) {
-        e.preventDefault()
-        const href = $(this).attr('href')
-        if (href.match(/^[a-zA-Z]+:\/\//)) {
-          self.openInBrowser(href)
-        } else {
-          // TODO dealwith wrong url
-          console.log('[' + href + '] is a wrong url')
-        }
-      })
-    },
+    // // prevent default click action instead of execute openInBrowser()
+    // $('.readme a').click(function (e) {
+    //   e.preventDefault()
+    //   const href = $(this).attr('href')
+    //   if (href.match(/^[a-zA-Z]+:\/\//)) {
+    //     self.openInBrowser(href)
+    //   } else {
+    //     // TODO dealwith wrong url
+    //     console.log('[' + href + '] is a wrong url')
+    //   }
+    // })
+  },
 
-    methods: {
-      openInBrowser (url) {
-        shell.openExternal(url)
-      }
+  methods: {
+    openInBrowser (url) {
+      shell.openExternal(url)
     }
   }
+}
 </script>
 
 <style>

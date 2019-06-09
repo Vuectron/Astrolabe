@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 const { shell } = require('electron')
 const { clipboard } = require('electron')
 
@@ -62,9 +61,9 @@ export default {
       this.copyTooltip = 'Copied'
     },
     backToTop () {
-      $('#repos-readme').animate({
-        scrollTop: 0
-      }, 300)
+      // $('#repos-readme').animate({
+      //   scrollTop: 0
+      // }, 300)
     }
   }
 }

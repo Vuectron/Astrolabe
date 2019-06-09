@@ -41,12 +41,14 @@ export default {
     ...mapActions([
       'getLocalToken',
       'getUser',
-      'getRepos'
+      'getRepos',
+      'getLocalRepos'
     ]),
     async initGithub () {
       await this.getLocalToken()
       const user = await this.getUser()
-      this.getRepos(user)
+      this.getLocalRepos(user)
+      // this.getRepos(user)
     }
   },
 

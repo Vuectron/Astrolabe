@@ -4,10 +4,15 @@ const state = {
   version: '0.0.1',
   limitCount: 10,
   minLangCount: 0,
-  isInfinite: false
+  isInfinite: false,
+  windowSize: {}
 }
 
 const mutations = {
+  [types.SET_GLOBAL_STATE] (state, payload) {
+    Object.assign(state, payload)
+  },
+
   [types.INCREASE_LIMIT] (state) {
     state.limitCount += 10
   },

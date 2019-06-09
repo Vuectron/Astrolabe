@@ -1,13 +1,13 @@
 <template>
-  <div class="animated">
+  <div class="astrolabe-app animated">
     <nav-bar :open="open" />
     <main>
       <aside class="sidebar">
         <side-bar @change="handleMenuChange" @close="toggleSidebar" :open="open" :docked="docked" />
       </aside>
-      <main class="wrapper" :class="{'nav-hide': !open}">
+      <section class="wrapper" :class="{'nav-hide': !open}">
         <router-view></router-view>
-      </main>
+      </section>
     </main>
   </div>
 </template>
@@ -18,7 +18,7 @@ import { mapActions } from 'vuex'
 import NavBar from './NavBar.vue'
 import SideBar from './SideBar.vue'
 
-const isDesktop = () => window.innerWidth > 993
+const isDesktop = (() => window.innerWidth > 993)()
 
 export default {
   name: 'MainLayout',
@@ -29,8 +29,8 @@ export default {
   data () {
     return {
       title: '',
-      docked: isDesktop(),
-      desktop: isDesktop()
+      docked: isDesktop,
+      desktop: isDesktop
     }
   },
   computed: {
@@ -55,7 +55,7 @@ export default {
       'toggleSidebar'
     ]),
     resizeSidebar () {
-      const desktop = isDesktop()
+      const desktop = this.isDesktop
       console.log('resizeSidebar:' + desktop)
       this.docked = desktop
       if (desktop === this.desktop) return
@@ -83,7 +83,7 @@ export default {
     }
   },
   mounted () {
-    this.setSidebar({ isDesktop: isDesktop() })
+    this.setSidebar({ isDesktop: this.isDesktop })
     this.routes = this.$router.options.routes
     this.setTitle()
     this.resizeSidebar()
@@ -102,6 +102,9 @@ export default {
 </script>
 
 <style lang="less">
+.astrolabe-app {
+  height: 100%;
+}
 .header-appbar {
   position: fixed;
   left: 256px;

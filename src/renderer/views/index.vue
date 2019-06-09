@@ -6,25 +6,20 @@
 
 <script>
 import Login from './login/index.vue'
-import MainLayout from './main-layout/index.vue'
+import Home from './home/index.vue'
 
 export default {
   name: 'Astrolabe',
   components: {
     Login,
-    MainLayout
-  },
-  data () {
-    return {
-      // isLogin: true
-    }
+    Home
   },
   computed: {
     isLogin () {
       return this.$store.state.auth.isLogin
     },
     activeView () {
-      return this.isLogin ? 'main-layout' : 'login'
+      return this.isLogin ? 'home' : 'login'
     }
   }
 }

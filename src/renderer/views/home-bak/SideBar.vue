@@ -40,27 +40,34 @@
         </mu-list-item>
       </mu-list>
       <mu-divider />
-      <draggable v-model="langGroup" element="ul" :options="dragOptions" class="mu-list" @start="isSorted=true" @end="isSorted=false" @sort="handleSortTag">
-        <li
-          v-for="group in langGroup"
-          v-if="group.count >= minLangCount && group.lang != 'null'"
-          class="mu-list__langtag"
-          :title="group.lang"
-          :key="group.lang"
-          @click="filterByLanguage({lang: group.lang})"
-        >
-          <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="hoveredLink = group.lang" @mouseout="hoveredLink = ''">
-            <div class="mu-item" :class="{'is-selected': activeLang === group.lang}">
-              <div class="mu-item-action">
-                <div class="mu-item-left"><i class="mu-icon devicon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
+      <draggable
+        v-model="langGroup"
+        tag="ul"
+        class="mu-list"
+        :options="dragOptions"
+        @start="isSorted=true"
+        @end="isSorted=false"
+        @sort="handleSortTag">
+        <template v-for="group in langGroup">
+          <li
+            v-if="group.count >= minLangCount && group.lang != 'null'"
+            class="mu-list__langtag"
+            :title="group.lang"
+            :key="group.lang"
+            @click="filterByLanguage({lang: group.lang})">
+            <a class="mu-item-wrapper" :class="{'hover': hoveredLink === group.lang}" @mouseover="hoveredLink = group.lang" @mouseout="hoveredLink = ''">
+              <div class="mu-item" :class="{'is-selected': activeLang === group.lang}">
+                <div class="mu-item-action">
+                  <div class="mu-item-left"><i class="mu-icon devicon" :class="[group.icon, {'colored': activeLang === group.lang}]"></i></div>
+                </div>
+                <div class="mu-item-title">{{group.lang}}</div>
+                <div class="mu-item-action">
+                  <mu-badge :content="group.count + ''" color="secondary" />
+                </div>
               </div>
-              <div class="mu-item-title">{{group.lang}}</div>
-              <div class="mu-item-action">
-                <mu-badge :content="group.count + ''" color="secondary" />
-              </div>
-            </div>
-          </a>
-        </li>
+            </a>
+          </li>
+        </template>
       </draggable>
     </section>
     <mu-flex justify-content="center" align-items="center" class="sidebar-action">
@@ -209,18 +216,6 @@ export default {
 
 <style lang="less">
 .sidebar-drawer {
-  &.is-open {
-    min-width: 256px;
-    width: 256px;
-    .mu-item {
-      min-height: 36px;
-    }
-  }
-  min-width: 64px;
-  width: 64px;
-  transform: translate3d(0, 0, 0);
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  visibility: visible;
   .mu-appbar {
     .mu-text-field-content {
       padding-top: 12px;
@@ -238,6 +233,21 @@ export default {
     .mu-item-content {
       white-space: nowrap;
     }
+  }
+  .sidebar-tags {
+    position: absolute;
+    top: 64px;
+    bottom: 36px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .sidebar-action {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 36px;
+    border-top: 1px solid rgba(0,0,0,.12);
   }
 }
 .sidebar-appbar.mu-appbar {
@@ -261,24 +271,6 @@ export default {
     input {
       color: #fff;
     }
-  }
-}
-
-.sidebar-drawer {
-  .sidebar-tags {
-    position: absolute;
-    top: 64px;
-    bottom: 36px;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  .sidebar-action {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 36px;
-    border-top: 1px solid rgba(0,0,0,.12);
   }
 }
 
