@@ -2238,9 +2238,9 @@ detect-node@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.3.tgz#a2033c09cc8e158d37748fbde7507832bd6ce127"
 
-devicon@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/devicon/-/devicon-2.0.0.tgz#6374a28c18561abe15720af01dca5ea0953cd51b"
+devicon@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/devicon/-/devicon-2.2.0.tgz#a19ddc9410f7294fbbe0825fe6259c80681cdb15"
 
 devtron@^1.4.0:
   version "1.4.0"
@@ -6600,6 +6600,10 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
+sortablejs@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.9.0.tgz#2d1e74ae6bac2cb4ad0622908f340848969eb88d"
+
 source-list-map@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.0.tgz#aaa47403f7b245a92fbc97ea08f250d6087ed085"
@@ -7381,6 +7385,12 @@ vue-template-es2015-compiler@^1.6.0:
 vue@^2.5.16:
   version "2.5.16"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
+
+vuedraggable@^2.16.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.21.0.tgz#30c485ed737a9a6a73ea8f21cc8e1ed59aaddc92"
+  dependencies:
+    sortablejs "^1.9.0"
 
 vuex@^3.0.1:
   version "3.0.1"
