@@ -3,7 +3,8 @@ import _ from 'lodash'
 // // import jetpack from 'fs-jetpack'
 import request from 'superagent'
 import Github from 'github-api'
-import db from '../services/db'
+// import db from '../services/db'
+import dataBase from '../services/dataBase'
 import storage from 'electron-json-storage'
 
 import * as types from './mutation-types'
@@ -18,19 +19,22 @@ const makeAction = (type) => {
 // auth actions, axios can not cors for now, use superagent instead.
 export const getToken = ({ commit }, payload) => {
   const { authOptions, code } = payload
-  const { hostname } = authOptions
-
+  const { hostname, clientId, clientSecret } = authOptions
+  // https://github.com/login/oauth/access_token
   const url = `https://${hostname}/login/oauth/access_token`
   const postData = {
-    'client_id': authOptions.clientId,
-    'client_secret': authOptions.clientSecret,
+    'client_id': clientId,
+    'client_secret': clientSecret,
     'code': code
   }
 
   commit(types.TOGGLE_CONNECTING)
 
+  console.log(postData)
+
   return new Promise((resolve, reject) => {
     request.post(url)
+      .withCredentials()
       .accept('application/json')
       .send(postData)
       .end((error, response) => {
@@ -61,21 +65,18 @@ export const getLocalToken = ({ commit, dispatch, state }, payload) => {
         commit(types.TOGGLE_CONNECTING)
         reject(error)
       }
-      if (!_.isEmpty(data)) {
-        const { token } = data
-        if (token) {
-          const github = new Github({
-            token: data.token,
-            auth: 'oauth'
-          })
-          commit(types.SET_TOKEN, { token })
-          commit(types.SET_GITHUB_STATE, { github })
-          commit(types.TOGGLE_LOADING)
-          resolve(data)
-        } else {
-          commit(types.TOGGLE_CONNECTING)
-          reject(error)
-        }
+      if (!_.isEmpty(data) && data.token) {
+        const github = new Github({
+          token: data.token,
+          auth: 'oauth'
+        })
+        commit(types.SET_TOKEN, { token: data.token })
+        commit(types.SET_GITHUB_STATE, { github })
+        commit(types.TOGGLE_LOADING)
+        resolve(data)
+      } else {
+        commit(types.TOGGLE_CONNECTING)
+        reject(error)
       }
     })
   })
@@ -106,9 +107,7 @@ export const getUser = ({ commit, dispatch, state }, payload) => {
 }
 
 export const getRepos = async ({ commit, dispatch, state }, user) => {
-  console.log(user)
   user = user || state.github.user
-
   const getStarredRepos = async (page = 1) => {
     const result = await octokit.activity.listReposStarredByUser({
       username: user.login,
@@ -124,27 +123,32 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
       commit(types.TOGGLE_LOGIN)
     }
   }
-  // fetch user from db
-  const userInfo = await db.findOneUser(user.id)
   // fetch langGroup from db
-  const langGroup = await db.fetchLangGroup()
+  // const langGroup = await db.fetchLangGroup()
   // fetch all repos from db into repos state
-  // const repos = await db.fetchAllRepos()
+  const allRepos = await dataBase.fetchAllRepos()
   const repos = []
 
-  // console.group('Github getRepos Begin')
-  // console.log(userInfo)
+  console.group('Github getRepos Begin')
   // console.log(langGroup)
-  // console.log(repos)
-  // console.groupEnd()
+  console.log(allRepos)
+  console.groupEnd()
 
-  if (_.isNull(userInfo) || _.isEmpty(langGroup) || _.isEmpty(repos)) {
+  if (_.size(repos) === 0) {
     getStarredRepos()
   } else {
     commit(types.SET_REPOS, { repos })
-    commit(types.SET_GITHUB_STATE, { langGroup })
+    // commit(types.SET_GITHUB_STATE, { langGroup })
     commit(types.TOGGLE_LOGIN)
   }
+}
+
+export const getLocalRepos = async ({ commit, state }) => {
+  const repos = await dataBase.fetchAllRepos()
+  console.log(repos.map(v => v.name))
+  commit(types.SET_REPOS, { repos })
+  commit(types.TOGGLE_LOGIN)
+  return repos
 }
 
 export const showReadme = ({ commit, state }, repo) => {
@@ -219,11 +223,11 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
     commit(types.INCREASE_LIMIT)
   }
   setTimeout(() => {
-    db.fetchLazyRepos(limitCount)
-      .then(lazyRepos => {
-        console.log(lazyRepos)
-        commit(types.SET_GITHUB_STATE, { lazyRepos })
-      })
+    // db.fetchLazyRepos(limitCount)
+    //   .then(lazyRepos => {
+    //     console.log(lazyRepos)
+    //     commit(types.SET_GITHUB_STATE, { lazyRepos })
+    //   })
     if (isInfinite) {
       commit(types.TOGGLE_IS_INFINITE)
     }
@@ -231,6 +235,7 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
 }
 
 // global actions
+export const setGlobalState = makeAction('SET_GLOBAL_STATE')
 export const increaseLimit = makeAction('INCREASE_LIMIT')
 export const toggleIsInfinite = makeAction('TOGGLE_IS_INFINITE')
 
