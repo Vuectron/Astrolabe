@@ -3,7 +3,7 @@ import _ from 'lodash'
 // import { remote } from 'electron'
 // import db from '../../services/db'
 import dataBase from '../../services/dataBase'
-import Constants from '../../utils/constants'
+// import Constants from '../../utils/constants'
 import * as types from '../mutation-types'
 
 // const userDataDir = remote.app.getPath('userData')
@@ -117,19 +117,19 @@ const actions = {
         commit(types.SET_GITHUB_STATE, { user })
       }
     })
-  },
-  async addLangGroup ({ commit, state }, payload) {
-    const { langGroup } = state
-    const newTag = {
-      _id: langGroup.length + 1,
-      lang: payload,
-      count: 0,
-      icon: Constants.DEVICONS['Default']
-    }
-    commit(types.ADD_LANG_GROUP, { newTag })
-    const res = db.addLangGroup(newTag, _ => {})
-    return res
   }
+  // async addLangGroup ({ commit, state }, payload) {
+  //   const { langGroup } = state
+  //   const newTag = {
+  //     _id: langGroup.length + 1,
+  //     lang: payload,
+  //     count: 0,
+  //     icon: Constants.DEVICONS['Default']
+  //   }
+  //   commit(types.ADD_LANG_GROUP, { newTag })
+  //   const res = db.addLangGroup(newTag, _ => {})
+  //   return res
+  // }
 }
 
 // mutations

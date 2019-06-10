@@ -6,8 +6,7 @@
         :active.sync="activeTopNav"
         :value="true"
         class="as-top-nav"
-        color="transparent"
-      >
+        color="transparent">
         <v-btn color="teal" flat value="time" @click="orderedRepos('starred_at')">
           <span>Time</span>
           <v-icon>schedule</v-icon>
@@ -27,40 +26,58 @@
       </v-bottom-nav>
     </div>
     <div class="repos-desc__content" :style="{height: descHeight}">
-      <v-hover v-for="repo in repos" :key="repo._id">
-        <v-card
-          class="repos-desc__card"
-          slot-scope="{ hover }"
-          :color="hover ? 'light-blue lighten-5' : ''"
-          @click.stop.native="showReadme(repo)">
-          <v-card-title>
-            <div class="title font-weight-bold" v-text="repo.owner_name+'/'+repo.repo_name"></div>
-          </v-card-title>
-          <v-card-text class="font-weight-light" v-text="repo.description"></v-card-text>
-          <v-card-actions>
-            <v-chip
-              v-if="repo.language != 'null'"
-              color="pink"
-              text-color="white"
-              @click.stop="filterByLanguage(repo.language)"
-            >
-              {{repo.language}}
-            </v-chip>
-          </v-card-actions>
-          <v-card-actions>
-            <v-layout align-center>
-              <v-icon class="mr-1">star</v-icon>
-              <span class="star-count mr-2" v-text="repo.stargazers_count">256</span>
-              <span class="mr-1">·</span>
-              <v-icon class="mr-1">star</v-icon>
-              <span class="fork-count" v-text="repo.forks_count"></span>
-            </v-layout>
-            <v-layout align-center justify-end>
-              <v-btn flat small color="primary" @click.stop="openInBrowser(repo.html_url)">View on GitHub</v-btn>
-            </v-layout>
-          </v-card-actions>
-        </v-card>
-      </v-hover>
+      <DynamicScroller
+        :items="repos"
+        :min-item-size="54"
+        class="scroller"
+      >
+        <template v-slot="{ item, index, active }">
+          <DynamicScrollerItem
+            :item="item"
+            :active="active"
+            :size-dependencies="[
+              item.description,
+            ]"
+            :data-index="index"
+            class="content-card-item"
+          >
+            <v-hover>
+              <v-card
+                class="repos-desc__card"
+                slot-scope="{ hover }"
+                :color="hover ? 'light-blue lighten-5' : ''"
+                @click.stop.native="showReadme(item)">
+                <v-card-title>
+                  <div class="title font-weight-bold" v-text="item.owner_name+'/'+item.repo_name"></div>
+                </v-card-title>
+                <v-card-text class="font-weight-light" v-text="item.description"></v-card-text>
+                <v-card-actions>
+                  <v-chip
+                    v-if="item.language != 'null'"
+                    color="pink"
+                    text-color="white"
+                    @click.stop="filterByLanguage(item.language)"
+                  >
+                    {{item.language}}
+                  </v-chip>
+                </v-card-actions>
+                <v-card-actions>
+                  <v-layout align-center>
+                    <v-icon class="mr-1">star</v-icon>
+                    <span class="star-count mr-2" v-text="item.stargazers_count">256</span>
+                    <span class="mr-1">·</span>
+                    <v-icon class="mr-1">star</v-icon>
+                    <span class="fork-count" v-text="item.forks_count"></span>
+                  </v-layout>
+                  <v-layout align-center justify-end>
+                    <v-btn flat small color="primary" @click.stop="openInBrowser(item.html_url)">View on GitHub</v-btn>
+                  </v-layout>
+                </v-card-actions>
+              </v-card>
+            </v-hover>
+          </DynamicScrollerItem>
+        </template>
+      </DynamicScroller>
     </div>
   </div>
 </template>
@@ -119,13 +136,21 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .repos-desc {
   &__content {
-    overflow-y: scroll;
-    .repos-desc__card {
-      margin: 8px 12px;
+    .scroller {
+      height: 100%;
+      .vue-recycle-scroller__item-wrapper {
+        margin: 4px 0;
+      }
+    }
+    .content-card-item {
       padding: 4px 8px;
+    }
+    .repos-desc__card,
+    .repos-desc__card .v-chip .v-chip__content {
+      cursor: pointer;
     }
   }
 }
