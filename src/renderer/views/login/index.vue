@@ -40,11 +40,13 @@ export default {
       'getLocalToken',
       'getUser',
       'getRepos',
-      'getLocalRepos'
+      'getLocalRepos',
+      'getLocalUser'
     ]),
     async initGithub () {
       await this.getLocalToken()
-      const user = await this.getUser()
+      // const user = await this.getUser()
+      const user = await this.getLocalUser(17395454)
       this.getLocalRepos(user)
       // this.getRepos(user)
     }

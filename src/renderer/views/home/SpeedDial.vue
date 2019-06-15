@@ -54,7 +54,7 @@ export default {
       this.$emit('toast', url)
     },
     backToTop () {
-      const element = document.querySelector('.repos-readme')
+      const element = document.querySelector('.article-wrap')
       element.scrollIntoView({
         behavior: 'smooth',
         block: 'start'

@@ -106,6 +106,20 @@ export const getUser = ({ commit, dispatch, state }, payload) => {
   })
 }
 
+export const getLocalUser = ({ commit, dispatch, state }, payload) => {
+  const { userId } = payload
+  dataBase.findOneUser(userId).then(async user => {
+    console.log(user)
+    if (_.isUndefined(user)) {
+      // await dataBase.addUser(user)
+      commit(types.SET_GITHUB_STATE, { user })
+    } else {
+      // await dataBase.updateUser(user)
+      commit(types.SET_GITHUB_STATE, { user })
+    }
+  })
+}
+
 export const getRepos = async ({ commit, dispatch, state }, user) => {
   user = user || state.github.user
   const getStarredRepos = async (page = 1) => {
@@ -152,10 +166,13 @@ export const getLocalRepos = async ({ commit, state }) => {
 }
 
 export const showReadme = ({ commit, state }, repo) => {
-  commit(types.SET_CONTENT_STATE, { loadingReadme: true })
-
   const { github } = state.github
   const { activeRepo, loadingReadme } = state.content
+
+  if (repo._id === activeRepo._id) return
+
+  commit(types.SET_CONTENT_STATE, { loadingReadme: true })
+
   const repoSlug = `${repo.owner_name}_${repo.repo_name}`
   let renderMarkdown
 

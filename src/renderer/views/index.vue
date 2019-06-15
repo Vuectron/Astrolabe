@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
 .fade-enter-active .fade-leave-active {
   transition: all .2s ease;
 }

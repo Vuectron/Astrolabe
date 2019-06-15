@@ -70,7 +70,9 @@
                     <span class="fork-count" v-text="item.forks_count"></span>
                   </v-layout>
                   <v-layout align-center justify-end>
-                    <v-btn flat small color="primary" @click.stop="openInBrowser(item.html_url)">View on GitHub</v-btn>
+                    <v-btn flat small color="primary" @click.stop="openInBrowser(item.html_url)">
+                      View on GitHub
+                    </v-btn>
                   </v-layout>
                 </v-card-actions>
               </v-card>
@@ -106,23 +108,28 @@ export default {
       repos: state => state.github.repos,
       loadingRepos: state => state.content.loadingRepos,
       selectedRepo: state => state.content.selectedRepo,
-      descHeight: state => `${state.global.windowSize.y - 156}px`
+      descHeight: state => {
+        const { windowSize } = state.global
+        return `${windowSize.y - windowSize.toolbarHeight - 92}px`
+      }
     })
   },
 
   methods: {
     ...mapActions([
       'showReadme',
-      'reloadRepos'
+      'reloadRepos',
+      'orderedRepos',
+      'filterByLanguage'
     ]),
     // setLazyRepos (lazyRepos) {
     //   return this.$store.dispatch('setLazyRepos', { lazyRepos })
     // },
     orderedRepos (orderField) {
-      return this.$store.dispatch('orderedRepos', { orderField })
+      return this.orderedRepos({ orderField })
     },
     filterByLanguage (lang) {
-      return this.$store.dispatch('filterByLanguage', { lang })
+      return this.filterByLanguage({ lang })
     },
     openInBrowser (url) {
       shell.openExternal(url)

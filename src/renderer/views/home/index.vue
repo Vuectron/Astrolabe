@@ -11,7 +11,7 @@
     >
       <side-bar />
     </v-navigation-drawer>
-    <v-toolbar :clipped-left="primaryDrawer.clipped" color="primary" app absolute dark>
+    <v-toolbar :clipped-left="primaryDrawer.clipped" color="primary" app absolute dark ref="toolbar">
       <v-toolbar-side-icon
         v-if="primaryDrawer.type !== 'permanent'"
         @click.stop="primaryDrawer.model = !primaryDrawer.model"
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 import SideBar from './SideBar'
 import RepoDesc from './RepoDesc'
@@ -67,14 +67,10 @@ export default {
     paneSize: 25,
     windowSize: {
       x: 0,
-      y: 0
+      y: 0,
+      toolbarHeight: 0
     }
   }),
-  computed: {
-    ...mapState({
-      loadingReadme: state => state.content.loadingReadme
-    })
-  },
   mounted () {
     this.onResize()
   },
@@ -83,7 +79,13 @@ export default {
       'setGlobalState'
     ]),
     onResize () {
-      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+      console.log(this.$refs.toolbar.$el.offsetHeight)
+      const toolbarHeight = this.$refs.toolbar.$el.offsetHeight
+      this.windowSize = {
+        x: window.innerWidth,
+        y: window.innerHeight,
+        toolbarHeight: toolbarHeight
+      }
       this.setGlobalState({
         windowSize: this.windowSize
       })
@@ -107,8 +109,5 @@ export default {
 .splitpanes__pane .right-pane {
   height: 100%;
   width: 100%;
-}
-.splitpanes__pane .right-pane {
-  overflow-y: scroll
 }
 </style>
