@@ -3,19 +3,46 @@
     <div class="empty-placeholder" v-if="repoReadme.length == 0">
       No Repo Selected
     </div>
-    <div class="readme animated fadeIn" v-html="repoReadme"></div>
+    <div class="progress-wrap" v-if="isLoadingReadme">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        :size="50"
+      ></v-progress-circular>
+    </div>
+    <div class="readme animated fadeIn" v-html="repoReadme" ref="repoReadme" v-else></div>
+    <speed-dial @toast="snackbar = true" />
+    <v-snackbar
+      v-model="snackbar"
+      color="success"
+      top
+      :timeout="3000"
+    >
+      {{ snackbarTip }}
+      <v-btn dark flat @click="snackbar = false" > Close </v-btn>
+    </v-snackbar>
   </section>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-const { shell } = require('electron')
+import SpeedDial from './SpeedDial'
+
+import { shell } from 'electron'
 
 export default {
   name: 'RepoReadme',
+  components: {
+    SpeedDial
+  },
+  data: () => ({
+    snackbar: false,
+    snackbarTip: 'Repo clone link copied'
+  }),
   computed: {
     ...mapState({
       repoReadme: state => state.content.repoReadme,
+      isLoadingReadme: state => state.content.loadingReadme,
       rightPaneHeight: state => `${state.global.windowSize.y - 100}px`
     })
   },
@@ -48,82 +75,83 @@ export default {
 </script>
 
 <style lang="less">
-  .repos-readme .empty-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 2em;
-  }
+pre {
+  position: relative;
+  margin-bottom: 24px;
+  border-radius: 3px;
+  overflow: hidden;
+}
 
-  .repos-readme .readme {
-    font-size: 16px;
-    line-height: 1.6;
-    word-wrap: break-word;
-    margin: 16px;
-  }
+code {
+  background-color: #FCE4EC;
+  color: #880E4F;
+  padding: 0.1em 0.2em;
+  font-family: Menlo, Monaco, Consolas, Courier, monospace;
+}
 
-  .repos-readme .readme a {
-    color: #00bfa5;
-  }
+.repos-readme .empty-placeholder,
+.repos-readme .progress-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 2em;
+}
 
-  .repos-readme .readme a:hover {
-    color: #009688;
-    text-decoration: underline;
-  }
+.repos-readme .readme {
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  padding: 16px;
+}
 
-  .repos-readme .readme img {
-    max-width: 100%;
-    height: auto;
-    vertical-align: middle;
-  }
+.repos-readme .readme a {
+  color: #00bfa5;
+}
 
-  .repos-readme .readme h1 {
-    padding-bottom: 0.3em;
-    font-size: 2.25em;
-    line-height: 1.2;
-    border-bottom: 1px solid #eee;
-  }
+.repos-readme .readme a:hover {
+  color: #009688;
+  text-decoration: underline;
+}
 
-  .repos-readme .readme h2 {
-    padding-bottom: 0.3em;
-    font-size: 1.75em;
-    font-weight: bold;
-    line-height: 1.225;
-    border-bottom: 1px solid #eee;
-  }
+.repos-readme .readme img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
 
-  .repos-readme .readme h3 {
-    font-size: 1.5em;
-    font-weight: bold;
-    line-height: 1.43;
-  }
+.repos-readme .readme h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
 
-  .repos-readme .readme ul {
-    padding-left: 2em;
-    list-style-type: disc;
-  }
+.repos-readme .readme h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  font-weight: bold;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
 
-  .repos-readme .readme ul li {
-    list-style-type: disc;
-  }
+.repos-readme .readme h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1.43;
+}
 
-  .repos-readme .readme ul ul,
-  .repos-readme .readme ol ul {
-    list-style-type: circle;
-  }
+.repos-readme .readme ul {
+  padding-left: 2em;
+  list-style-type: disc;
+}
 
-  pre {
-    position: relative;
-    margin-bottom: 24px;
-    border-radius: 3px;
-    overflow: hidden;
-  }
+.repos-readme .readme ul li {
+  list-style-type: disc;
+}
 
-  code {
-    background-color: #FCE4EC;
-    color: #880E4F;
-    padding: 0.1em 0.2em;
-    font-family: Consolas, Monaco, Menlo, Courier, monospace;
-  }
+.repos-readme .readme ul ul,
+.repos-readme .readme ol ul {
+  list-style-type: circle;
+}
 </style>

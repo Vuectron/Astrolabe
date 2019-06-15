@@ -18,14 +18,12 @@
 import { mapState, mapActions } from 'vuex'
 
 import GithubAuth from './GithubAuth'
-import MdlLoading from '@/components/MdlLoading'
 import DotLoader from 'vue-spinner/src/DotLoader.vue'
 import BounceLoader from 'vue-spinner/src/BounceLoader.vue'
 
 export default {
   components: {
     GithubAuth,
-    MdlLoading,
     DotLoader,
     BounceLoader
   },

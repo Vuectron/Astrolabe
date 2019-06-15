@@ -13,25 +13,19 @@
         </aside>
       </template>
     </splitpanes>
-    <mdl-fab></mdl-fab>
-    <mdl-loading v-show="loadingReadme"></mdl-loading>
   </div>
 </template>
 
 <script>
 import RepoDesc from './RepoDesc'
 import Readme from './Readme'
-import MdlLoading from '@/components/MdlLoading'
-import MdlFab from '@/components/MdlFab'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Content',
   components: {
     RepoDesc,
-    Readme,
-    MdlLoading,
-    MdlFab
+    Readme
   },
   data () {
     return {

@@ -152,6 +152,8 @@ export const getLocalRepos = async ({ commit, state }) => {
 }
 
 export const showReadme = ({ commit, state }, repo) => {
+  commit(types.SET_CONTENT_STATE, { loadingReadme: true })
+
   const { github } = state.github
   const { activeRepo, loadingReadme } = state.content
   const repoSlug = `${repo.owner_name}_${repo.repo_name}`

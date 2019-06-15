@@ -11,12 +11,36 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow: hidden;
+}
+
 code,
 kbd,
 pre,
 samp {
-  font-family: 'Fira Code', 'Monaco', 'Menlo', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: Menlo,
+  Monaco,
+  'Segoe UI',
+  Consolas,
+  Roboto,
+  Oxygen,
+  Ubuntu,
+  Cantarell,
+  'Open Sans',
+  'Helvetica Neue',
+  sans-serif;
 }
+
+code::before,
+code::after {
+  content: '';
+}
+
 .no-padding {
   padding: 0;
 }
