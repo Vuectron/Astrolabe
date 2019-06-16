@@ -13,8 +13,8 @@
 <style lang="less">
 @import '~material-design-icons/iconfont/material-icons.css';
 // @import '~highlight.js/styles/github.css';
-@import '~highlight.js/styles/monokai.css';
-// @import '~highlight.js/styles/dracula.css';
+// @import '~highlight.js/styles/monokai.css';
+@import '~highlight.js/styles/dracula.css';
 @import '~devicon/devicon.min.css';
 // @import './assets/icons/devicon-2.2/devicon.min.css';
 @import '~devicon/devicon-colors.css';

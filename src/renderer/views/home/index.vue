@@ -79,7 +79,6 @@ export default {
       'setGlobalState'
     ]),
     onResize () {
-      console.log(this.$refs.toolbar.$el.offsetHeight)
       const toolbarHeight = this.$refs.toolbar.$el.offsetHeight
       this.windowSize = {
         x: window.innerWidth,

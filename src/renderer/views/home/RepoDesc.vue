@@ -63,10 +63,12 @@
                 </v-card-actions>
                 <v-card-actions>
                   <v-layout align-center>
-                    <v-icon class="mr-1">star</v-icon>
+                    <!-- <v-icon class="mr-1">star</v-icon> -->
+                    <span class="v-icon mr-1" v-html="starIcon" />
                     <span class="star-count mr-2" v-text="item.stargazers_count">256</span>
                     <span class="mr-1">·</span>
-                    <v-icon class="mr-1">star</v-icon>
+                    <!-- <v-icon class="mr-1">star</v-icon> -->
+                    <span class="v-icon mr-1" v-html="forkedIcon" />
                     <span class="fork-count" v-text="item.forks_count"></span>
                   </v-layout>
                   <v-layout align-center justify-end>
@@ -88,6 +90,8 @@
 import { shell } from 'electron'
 import { mapState, mapActions } from 'vuex'
 
+import { getOcticon } from '../../utils/helpers'
+
 export default {
   name: 'RepoDesc',
 
@@ -96,7 +100,9 @@ export default {
       zDepth: 1,
       activeTab: 'tab1',
       scroller: null,
-      activeTopNav: 'time'
+      activeTopNav: 'time',
+      starIcon: getOcticon('star'),
+      forkedIcon: getOcticon('repo-forked')
     }
   },
 
@@ -113,6 +119,11 @@ export default {
         return `${windowSize.y - windowSize.toolbarHeight - 92}px`
       }
     })
+  },
+
+  mounted () {
+    this.scroller = this.$el
+    // this.reloadRepos(false)
   },
 
   methods: {
@@ -134,11 +145,6 @@ export default {
     openInBrowser (url) {
       shell.openExternal(url)
     }
-  },
-
-  mounted () {
-    this.scroller = this.$el
-    // this.reloadRepos(false)
   }
 }
 </script>

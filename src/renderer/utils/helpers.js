@@ -2,6 +2,8 @@ import { parse } from 'url'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import { remote } from 'electron'
+import octicons from '@primer/octicons'
+
 import Constants from './constants'
 
 const { BrowserWindow } = remote
@@ -134,4 +136,8 @@ export const md = () => {
       return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`
     }
   })
+}
+
+export const getOcticon = (icon, options) => {
+  return octicons[icon].toSVG(options)
 }
