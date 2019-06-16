@@ -106,15 +106,10 @@ export const getUser = ({ commit, dispatch, state }, payload) => {
   })
 }
 
-export const getLocalUser = ({ commit, dispatch, state }, payload) => {
-  const { userId } = payload
+export const getLocalUser = ({ commit, dispatch, state }, userId) => {
   dataBase.findOneUser(userId).then(async user => {
     console.log(user)
-    if (_.isUndefined(user)) {
-      // await dataBase.addUser(user)
-      commit(types.SET_GITHUB_STATE, { user })
-    } else {
-      // await dataBase.updateUser(user)
+    if (user) {
       commit(types.SET_GITHUB_STATE, { user })
     }
   })

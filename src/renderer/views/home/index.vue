@@ -1,5 +1,5 @@
 <template>
-  <v-app id="astrolabe" :dark="dark" v-resize="onResize">
+  <v-app id="astrolabe" class="main-page" :dark="dark" v-resize="onResize">
     <v-navigation-drawer
       v-model="primaryDrawer.model"
       :clipped="primaryDrawer.clipped"
@@ -11,13 +11,7 @@
     >
       <side-bar />
     </v-navigation-drawer>
-    <v-toolbar :clipped-left="primaryDrawer.clipped" color="primary" app absolute dark ref="toolbar">
-      <v-toolbar-side-icon
-        v-if="primaryDrawer.type !== 'permanent'"
-        @click.stop="primaryDrawer.model = !primaryDrawer.model"
-      />
-      <v-toolbar-title>Astrolabe</v-toolbar-title>
-    </v-toolbar>
+    <nav-bar :app-drawer="primaryDrawer" ref="navbar" />
     <v-content>
       <v-container fluid class="no-padding">
         <v-layout align-center justify-center>
@@ -37,7 +31,7 @@
       </v-container>
     </v-content>
     <v-footer inset app>
-      <span class="px-3">&copy; {{ new Date().getFullYear() }} Astrolabe </span>Built By ❤️<a href="http://xlbd.me">xlbd.me</a>
+      <span class="px-3">&copy; {{ new Date().getFullYear() }} Astrolabe </span>Made By ❤️<a href="http://xlbd.me">xlbd.me</a>
     </v-footer>
   </v-app>
 </template>
@@ -45,6 +39,7 @@
 <script>
 import { mapActions } from 'vuex'
 
+import NavBar from './NavBar'
 import SideBar from './SideBar'
 import RepoDesc from './RepoDesc'
 import RepoReadme from './RepoReadme'
@@ -52,6 +47,7 @@ import RepoReadme from './RepoReadme'
 export default {
   name: 'home',
   components: {
+    NavBar,
     SideBar,
     RepoDesc,
     RepoReadme
@@ -69,7 +65,10 @@ export default {
       x: 0,
       y: 0,
       toolbarHeight: 0
-    }
+    },
+    items: [
+      'Profile', 'Settings', 'Sign out', 'Exit'
+    ]
   }),
   mounted () {
     this.onResize()
@@ -79,7 +78,7 @@ export default {
       'setGlobalState'
     ]),
     onResize () {
-      const toolbarHeight = this.$refs.toolbar.$el.offsetHeight
+      const toolbarHeight = this.$refs.navbar.$el.offsetHeight
       this.windowSize = {
         x: window.innerWidth,
         y: window.innerHeight,
@@ -93,20 +92,22 @@ export default {
 }
 </script>
 
-<style lang="less">
-.container,
-.container .layout {
-  height: 100%;
-}
-.splitpanes__pane {
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
+<style lang="less" scoped>
+.main-page {
+  .container,
+  .container .layout {
+    height: 100%;
+  }
 
-.splitpanes__pane .left-pane,
-.splitpanes__pane .right-pane {
-  height: 100%;
-  width: 100%;
+  .splitpanes__pane {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    .left-pane,
+    .right-pane {
+      height: 100%;
+      width: 100%;
+    }
+  }
 }
 </style>

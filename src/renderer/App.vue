@@ -19,6 +19,7 @@
 // @import './assets/icons/devicon-2.2/devicon.min.css';
 @import '~devicon/devicon-colors.css';
 @import '~animate.css/animate.min.css';
+
 #app {
   height: 100%;
   overflow: hidden;
