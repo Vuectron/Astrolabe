@@ -2120,10 +2120,10 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
-cfonts@^2.1.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.4.2.tgz#fa94278e9163d4e31ffa4668d621cf2a197894a4"
-  integrity sha512-H9vvFz6tM5fdVMFL2PzIueBcljsG6OsP+QDp35jFEd33mh04yW/8IHmPmjji4duMA6HePF8VbOI1005Mr8C0Pw==
+cfonts@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.4.3.tgz#faa6c1a56b19c7942eb8ce46f657e770bb28bb0c"
+  integrity sha512-UDVEDbU9N5j5QLG4Q4iCSjsjWa11PpMKDLOHkMFPGIfgk6UjaeMHAgaHlpXXsZzfKcibEHZ4oE75HVAarQDbAg==
   dependencies:
     ansi-styles "^3.2.1"
     chalk "^2.4.2"
@@ -8995,6 +8995,11 @@ vuedraggable@^2.21.0:
   integrity sha512-UDp0epjaZikuInoJA9rlEIJaSTQThabq0R9x7TqBdl0qGVFKKzo6glP6ubfzWBmV4iRIfbSOs2DV06s3B5h5tA==
   dependencies:
     sortablejs "^1.9.0"
+
+vuetify@^1.5.14:
+  version "1.5.14"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.5.14.tgz#ff67d0b8a398be5297da159b6cd1b31f4d2898b8"
+  integrity sha512-7iM+TfghR/wu/Gl+k37lKr0N8Ddr6SxzqHtoK1dIyHgCH6SJRkpaXPw2MC5/FsAg9aUDJbYNWrzSeu5eHw+Q/w==
 
 vuetify@^1.5.14:
   version "1.5.14"
