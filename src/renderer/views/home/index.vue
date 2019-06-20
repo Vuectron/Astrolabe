@@ -18,7 +18,7 @@
           <splitpanes class="default-theme">
             <div
               class="left-pane"
-              splitpanes-min="0"
+              splitpanes-min="20px"
               splitpanes-max="33"
               :splitpanes-size="paneSize">
               <repo-desc />
@@ -56,7 +56,7 @@ export default {
     dark: false,
     primaryDrawer: {
       model: null,
-      clipped: false,
+      clipped: true,
       floating: false,
       mini: false
     },
@@ -82,7 +82,7 @@ export default {
       this.windowSize = {
         x: window.innerWidth,
         y: window.innerHeight,
-        toolbarHeight: toolbarHeight
+        toolbarHeight
       }
       this.setGlobalState({
         windowSize: this.windowSize

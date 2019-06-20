@@ -159,6 +159,7 @@ const mutations = {
   },
 
   [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
+    state.searchQuery = searchQuery
     state.repos = _.isNull(searchQuery) || searchQuery === ''
       ? state.lazyRepos
       : _.filter(state.repos, function (o) {

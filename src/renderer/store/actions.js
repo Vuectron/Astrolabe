@@ -155,6 +155,7 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
 export const getLocalRepos = async ({ commit, state }) => {
   const repos = await dataBase.fetchAllRepos()
   console.log(repos.map(v => v.name))
+  commit(types.SET_GITHUB_STATE, { lazyRepos: repos })
   commit(types.SET_REPOS, { repos })
   commit(types.TOGGLE_LOGIN)
   return repos

@@ -6,6 +6,17 @@
     />
     <v-toolbar-title>Astrolabe</v-toolbar-title>
 
+    <div class="search-wrapper">
+      <v-text-field
+        v-model="searchVal"
+        flat
+        solo-inverted
+        prepend-inner-icon="search"
+        label="Search"
+        class="hidden-sm-and-down"
+      ></v-text-field>
+    </div>
+
     <v-spacer></v-spacer>
 
     <v-menu :nudge-width="80">
@@ -104,6 +115,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { ipcRenderer } from 'electron'
+import _ from 'lodash'
 
 export default {
   name: 'NavBar',
@@ -117,10 +129,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    searchVal: {
+      get () {
+        return this.$store.state.github.searchQuery
+      },
+      set (val) {
+        this.handleSearch(val)
+      }
+    }
   },
   methods: {
-    ...mapActions(['userSignout']),
+    ...mapActions(['userSignout', 'setSearchQuery']),
     onClickMenu (val) {
       console.log('click menu ' + val)
     },
@@ -134,7 +154,10 @@ export default {
     },
     handleExit () {
       ipcRenderer.send('exit', 'exit')
-    }
+    },
+    handleSearch: _.debounce(function (val) {
+      this.setSearchQuery({ searchQuery: val })
+    }, 333)
   }
 }
 </script>
@@ -146,6 +169,12 @@ export default {
     .v-list__tile__action {
       min-width: 32px;
     }
+  }
+  .search-wrapper {
+    position: absolute;
+    left: 300px;
+    width: 600px;
+    margin-top: 4px;
   }
 }
 </style>
