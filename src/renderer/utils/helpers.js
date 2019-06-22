@@ -94,7 +94,7 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
     if (code) {
       console.log(code)
       // If there is a code, proceed to get token from github
-      await dispatch('getToken', {authOptions, code})
+      await dispatch('getToken', { authOptions, code })
       // If get token successful, proceed to get user from github
       const user = await dispatch('getUser')
       // If get user successful, proceed to get repos from github

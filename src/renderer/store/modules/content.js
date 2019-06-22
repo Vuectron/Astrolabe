@@ -18,19 +18,19 @@ const mutations = {
     state.loadingReadme = !state.loadingReadme
   },
 
-  [types.SET_ACTIVE_REPO] (state, {repo}) {
+  [types.SET_ACTIVE_REPO] (state, { repo }) {
     state.activeRepo = repo
   },
 
-  [types.SET_SELECTED_REPO] (state, {repoName}) {
+  [types.SET_SELECTED_REPO] (state, { repoName }) {
     state.selectedRepo = repoName
   },
 
-  [types.SET_REPO_README] (state, {repoReadme}) {
+  [types.SET_REPO_README] (state, { repoReadme }) {
     state.repoReadme = repoReadme
   },
 
-  [types.ORDER_REPO] (state, {repoKey}) {
+  [types.ORDER_REPO] (state, { repoKey }) {
     state.repoKey = repoKey
     state.order = state.order * -1
   }

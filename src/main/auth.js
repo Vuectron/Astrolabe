@@ -31,7 +31,7 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
 
     // If there is a code, proceed to get token from github
     if (code) {
-      dispatch('getToken', {authOptions, code})
+      dispatch('getToken', { authOptions, code })
         .then(() => {})
         .then(() => { dispatch('getUser') }) // If get token successful, proceed to get user from github
         .then(() => { dispatch('getRepos') }) // If get user successful, proceed to get repos from github

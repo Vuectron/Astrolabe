@@ -16,13 +16,13 @@ export default {
     })
   },
   updateUser (userData) {
-    user.update({_id: userData.id}, {$set: userData}, (err, num) => {
+    user.update({ _id: userData.id }, { $set: userData }, (err, num) => {
       if (err) {}
     })
   },
   findOneUser (id) {
     return new Promise((resolve, reject) => {
-      user.findOne({_id: id}, (err, doc) => {
+      user.findOne({ _id: id }, (err, doc) => {
         if (err) {}
         return resolve(doc)
       })
@@ -44,13 +44,13 @@ export default {
     })
   },
   updateRepo (repoData) {
-    repo.update({_id: repoData._id}, {$set: repoData}, (err, num) => {
+    repo.update({ _id: repoData._id }, { $set: repoData }, (err, num) => {
       if (err) {}
     })
   },
   findOneRepo (id) {
     return new Promise((resolve, reject) => {
-      repo.findOne({_id: id}, (err, doc) => {
+      repo.findOne({ _id: id }, (err, doc) => {
         if (err) {}
         return resolve(doc)
       })
@@ -58,7 +58,7 @@ export default {
   },
   fetchAllRepos () {
     return new Promise((resolve, reject) => {
-      repo.find({}).sort({repo_idx: 1}).exec((err, docs) => {
+      repo.find({}).sort({ repo_idx: 1 }).exec((err, docs) => {
         if (err) {}
         return resolve(docs)
       })
@@ -66,7 +66,7 @@ export default {
   },
   fetchLazyRepos (limit) {
     return new Promise((resolve, reject) => {
-      repo.find({}).sort({repo_idx: 1}).skip(0).limit(limit).exec((err, docs) => {
+      repo.find({}).sort({ repo_idx: 1 }).skip(0).limit(limit).exec((err, docs) => {
         if (err) {}
         return resolve(docs)
       })
@@ -74,7 +74,7 @@ export default {
   },
   removeRepo (id) {
     return new Promise((resolve, reject) => {
-      repo.remove({_id: id}, {}, (err, numRemoved) => {
+      repo.remove({ _id: id }, {}, (err, numRemoved) => {
         if (err) {}
       })
     })
@@ -82,7 +82,7 @@ export default {
   // langGroup.db CRUD
   countLangGroup (lang) {
     return new Promise((resolve, reject) => {
-      repo.count({language: lang}, (err, count) => {
+      repo.count({ language: lang }, (err, count) => {
         if (err) {}
         return resolve(count)
       })
@@ -99,13 +99,13 @@ export default {
     })
   },
   updateLangGroup (langGroupData) {
-    langGroup.update({_id: langGroupData._id}, {$set: langGroupData}, (err, num) => {
+    langGroup.update({ _id: langGroupData._id }, { $set: langGroupData }, (err, num) => {
       if (err) {}
     })
   },
   findOneLangGroup (lang) {
     return new Promise((resolve, reject) => {
-      langGroup.findOne({lang: lang}, (err, doc) => {
+      langGroup.findOne({ lang: lang }, (err, doc) => {
         if (err) {}
         return resolve(doc)
       })

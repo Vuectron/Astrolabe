@@ -144,21 +144,21 @@ const mutations = {
     state.untaggedCount = _.toString(_.size(_.filter(repos, _.matches({ 'language': 'null' }))))
   },
 
-  [types.FILTER_BY_LANGUAGE] (state, {lang}) {
+  [types.FILTER_BY_LANGUAGE] (state, { lang }) {
     state.repos = _.isNull(lang)
       ? state.lazyRepos
       : _.filter(state.lazyRepos, _.matches({ 'language': lang }))
     state.activeLang = lang
   },
 
-  [types.ORDERED_REPOS] (state, {orderField}) {
+  [types.ORDERED_REPOS] (state, { orderField }) {
     state.repos = state.order > 0
       ? _.orderBy(state.repos, orderField)
       : _.orderBy(state.repos, orderField, 'desc')
     state.order = state.order * -1
   },
 
-  [types.SET_SEARCH_QUERY] (state, {searchQuery}) {
+  [types.SET_SEARCH_QUERY] (state, { searchQuery }) {
     state.searchQuery = searchQuery
     state.repos = _.isNull(searchQuery) || searchQuery === ''
       ? state.lazyRepos

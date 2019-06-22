@@ -210,8 +210,8 @@ export const showReadme = ({ commit, state }, repo) => {
       commit(types.SET_CONTENT_STATE, { loadingReadme: false })
     })
 
-  commit(types.SET_ACTIVE_REPO, {repo})
-  commit(types.SET_SELECTED_REPO, {repoName: repo.repo_name})
+  commit(types.SET_ACTIVE_REPO, { repo })
+  commit(types.SET_SELECTED_REPO, { repoName: repo.repo_name })
   if (repo._id !== activeRepo._id) {
     if (!loadingReadme) {
       commit(types.SET_CONTENT_STATE, { loadingReadme: true })
@@ -220,7 +220,7 @@ export const showReadme = ({ commit, state }, repo) => {
     storage.get(repoSlug, (error, data) => {
       if (error) console.error(error)
       if (!_.isEmpty(data)) {
-        commit(types.SET_REPO_README, {repoReadme: data})
+        commit(types.SET_REPO_README, { repoReadme: data })
         commit(types.SET_CONTENT_STATE, { loadingReadme: false })
       } else {
         getReadme()
