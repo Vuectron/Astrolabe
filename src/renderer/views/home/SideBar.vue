@@ -17,7 +17,11 @@
           </v-btn>
         </v-flex>
       </v-layout>
-      <v-list-tile v-else :key="item.text" @click="handleChooseStar(index)">
+      <v-list-tile
+        v-else
+        :class="{'is-active': item.lang === activeLang}"
+        :key="item.text"
+        @click="handleChooseStar(index)">
         <v-list-tile-action>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-tile-action>
@@ -38,7 +42,7 @@
 
     <v-divider></v-divider>
 
-    <template v-for="item in langList">
+    <template v-for="item in langGroupList">
       <v-layout
         v-if="item.heading"
         :key="item.heading"
@@ -60,7 +64,6 @@
         v-model="item.model"
         :key="item.text"
         :prepend-icon="item.icon"
-        no-action
       >
         <v-list-tile slot="activator">
           <v-list-tile-content>
@@ -73,11 +76,17 @@
         <v-list-tile
           v-for="(child, i) in item.children"
           :key="i"
-          @click="handleChooseLang"
+          :class="{'is-active': child.lang === activeLang}"
+          @click="handleChooseLang(child.lang)"
         >
+
+          <v-list-tile-action>
+            <i class="v-icon devicon" :class="[child.icon, {'colored': child.lang === activeLang}]"></i>
+          </v-list-tile-action>
+
           <v-list-tile-content>
             <v-list-tile-title>
-              {{ child.text }}
+              {{ child.lang }}
             </v-list-tile-title>
           </v-list-tile-content>
 
@@ -149,22 +158,7 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   data: () => ({
-    langList: [
-      { icon: 'sort', heading: 'Languages' },
-      {
-        icon: 'code',
-        text: 'All Languages',
-        model: true,
-        children: [
-          { text: 'Vue', count: 323 },
-          { text: 'Python' },
-          { text: 'JavaScript' },
-          { text: 'Css' },
-          { text: 'Html' },
-          { text: 'C' }
-        ]
-      }
-    ],
+    langList: { icon: 'sort', heading: 'Languages' },
     tagList: [
       { icon: 'add', heading: 'Tags' },
       {
@@ -180,14 +174,25 @@ export default {
   computed: {
     ...mapState({
       reposCount: state => state.github.reposCount,
-      untaggedCount: state => state.github.untaggedCount
+      untaggedCount: state => state.github.untaggedCount,
+      langGroup: state => state.github.langGroup.filter(v => v.lang !== 'null'),
+      activeLang: state => state.github.activeLang
     }),
     topList () {
       return [
         { icon: 'cached', heading: 'Stars' },
-        { icon: 'star', text: 'All Stars', count: this.reposCount },
-        { icon: 'bookmark_border', text: 'Untagged Stars', count: this.untaggedCount }
+        { icon: 'star', text: 'All Stars', count: this.reposCount, lang: null },
+        { icon: 'bookmark_border', text: 'Untagged Stars', count: this.untaggedCount, lang: 'null' }
       ]
+    },
+    langGroupList () {
+      const allLang = {
+        icon: 'code',
+        text: 'All Languages',
+        model: true,
+        children: this.langGroup
+      }
+      return [this.langList, allLang]
     }
   },
   methods: {
@@ -200,8 +205,8 @@ export default {
       }
       this.filterByLanguage(params)
     },
-    handleChooseLang () {
-      console.log('lang')
+    handleChooseLang (lang) {
+      this.filterByLanguage({ lang })
     },
     handleChooseTag () {
       console.log('tag')
@@ -220,6 +225,9 @@ export default {
     .v-chip__content {
       padding: 3px 6px;
     }
+  }
+  div[role=listitem].is-active {
+    background-color: #E1F5FE;
   }
 }
 </style>

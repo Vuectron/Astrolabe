@@ -128,26 +128,29 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
       const res = await dispatch('loadRepos', { repos })
       if (res && res.length > 0) {
         getStarredRepos(page + 1)
+      } else {
+        return
       }
       commit(types.TOGGLE_LOGIN)
     }
   }
   // fetch langGroup from db
-  // const langGroup = await db.fetchLangGroup()
+  const langGroup = await dataBase.fetchLangGroup()
   // fetch all repos from db into repos state
   const allRepos = await dataBase.fetchAllRepos()
-  const repos = []
 
   console.group('Github getRepos Begin')
-  // console.log(langGroup)
+  console.log(langGroup)
   console.log(allRepos)
   console.groupEnd()
 
-  if (_.size(repos) === 0) {
-    getStarredRepos()
+  // fetch local repos
+  if (_.size(allRepos) === 0 || _.size(langGroup) === 0) {
+    await getStarredRepos()
+    // dispatch('bulidLangGroup')
   } else {
-    commit(types.SET_REPOS, { repos })
-    // commit(types.SET_GITHUB_STATE, { langGroup })
+    commit(types.SET_REPOS, { repos: allRepos })
+    commit(types.SET_GITHUB_STATE, { langGroup })
     commit(types.TOGGLE_LOGIN)
   }
 }

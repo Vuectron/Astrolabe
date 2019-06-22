@@ -46,14 +46,16 @@ export default {
       'getRepos',
       'getLocalToken',
       'getLocalUser',
-      'getLocalRepos'
+      'getLocalRepos',
+      'bulidLangGroup'
     ]),
     async initGithub () {
-      // const user = await this.getUser()
-      // this.getRepos(user)
       await this.getLocalToken()
+      // const user = await this.getUser()
       const user = await this.getLocalUser(17395454)
-      this.getLocalRepos(user)
+      // await this.getRepos(user)
+      await this.getLocalRepos(user)
+      await this.bulidLangGroup()
     }
   }
 }

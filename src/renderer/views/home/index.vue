@@ -19,7 +19,7 @@
             <div
               class="left-pane"
               splitpanes-min="25"
-              splitpanes-max="33"
+              splitpanes-max="40"
               :splitpanes-size="paneSize">
               <repo-desc />
             </div>

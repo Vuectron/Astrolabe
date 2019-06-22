@@ -47,5 +47,27 @@ export default {
   async fetchAllRepos () {
     const res = await _repos.value()
     return res
+  },
+  // langGroup db crud
+  async addLangGroup (data) {
+    const res = await _langGroup.push(data).write()
+    return res
+  },
+  async removeLangGroup (lang) {
+    const res = await _langGroup.remove({ lang }).write()
+    return res
+  },
+  async updateLangGroup (data) {
+    const { lang } = data
+    const res = await _langGroup.find({ lang }).assign(data).write()
+    return res
+  },
+  async findOneLangGroup (lang) {
+    const res = await _langGroup.find({ lang }).value()
+    return res
+  },
+  async fetchLangGroup () {
+    const res = await _langGroup.value()
+    return res
   }
 }

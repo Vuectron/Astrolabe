@@ -3,7 +3,7 @@ import _ from 'lodash'
 // import { remote } from 'electron'
 // import db from '../../services/db'
 import dataBase from '../../services/dataBase'
-// import Constants from '../../utils/constants'
+import CONSTS from '../../utils/constants'
 import * as types from '../mutation-types'
 
 // const userDataDir = remote.app.getPath('userData')
@@ -28,14 +28,13 @@ const actions = {
   async loadRepos ({ commit, dispatch, state }, payload) {
     const { repos } = payload
     // loading finish
-    if (_.size(repos) === 0) {
-      commit(types.SET_GITHUB_STATE, {
-        lazyRepos: state.repos,
-        loadingRepos: false
-      })
-      // dispatch('bulidLangGroup')
-      return repos
-    }
+    // if (_.size(repos) === 0) {
+    //   commit(types.SET_GITHUB_STATE, {
+    //     lazyRepos: state.repos,
+    //     loadingRepos: false
+    //   })
+    //   return repos
+    // }
     // insert repos
     let apiReposArray = []
     const initRepos = repos.map((v, i) => {
@@ -76,35 +75,36 @@ const actions = {
     const mergedRepos = [...state.repos, ...initRepos]
 
     commit(types.SET_REPOS, { repos: mergedRepos })
+
     return initRepos
   },
   // build lang_group
-  // async bulidLangGroup ({ commit, state }, payload) {
-  //   const { repos } = state
-  //   const devicons = Constants.DEVICONS
-  //   const countedLangs = _.countBy(repos, 'language')
-  //   const langGroup = Object.keys(countedLangs).map((v, i) => {
-  //     return {
-  //       lang: v,
-  //       count: countedLangs[v],
-  //       icon: devicons[v] || devicons['Default']
-  //     }
-  //   })
-  //   // ordered by count desc & lang asc
-  //   const orderedLangGroup = _.orderBy(langGroup, ['count', 'lang'], ['desc', 'asc'])
-  //   // upsert the lang_group db
-  //   orderedLangGroup.forEach((v, i) => {
-  //     db.findOneLangGroup(v.lang).then(data => {
-  //       if (_.isNull(data)) {
-  //         v._id = i + 1
-  //         db.addLangGroup(v, _ => {})
-  //       } else {
-  //         db.updateLangGroup(v)
-  //       }
-  //     })
-  //   })
-  //   commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
-  // },
+  async bulidLangGroup ({ commit, state }, payload) {
+    const { repos } = state
+    const devicons = CONSTS.DEVICONS
+    const countedLangs = _.countBy(repos, 'language')
+    const langGroup = Object.keys(countedLangs).map((v, i) => {
+      return {
+        lang: v,
+        count: countedLangs[v],
+        icon: devicons[v] || devicons['Default']
+      }
+    })
+    // ordered by count desc & lang asc
+    const orderedLangGroup = _.orderBy(langGroup, ['count', 'lang'], ['desc', 'asc'])
+    // upsert the lang_group db
+    orderedLangGroup.forEach((v, i) => {
+      dataBase.findOneLangGroup(v.lang).then(data => {
+        if (_.isUndefined(data)) {
+          v._id = i + 1
+          dataBase.addLangGroup(v)
+        } else {
+          dataBase.updateLangGroup(v)
+        }
+      })
+    })
+    commit(types.SET_GITHUB_STATE, { langGroup: orderedLangGroup })
+  },
   async setUser ({ commit, state }, payload) {
     const { user } = payload
     dataBase.findOneUser(user.id).then(async res => {
