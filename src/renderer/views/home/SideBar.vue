@@ -1,104 +1,226 @@
 <template>
-  <v-list dense>
-    <template v-for="item in items">
+  <v-list dense class="sidebar-list">
+    <template v-for="(item, index) in topList">
       <v-layout
         v-if="item.heading"
         :key="item.heading"
         row
-        align-center
-      >
-        <v-flex xs6>
-          <v-subheader v-if="item.heading">
+        align-center>
+        <v-flex xs6 md6>
+          <v-subheader v-if="item.heading" class="text-uppercase">
             {{ item.heading }}
           </v-subheader>
         </v-flex>
-        <v-flex xs6 class="text-xs-center">
-          <a href="#!" class="body-2 black--text">EDIT</a>
+        <v-flex xs6 md6 class="text-xs-right">
+          <v-btn flat icon color="blue darken-1">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-btn>
+        </v-flex>
+      </v-layout>
+      <v-list-tile v-else :key="item.text" @click="handleChooseStar(index)">
+        <v-list-tile-action>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-tile-action>
+
+        <v-list-tile-content>
+          <v-list-tile-title>
+            {{ item.text }}
+          </v-list-tile-title>
+        </v-list-tile-content>
+
+        <v-list-tile-action>
+          <v-chip color="pink lighten-1" text-color="white" class="x-small">
+            {{ item.count }}
+          </v-chip>
+        </v-list-tile-action>
+      </v-list-tile>
+    </template>
+
+    <v-divider></v-divider>
+
+    <template v-for="item in langList">
+      <v-layout
+        v-if="item.heading"
+        :key="item.heading"
+        row
+        align-center>
+        <v-flex xs6 md6>
+          <v-subheader v-if="item.heading" class="text-uppercase">
+            {{ item.heading }}
+          </v-subheader>
+        </v-flex>
+        <v-flex xs6 md6 class="text-xs-right">
+          <v-btn flat icon color="blue darken-1">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-btn>
         </v-flex>
       </v-layout>
       <v-list-group
         v-else-if="item.children"
         v-model="item.model"
         :key="item.text"
-        :prepend-icon="item.model ? item.icon : item['icon-alt']"
-        append-icon=""
+        :prepend-icon="item.icon"
+        no-action
       >
-        <template v-slot:activator>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ item.text }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </template>
+        <v-list-tile slot="activator">
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ item.text }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
         <v-list-tile
           v-for="(child, i) in item.children"
           :key="i"
+          @click="handleChooseLang"
         >
-          <v-list-tile-action v-if="child.icon">
-            <v-icon>{{ child.icon }}</v-icon>
-          </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
               {{ child.text }}
             </v-list-tile-title>
           </v-list-tile-content>
+
+          <v-list-tile-action v-if="child.count">
+            <v-chip color="pink lighten-1" text-color="white" class="x-small">
+              {{ child.count }}
+            </v-chip>
+          </v-list-tile-action>
         </v-list-tile>
       </v-list-group>
-      <v-list-tile v-else :key="item.text">
-        <v-list-tile-action>
-          <v-icon>{{ item.icon }}</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title>
-            {{ item.text }}
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
+    </template>
+
+    <v-divider></v-divider>
+    
+    <template v-for="item in tagList">
+      <v-layout
+        v-if="item.heading"
+        :key="item.heading"
+        row
+        align-center>
+        <v-flex xs6 md6>
+          <v-subheader v-if="item.heading" class="text-uppercase">
+            {{ item.heading }}
+          </v-subheader>
+        </v-flex>
+        <v-flex xs6 md6 class="text-xs-right">
+          <v-btn flat icon color="blue darken-1">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-btn>
+        </v-flex>
+      </v-layout>
+      <v-list-group
+        v-else-if="item.children"
+        v-model="item.model"
+        :key="item.text"
+        :prepend-icon="item.icon"
+        no-action
+      >
+        <v-list-tile slot="activator">
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ item.text }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
+          v-for="(child, i) in item.children"
+          :key="i"
+          @click="handleChooseTag"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ child.text }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+
+          <v-list-tile-action>
+            <v-icon>{{ child.icon }}</v-icon>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list-group>
     </template>
   </v-list>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   data: () => ({
-    items: [
-      { icon: 'contacts', text: 'Contacts' },
-      { icon: 'history', text: 'Frequently contacted' },
-      { icon: 'content_copy', text: 'Duplicates' },
+    langList: [
+      { icon: 'sort', heading: 'Languages' },
       {
-        icon: 'keyboard_arrow_up',
-        'icon-alt': 'keyboard_arrow_down',
-        text: 'Labels',
+        icon: 'code',
+        text: 'All Languages',
         model: true,
         children: [
-          { icon: 'add', text: 'Create label' }
+          { text: 'Vue', count: 323 },
+          { text: 'Python' },
+          { text: 'JavaScript' },
+          { text: 'Css' },
+          { text: 'Html' },
+          { text: 'C' }
         ]
-      },
+      }
+    ],
+    tagList: [
+      { icon: 'add', heading: 'Tags' },
       {
-        icon: 'keyboard_arrow_up',
-        'icon-alt': 'keyboard_arrow_down',
-        text: 'More',
+        icon: 'label',
+        text: 'All Tags',
         model: false,
         children: [
-          { text: 'Import' },
-          { text: 'Export' },
-          { text: 'Print' },
-          { text: 'Undo changes' },
-          { text: 'Other contacts' }
+          { text: 'node' }
         ]
-      },
-      { icon: 'settings', text: 'Settings' },
-      { icon: 'chat_bubble', text: 'Send feedback' },
-      { icon: 'help', text: 'Help' },
-      { icon: 'phonelink', text: 'App downloads' },
-      { icon: 'keyboard', text: 'Go to the old version' }
+      }
     ]
-  })
+  }),
+  computed: {
+    ...mapState({
+      reposCount: state => state.github.reposCount,
+      untaggedCount: state => state.github.untaggedCount
+    }),
+    topList () {
+      return [
+        { icon: 'cached', heading: 'Stars' },
+        { icon: 'star', text: 'All Stars', count: this.reposCount },
+        { icon: 'bookmark_border', text: 'Untagged Stars', count: this.untaggedCount }
+      ]
+    }
+  },
+  methods: {
+    ...mapActions([
+      'filterByLanguage'
+    ]),
+    handleChooseStar (index) {
+      const params = {
+        lang: index === 1 ? null : 'null'
+      }
+      this.filterByLanguage(params)
+    },
+    handleChooseLang () {
+      console.log('lang')
+    },
+    handleChooseTag () {
+      console.log('tag')
+    }
+  }
 }
 </script>
 
-<style>
-
+<style lang="less">
+.sidebar-list {
+  .v-chip.x-small {
+    font-size: 12px;
+    height: 18px !important;
+    font-weight: normal;
+    border-radius: 2px;
+    .v-chip__content {
+      padding: 3px 6px;
+    }
+  }
+}
 </style>
+

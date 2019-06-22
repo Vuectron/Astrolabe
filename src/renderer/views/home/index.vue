@@ -18,7 +18,7 @@
           <splitpanes class="default-theme">
             <div
               class="left-pane"
-              splitpanes-min="20px"
+              splitpanes-min="25"
               splitpanes-max="33"
               :splitpanes-size="paneSize">
               <repo-desc />

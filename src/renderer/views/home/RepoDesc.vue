@@ -48,14 +48,15 @@
                 :color="hover ? 'light-blue lighten-5' : ''"
                 @click.stop.native="showReadme(item)">
                 <v-card-title>
-                  <div class="title font-weight-bold" v-text="item.owner_name+'/'+item.repo_name"></div>
+                  <div class="title font-weight-bold text-truncate" v-text="item.owner_name+'/'+item.repo_name"></div>
                 </v-card-title>
                 <v-card-text class="font-weight-light" v-text="item.description"></v-card-text>
                 <v-card-actions>
                   <v-chip
                     v-if="item.language != 'null'"
-                    color="pink"
+                    color="pink lighten-1"
                     text-color="white"
+                    small
                     @click.stop="filterByLanguage(item.language)"
                   >
                     {{item.language}}
@@ -63,19 +64,26 @@
                 </v-card-actions>
                 <v-card-actions>
                   <v-layout align-center>
-                    <!-- <v-icon class="mr-1">star</v-icon> -->
-                    <span class="v-icon mr-1" v-html="starIcon" />
-                    <span class="star-count mr-2" v-text="item.stargazers_count">256</span>
-                    <span class="mr-1">·</span>
-                    <!-- <v-icon class="mr-1">star</v-icon> -->
-                    <span class="v-icon mr-1" v-html="forkedIcon" />
-                    <span class="fork-count" v-text="item.forks_count"></span>
+                    <v-flex d-flex xs12 sm12 md6>
+                      <v-layout justify-start>
+                        <span class="v-icon mr-1" v-html="starIcon" />
+                        <span class="star-count mr-2" v-text="item.stargazers_count">256</span>
+                        <span class="mr-1">·</span>
+                        <span class="v-icon mr-1" v-html="forkedIcon" />
+                        <span class="fork-count" v-text="item.forks_count"></span>
+                      </v-layout>
+                    </v-flex>
+                    <v-flex d-flex xs12 sm12 md6>
+                      <v-layout align-center justify-end>
+                        <v-btn flat small color="primary" @click.stop="openInBrowser(item.html_url)">
+                          View on GitHub
+                        </v-btn>
+                      </v-layout>
+                    </v-flex>
                   </v-layout>
-                  <v-layout align-center justify-end>
-                    <v-btn flat small color="primary" @click.stop="openInBrowser(item.html_url)">
-                      View on GitHub
-                    </v-btn>
-                  </v-layout>
+                  <!-- <v-layout align-center justify-end>
+                    
+                  </v-layout> -->
                 </v-card-actions>
               </v-card>
             </v-hover>

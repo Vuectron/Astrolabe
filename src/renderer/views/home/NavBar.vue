@@ -99,11 +99,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="green darken-1" flat="flat" @click="isOpenDialog = false">
+          <v-btn color="blue darken-1" flat="flat" @click="isOpenDialog = false">
             No
           </v-btn>
 
-          <v-btn color="green darken-1" flat="flat" @click="isOpenDialog = false" >
+          <v-btn color="blue darken-1" flat="flat" @click="isOpenDialog = false" >
             Yes
           </v-btn>
         </v-card-actions>
