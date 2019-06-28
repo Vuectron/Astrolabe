@@ -150,10 +150,10 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@primer/octicons@^9.1.0":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@primer/octicons/-/octicons-9.1.0.tgz#8aa3cd7416da39307e9963e30d21c858509e54ae"
-  integrity sha512-dHRcL2ME14EHidGzja+qJAMWi93Qo5H4g2Rk5ltwTrswP+b7HF7vl7Wnrpwqpyj/Zan4oOCKXhBYtsa5R8DjwQ==
+"@primer/octicons@^9.1.1":
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/@primer/octicons/-/octicons-9.1.1.tgz#a72a59e8ec77521cc2eefb36c345f780a61c79fb"
+  integrity sha512-7EGM0+Kx39bIgaYr9bTCzFvBCxm+fqh/YJIoSns8zfCwss32ZJ2GDP3024UH709VQtM5cKFU4JcIYPHyGdSfIg==
   dependencies:
     object-assign "^4.1.1"
 
