@@ -85,6 +85,9 @@ export default {
       // update remote tags to local tags
       localTags.forEach(tag => {
         const idx = newTags.findIndex(v => v.id === tag.id)
+        if (idx === -1) {
+          _tags.remove({ id: tag.id }).write()
+        }
         if (idx !== -1) {
           const tag = newTags[idx]
           _tags.find({ id: tag.id }).assign(tag).write()
