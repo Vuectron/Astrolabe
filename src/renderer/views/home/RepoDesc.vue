@@ -45,24 +45,25 @@
               <v-card
                 class="repos-desc__card"
                 slot-scope="{ hover }"
-                :color="hover ? 'light-blue lighten-5' : ''"
+                :color="(hover || selectedRepo === item.id)? 'light-blue lighten-5' : ''"
                 @click.stop.native="showReadme(item)">
                 <v-card-title>
                   <div class="title font-weight-bold text-truncate" v-text="item.owner_name+'/'+item.repo_name"></div>
                 </v-card-title>
                 <v-card-text class="font-weight-light" v-text="item.description"></v-card-text>
-                <v-card-actions>
+                <v-card-actions class="tag-action">
                   <v-chip
-                    v-if="item.language != 'null'"
+                    v-if="item.language !== 'null'"
                     color="pink lighten-1"
                     text-color="white"
                     small
+                    label
                     @click.stop="filterByLanguage(item.language)"
                   >
                     {{item.language}}
                   </v-chip>
                 </v-card-actions>
-                <v-card-actions>
+                <v-card-actions class="meta-action">
                   <v-layout align-center>
                     <v-flex d-flex xs12 sm12 md6>
                       <v-layout justify-start>
@@ -152,6 +153,10 @@ export default {
     },
     openInBrowser (url) {
       shell.openExternal(url)
+    },
+    handleEditTags (repo) {
+      console.log(repo)
+      this.isEditing = true
     }
   }
 }
