@@ -20,7 +20,8 @@ const state = {
   searchQuery: '',
   order: 1,
   activeLang: '',
-  loadingRepos: false
+  loadingRepos: false,
+  tags: []
 }
 
 // actions

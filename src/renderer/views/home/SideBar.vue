@@ -123,7 +123,6 @@
         v-model="item.model"
         :key="item.text"
         :prepend-icon="item.icon"
-        no-action
       >
         <v-list-tile slot="activator">
           <v-list-tile-content>
@@ -140,12 +139,20 @@
         >
           <v-list-tile-content>
             <v-list-tile-title>
-              {{ child.text }}
+              <v-chip
+                class="x-small"
+                :color="child.color"
+                :text-color="child.colorIsLight ? 'black' : 'white'"
+              >
+                {{ child.name }}
+              </v-chip>
             </v-list-tile-title>
           </v-list-tile-content>
 
-          <v-list-tile-action>
-            <v-icon>{{ child.icon }}</v-icon>
+          <v-list-tile-action v-if="child.count">
+            <v-chip color="pink lighten-1" text-color="white" class="x-small">
+              {{ child.count }}
+            </v-chip>
           </v-list-tile-action>
         </v-list-tile>
       </v-list-group>
@@ -158,25 +165,14 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   data: () => ({
-    langList: { icon: 'sort', heading: 'Languages' },
-    tagList: [
-      { icon: 'add', heading: 'Tags' },
-      {
-        icon: 'label',
-        text: 'All Tags',
-        model: false,
-        children: [
-          { text: 'node' }
-        ]
-      }
-    ]
   }),
   computed: {
     ...mapState({
       reposCount: state => state.github.reposCount,
       untaggedCount: state => state.github.untaggedCount,
       langGroup: state => state.github.langGroup.filter(v => v.lang !== 'null'),
-      activeLang: state => state.github.activeLang
+      activeLang: state => state.github.activeLang,
+      tags: state => state.github.tags
     }),
     topList () {
       return [
@@ -186,13 +182,24 @@ export default {
       ]
     },
     langGroupList () {
+      const langHeading = { icon: 'sort', heading: 'Languages' }
       const allLang = {
         icon: 'code',
         text: 'All Languages',
         model: true,
         children: this.langGroup
       }
-      return [this.langList, allLang]
+      return [ langHeading, allLang ]
+    },
+    tagList () {
+      const tagHeading = { icon: 'add', heading: 'Tags' }
+      const tagList = {
+        icon: 'label',
+        text: 'All Tags',
+        model: false,
+        children: this.tags
+      }
+      return [ tagHeading, tagList ]
     }
   },
   methods: {

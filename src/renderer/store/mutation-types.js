@@ -12,7 +12,7 @@ export const USER_SIGNOUT = 'USER_SIGNOUT'
 
 // sidebar mutation types
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
-export const SET_SIDEBAR = 'SET_SIDEBAR'
+export const SET_SIDEBAR_STATE = 'SET_SIDEBAR_STATE'
 
 // github mutation types
 export const SET_GITHUB_STATE = 'SET_GITHUB_STATE'

@@ -11,7 +11,7 @@ const state = {
 }
 
 const mutations = {
-  [types.SET_SIDEBAR] (state, { isDesktop }) {
+  [types.SET_SIDEBAR_STATE] (state, { isDesktop }) {
     state.open = isDesktop
   },
   [types.TOGGLE_SIDEBAR] (state) {

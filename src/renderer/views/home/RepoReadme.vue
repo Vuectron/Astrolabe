@@ -12,6 +12,77 @@
         ></v-progress-circular>
       </div>
       <div class="article-wrap" v-else>
+        <div class="repo-actions">
+          <v-combobox
+            v-model="activeTag"
+            :filter="handleFilter"
+            :hide-no-data="!search"
+            :items="tagList"
+            :search-input.sync="search"
+            hide-selected
+            label="Search for a tag"
+            multiple
+            small-chips
+            solo>
+            <template v-slot:no-data>
+              <v-list-tile>
+                <span class="subheading">Create</span>
+                <v-chip
+                  :color="`${colors[nonce - 1]} lighten-3`"
+                  label
+                  small
+                >
+                  {{ search }}
+                </v-chip>
+              </v-list-tile>
+            </template>
+            <template v-slot:selection="{ item, parent, selected }">
+              <v-chip
+                v-if="item === Object(item)"
+                :text-color="item.colorIsLight ? 'black' : 'white'"
+                :color="item.color"
+                :selected="selected"
+                label
+                small
+              >
+                <span class="pr-2">
+                  {{ item.text }}
+                </span>
+                <v-icon small @click="parent.selectItem(item)">close</v-icon>
+              </v-chip>
+            </template>
+            <template v-slot:item="{ index, item }">
+              <v-list-tile-content>
+                <v-text-field
+                  v-if="editing === item"
+                  v-model="editing.text"
+                  autofocus
+                  flat
+                  background-color="transparent"
+                  hide-details
+                  solo
+                  @keyup.enter="onEditTag(index, item)"
+                ></v-text-field>
+                <v-chip
+                  v-else
+                  :text-color="item.colorIsLight ? 'black' : 'white'"
+                  :color="item.color"
+                  dark
+                  label
+                  small
+                >
+                  {{ item.text }}
+                </v-chip>
+              </v-list-tile-content>
+              <v-spacer></v-spacer>
+              <v-list-tile-action @click.stop>
+                <v-btn icon @click.stop.prevent="onEditTag(index, item)">
+                  <v-icon>{{ editing !== item ? 'edit' : 'check' }}</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+            </template>
+          </v-combobox>
+        </div>
         <article class="readme animated fadeIn" v-html="repoReadme" ref="repoReadme"></article>
       </div>
     </template>
@@ -29,10 +100,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import SpeedDial from './SpeedDial'
-
+import { mapState, mapActions } from 'vuex'
 import { shell } from 'electron'
+
+import SpeedDial from './SpeedDial'
 
 export default {
   name: 'RepoReadme',
@@ -41,17 +112,75 @@ export default {
   },
   data: () => ({
     snackbar: false,
-    snackbarTip: 'Repo clone link copied'
+    snackbarTip: 'Repo clone link copied',
+    // combobox
+    activator: null,
+    attach: null,
+    editing: null,
+    tagIndex: -1,
+    nonce: 1,
+    tagList: [],
+    search: null
   }),
   computed: {
     ...mapState({
+      tags: state => state.github.tags,
       repoReadme: state => state.content.repoReadme,
       isLoadingReadme: state => state.content.loadingReadme,
+      selectedRepo: state => state.content.selectedRepo,
+      activeRepo: state => state.content.activeRepo,
       rightPaneHeight: state => {
         const { windowSize } = state.global
         return `${windowSize.y - windowSize.toolbarHeight - 36}px`
       }
-    })
+    }),
+    activeTag: {
+      get () {
+        return this.activeRepo._tags || []
+      },
+      set (val) {
+        this.setRepoTags({ tags: val })
+      }
+    },
+    colors () {
+      return this.tags.map(v => v.color)
+    }
+  },
+  watch: {
+    tags: {
+      handler (val) {
+        const tagHeading = { header: 'Select a tag or create one' }
+        const tagList = this.tags.map(v => {
+          return {
+            id: v.id,
+            text: v.name,
+            color: v.color,
+            colorIsLight: v.colorIsLight
+          }
+        })
+        tagList.unshift(tagHeading)
+        this.tagList = tagList
+      },
+      immediate: true
+    },
+    activeTag (val, prev) {
+      if (val.length === prev.length) return
+
+      val.map(v => {
+        if (typeof v === 'string') {
+          v = {
+            text: v,
+            color: this.colors[this.nonce - 1]
+          }
+
+          this.tagList.push(v)
+
+          this.nonce++
+        }
+
+        return v
+      })
+    }
   },
   mounted () {
     // const self = this
@@ -74,8 +203,30 @@ export default {
     // })
   },
   methods: {
+    ...mapActions(['setRepoTags']),
     openInBrowser (url) {
       shell.openExternal(url)
+    },
+    onEditTag (index, item) {
+      if (!this.editing) {
+        this.editing = item
+        this.tagIndex = index
+      } else {
+        this.editing = null
+        this.tagIndex = -1
+      }
+    },
+    handleFilter (item, queryText, itemText) {
+      if (item.header) return false
+
+      const hasValue = val => val != null ? val : ''
+
+      const text = hasValue(itemText)
+      const query = hasValue(queryText)
+
+      return text.toString()
+        .toLowerCase()
+        .indexOf(query.toString().toLowerCase()) > -1
     }
   }
 }

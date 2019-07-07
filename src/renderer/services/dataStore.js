@@ -22,16 +22,18 @@ export default class {
       db._users = db.get('users')
       db._repos = db.get('repos')
       db._langGroup = db.get('langGroup')
+      db._tags = db.get('tags')
 
       return db
     } else {
       try {
         // Set some defaults (required if your JSON file is empty)
-        db.defaults({ users: [], repos: [], langGroup: [] }).write()
+        db.defaults({ users: [], repos: [], langGroup: [], tags: [] }).write()
 
         db._users = db.get('users')
         db._repos = db.get('repos')
         db._langGroup = db.get('langGroup')
+        db._tags = db.get('tags')
 
         return db
       } catch (err) {
@@ -44,7 +46,7 @@ export default class {
     if (this.db) {
       return this.db
     }
-    this.db = this.createOrReadDatabase(['users', 'repos', 'langGroup'])
+    this.db = this.createOrReadDatabase(['users', 'repos', 'langGroup', 'tags'])
     return this.db
   }
 }

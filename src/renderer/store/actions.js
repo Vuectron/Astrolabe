@@ -1,8 +1,8 @@
 /* eslint prefer-promise-reject-errors: ["error", {"allowEmptyReject": true}] */
 import _ from 'lodash'
-// // import jetpack from 'fs-jetpack'
 import request from 'superagent'
 import Github from 'github-api'
+import Color from 'color'
 // import db from '../services/db'
 import dataBase from '../services/dataBase'
 import storage from 'electron-json-storage'
@@ -10,7 +10,12 @@ import storage from 'electron-json-storage'
 import * as types from './mutation-types'
 import { md } from '../utils/helpers'
 
-const octokit = require('@octokit/rest')()
+const Octokit = require('@octokit/rest')
+
+const octokit = Octokit({
+  auth: '28fc9ae18acaed5368805cd560b88e12fc82942b',
+  previews: ['symmetra']
+})
 
 const makeAction = (type) => {
   return ({ commit }, ...args) => commit(type, ...args)
@@ -155,12 +160,11 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
   }
 }
 
-export const getLocalRepos = async ({ commit, state }) => {
+export const getLocalRepos = async ({ commit, state }, isLogin) => {
   const repos = await dataBase.fetchAllRepos()
-  console.log(repos.map(v => v.name))
   commit(types.SET_GITHUB_STATE, { lazyRepos: repos })
-  commit(types.SET_REPOS, { repos })
-  commit(types.TOGGLE_LOGIN)
+  commit(types.SET_REPOS, { repos: repos })
+  isLogin && commit(types.TOGGLE_LOGIN)
   return repos
 }
 
@@ -178,43 +182,45 @@ export const showReadme = ({ commit, state }, repo) => {
   const githubRepo = github.getRepo(repo.owner_name, repo.repo_name)
   const readmeUrl = 'https://api.github.com/repos/' + repo.owner_name + '/' + repo.repo_name + '/readme'
 
-  const getReadme = () => request
-    .get(readmeUrl)
-    .accept('application/json')
-    .timeout(30000)
-    .then(res => {
-      /* responded in time */
-      githubRepo.getContents(
-        'master',
-        res.body.name,
-        true,
-        (err, data) => {
-          if (err) {
-            console.dir(err.status)
-            // TODO dealwith 404
+  const getReadme = () => {
+    return request
+      .get(readmeUrl)
+      .accept('application/json')
+      .timeout(30000)
+      .then(res => {
+        /* responded in time */
+        githubRepo.getContents(
+          'master',
+          res.body.name,
+          true,
+          (err, data) => {
+            if (err) {
+              console.dir(err.status)
+              // TODO dealwith 404
+            }
+            // self.repoReadme = marked(data)
+            renderMarkdown = md().render(data)
+            storage.set(repoSlug, renderMarkdown, error => {
+              if (error) throw error
+            })
+            if (state.content.selectedRepo === repo.id) {
+              commit(types.SET_REPO_README, { repoReadme: renderMarkdown })
+              commit(types.SET_CONTENT_STATE, { loadingReadme: false })
+            }
           }
-          // self.repoReadme = marked(data)
-          renderMarkdown = md().render(data)
-          storage.set(repoSlug, renderMarkdown, error => {
-            if (error) throw error
-          })
-          if (state.content.selectedRepo === repo.repo_name) {
-            commit(types.SET_REPO_README, { repoReadme: renderMarkdown })
-            commit(types.SET_CONTENT_STATE, { loadingReadme: false })
-          }
+        )
+      }, err => {
+        if (err.timeout) {
+          console.log('Fetching repos timeout.', err)
+        } else {
+          console.log('Something went wrong fetching from GitHub', err)
         }
-      )
-    }, err => {
-      if (err.timeout) {
-        console.log('Fetching repos timeout.', err)
-      } else {
-        console.log('Something went wrong fetching from GitHub', err)
-      }
-      commit(types.SET_CONTENT_STATE, { loadingReadme: false })
-    })
+        commit(types.SET_CONTENT_STATE, { loadingReadme: false })
+      })
+  }
 
-  commit(types.SET_ACTIVE_REPO, { repo })
-  commit(types.SET_SELECTED_REPO, { repoName: repo.repo_name })
+  commit(types.SET_ACTIVE_REPO, repo)
+  commit(types.SET_SELECTED_REPO, { repoId: repo.id })
   if (repo._id !== activeRepo._id) {
     if (!loadingReadme) {
       commit(types.SET_CONTENT_STATE, { loadingReadme: true })
@@ -252,6 +258,50 @@ export const reloadRepos = ({ commit, state }, isInfinite) => {
   }, 2000)
 }
 
+export const getLabels = async ({ commit, state }, user) => {
+  user = user || state.github.user
+  const getLabelsByRepo = async () => {
+    const result = await octokit.issues.listLabelsForRepo({
+      owner: user.login,
+      repo: 'astrolabe-tags'
+    })
+    if (result && result.status === 200) {
+      const labels = result.data
+      console.log(labels)
+      if (labels) {
+        return labels.map(label => {
+          const hexColor = `#${label.color}`
+          const color = Color(hexColor)
+          return {
+            ...label,
+            color: hexColor,
+            colorIsLight: color.isLight()
+          }
+        })
+      }
+    }
+  }
+  const tags = await getLabelsByRepo()
+  await dataBase.setTags(tags)
+  commit(types.SET_GITHUB_STATE, { tags })
+}
+
+export const createLabel = async ({ commit, state }, { user, tag }) => {
+  user = user || state.github.user
+  const { name, color, description } = tag
+  try {
+    await octokit.issues.createLabel({
+      owner: user.login,
+      repo: 'astrolabe-tags',
+      name,
+      color,
+      description
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 // global actions
 export const setGlobalState = makeAction('SET_GLOBAL_STATE')
 export const increaseLimit = makeAction('INCREASE_LIMIT')
@@ -264,7 +314,7 @@ export const userSignout = makeAction('USER_SIGNOUT')
 
 // sidebar actions
 export const toggleSidebar = makeAction('TOGGLE_SIDEBAR')
-export const setSidebar = makeAction('SET_SIDEBAR')
+export const setSidebar = makeAction('SET_SIDEBAR_STATE')
 
 // github actions
 export const setGithubState = makeAction('SET_GITHUB_STATE')
