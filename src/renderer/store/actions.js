@@ -13,7 +13,7 @@ import { md } from '../utils/helpers'
 const Octokit = require('@octokit/rest')
 
 const octokit = Octokit({
-  auth: '28fc9ae18acaed5368805cd560b88e12fc82942b',
+  auth: 'ab457c5beede96152b257c70a64feae9c13525ad',
   previews: ['symmetra']
 })
 
@@ -140,7 +140,7 @@ export const getRepos = async ({ commit, dispatch, state }, user) => {
     }
   }
   // fetch langGroup from db
-  const langGroup = await dataBase.fetchLangGroup()
+  const langGroup = await dataBase.fetchAllLangGroup()
   // fetch all repos from db into repos state
   const allRepos = await dataBase.fetchAllRepos()
 
@@ -281,8 +281,8 @@ export const getLabels = async ({ commit, state }, user) => {
       }
     }
   }
-  const tags = await getLabelsByRepo()
-  await dataBase.setTags(tags)
+  const newTags = await getLabelsByRepo()
+  const tags = await dataBase.setTags(newTags)
   commit(types.SET_GITHUB_STATE, { tags })
 }
 

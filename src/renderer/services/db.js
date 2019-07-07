@@ -111,7 +111,7 @@ export default {
       })
     })
   },
-  fetchLangGroup () {
+  fetchAllLangGroup () {
     return new Promise((resolve, reject) => {
       langGroup.find({}, (err, docs) => {
         if (err) {}

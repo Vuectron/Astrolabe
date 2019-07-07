@@ -69,7 +69,7 @@ export default {
     const res = await _langGroup.find({ lang }).value()
     return res
   },
-  async fetchLangGroup () {
+  async fetchAllLangGroup () {
     const res = await _langGroup.value()
     return res
   },
@@ -80,7 +80,6 @@ export default {
   },
   async setTags (newTags) {
     const localTags = await this.fetchAllTags()
-    let res = []
     // async remote tags
     if (localTags) {
       // update remote tags to local tags
@@ -99,25 +98,29 @@ export default {
         }
       })
     } else {
-      res = await db.set('tags', newTags).write()
+      await db.set('tags', newTags).write()
     }
-    return res
+    const allTags = await this.fetchAllTags()
+    return allTags
   },
   async setTagCount (id, tags) {
-    tags.forEach(tag => {
-      const localTag = _tags.find({ id: tag.id }).value()
-      let ids = []
-      if (localTag.hasOwnProperty('repos')) {
-        ids = new Set([...localTag.repos, id])
-      } else {
-        ids = [id]
-      }
+    const allRepos = await this.fetchAllRepos()
+    const allTags = await this.fetchAllTags()
+    const allReposTags = allRepos
+      .filter(v => v.hasOwnProperty('_tags'))
+      .map(v => v._tags)
+      .reduce((a, b) => a.concat(b), [])
+    const reposCount = _.countBy(allReposTags, 'id')
+    console.log(reposCount)
+    allTags.forEach(tag => {
+      // const localTag = _tags.find({ id: tag.id }).value()
+      const count = reposCount[tag.id]
       _tags.find({ id: tag.id })
-        .set('repos', ids)
-        .set('count', _.size(ids))
+        .set('count', count)
         .write()
     })
-    return this.fetchAllTags()
+    const newTags = await this.fetchAllTags()
+    return newTags
   },
   async fetchAllTags () {
     const res = _tags.cloneDeep().value()
