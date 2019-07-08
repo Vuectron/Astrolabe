@@ -72,7 +72,7 @@
     "superagent": "^3.8.3",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
-    "vue-router": "^3.0.1",
+    "vue-router": "^3.0.7",
     "vue-spinner": "^1.0.3",
     "vue-virtual-scroller": "^1.0.0-rc.2",
     "vuedraggable": "^2.23.0",
