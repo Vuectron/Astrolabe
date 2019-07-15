@@ -54,7 +54,7 @@
     }
   },
   "dependencies": {
-    "@octokit/rest": "^16.28.2",
+    "@octokit/rest": "^16.28.3",
     "@primer/octicons": "^9.1.1",
     "animate.css": "^3.7.2",
     "axios": "^0.18.1",
