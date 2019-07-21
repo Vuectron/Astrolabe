@@ -105,7 +105,7 @@
     "eslint-loader": "^2.2.1",
     "eslint-plugin-html": "^4.0.3",
     "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "file-loader": "^4.0.0",
