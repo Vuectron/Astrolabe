@@ -8,7 +8,7 @@
 
 ## Tech Stack
 
-* Electron 4.0.0
+* Electron 4.x
 * Github Api 3.x
 * Lodash
 * Material Design
