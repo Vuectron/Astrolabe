@@ -1,4 +1,5 @@
 // global mutation types
+export const SET_GLOBAL_STATE = 'SET_GLOBAL_STATE'
 export const INCREASE_LIMIT = 'INCREASE_LIMIT'
 export const TOGGLE_IS_INFINITE = 'TOGGLE_IS_INFINITE'
 
@@ -11,7 +12,7 @@ export const USER_SIGNOUT = 'USER_SIGNOUT'
 
 // sidebar mutation types
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
-export const SET_SIDEBAR = 'SET_SIDEBAR'
+export const SET_SIDEBAR_STATE = 'SET_SIDEBAR_STATE'
 
 // github mutation types
 export const SET_GITHUB_STATE = 'SET_GITHUB_STATE'
@@ -23,7 +24,7 @@ export const SET_LANG_GROUP = 'SET_LANG_GROUP'
 export const ADD_LANG_GROUP = 'ADD_LANG_GROUP'
 
 // content mutation types
-export const TOGGLE_LOADING_REPOS = 'TOGGLE_LOADING_REPOS'
+export const SET_CONTENT_STATE = 'SET_CONTENT_STATE'
 export const TOGGLE_LOADING_README = 'TOGGLE_LOADING_README'
 export const SET_ACTIVE_REPO = 'SET_ACTIVE_REPO'
 export const SET_SELECTED_REPO = 'SET_SELECTED_REPO'

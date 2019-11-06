@@ -2,9 +2,11 @@ import { parse } from 'url'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import { remote } from 'electron'
+import octicons from '@primer/octicons'
+
 import Constants from './constants'
 
-const { BrowserWindow, dialog } = remote
+const { BrowserWindow } = remote
 
 // import marked, { Renderer } from 'marked'
 
@@ -66,15 +68,12 @@ export const generateGitHubWebUrl = (url) => {
 }
 
 export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatch) => {
-  // Build the OAuth consent page URL
+  // Build the OAuth content page URL
   const authWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    show: true,
-    webPreferences: {
-      devTools: true,
-      nodeIntegration: false
-    }
+    center: true,
+    show: true
   })
 
   const githubUrl = `https://${authOptions.hostname}/login/oauth/authorize?`
@@ -82,7 +81,7 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
 
   authWindow.loadURL(authUrl)
 
-  const handleCallback = (url) => {
+  const handleCallback = async (url) => {
     const rawCode = /code=([^&]*)/.exec(url) || null
     const code = (rawCode && rawCode.length > 1) ? rawCode[1] : null
     const error = /\?error=(.+)$/.exec(url)
@@ -92,12 +91,14 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
       authWindow.destroy()
     }
 
-    // If there is a code, proceed to get token from github
     if (code) {
-      dispatch('getToken', {authOptions, code})
-        .then(() => {})
-        .then(() => { dispatch('getUser') }) // If get token successful, proceed to get user from github
-        .then(() => { dispatch('getRepos') }) // If get user successful, proceed to get repos from github
+      console.log(code)
+      // If there is a code, proceed to get token from github
+      await dispatch('getToken', { authOptions, code })
+      // If get token successful, proceed to get user from github
+      const user = await dispatch('getUser')
+      // If get user successful, proceed to get repos from github
+      await dispatch('getRepos', user)
     } else if (error) {
       alert('Oops! Something went wrong and we couldn\'t ' +
         'log you in using Github. Please try again.')
@@ -109,28 +110,15 @@ export const authGithub = (authOptions = Constants.DEFAULT_AUTH_OPTIONS, dispatc
     authWindow.destroy()
   })
 
-  authWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-    if (validatedURL.includes(authOptions.hostname)) {
-      authWindow.destroy()
-
-      dialog.showErrorBox(
-        'Invalid Hostname',
-        `Could not load https://${authOptions.hostname}/.`
-      )
-    }
-  })
-
   authWindow.webContents.on('will-navigate', (event, url) => {
+    console.log(url)
     handleCallback(url)
   })
 
-  authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
-    handleCallback(newUrl)
+  authWindow.webContents.on('will-redirect', (event, url) => {
+    console.log(url)
+    handleCallback(url)
   })
-}
-
-export const isUserEitherLoggedIn = (auth) => {
-  return auth.get('token') !== null || auth.get('enterpriseAccounts').size > 0
 }
 
 export const md = () => {
@@ -148,4 +136,8 @@ export const md = () => {
       return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`
     }
   })
+}
+
+export const getOcticon = (icon, options) => {
+  return octicons[icon].toSVG(options)
 }

@@ -1,7 +1,9 @@
 import * as types from '../mutation-types'
+import { cloneDeep } from 'lodash'
+
+import dataBase from '../../services/dataBase'
 
 const state = {
-  loadingRepos: false,
   loadingReadme: false,
   repoReadme: '',
   activeRepo: {},
@@ -10,28 +12,47 @@ const state = {
   order: 1
 }
 
+const actions = {
+  async setRepoTags ({ commit, dispatch, state }, payload) {
+    const { activeRepo } = state
+    const { tags } = payload
+
+    const cloneRepo = cloneDeep(activeRepo)
+    cloneRepo._tags = tags
+    commit(types.SET_ACTIVE_REPO, cloneRepo)
+
+    console.group('---')
+    await dataBase.updateRepoTags(activeRepo.id, tags)
+    const res = await dataBase.setTagCount(activeRepo.id, tags)
+    console.groupEnd()
+    commit(types.SET_GITHUB_STATE, { tags: res })
+    dispatch('getLocalRepos', false)
+    return cloneRepo
+  }
+}
+
 const mutations = {
-  [types.TOGGLE_LOADING_REPOS] (state) {
-    state.loadingRepos = !state.loadingRepos
+  [types.SET_CONTENT_STATE] (state, payload) {
+    Object.assign(state, payload)
   },
 
   [types.TOGGLE_LOADING_README] (state) {
     state.loadingReadme = !state.loadingReadme
   },
 
-  [types.SET_ACTIVE_REPO] (state, {repo}) {
+  [types.SET_ACTIVE_REPO] (state, repo) {
     state.activeRepo = repo
   },
 
-  [types.SET_SELECTED_REPO] (state, {repoName}) {
-    state.selectedRepo = repoName
+  [types.SET_SELECTED_REPO] (state, { repoId }) {
+    state.selectedRepo = repoId
   },
 
-  [types.SET_REPO_README] (state, {repoReadme}) {
+  [types.SET_REPO_README] (state, { repoReadme }) {
     state.repoReadme = repoReadme
   },
 
-  [types.ORDER_REPO] (state, {repoKey}) {
+  [types.ORDER_REPO] (state, { repoKey }) {
     state.repoKey = repoKey
     state.order = state.order * -1
   }
@@ -39,5 +60,6 @@ const mutations = {
 
 export default {
   state,
+  actions,
   mutations
 }

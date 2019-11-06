@@ -4,19 +4,19 @@
 
 ## Preview
 
-![img](app/imgs/preview.png)
+![img](src/renderer/assets/preview.png)
 
 ## Tech Stack
 
-* Electron 1.7.5
-* Github Api 3.0+
+* Electron 4.x
+* Github Api 3.x
 * Lodash
 * Material Design
-* Muse-ui 3.0+
+* Muse-ui 3.x
 * Nedb
 * Superagent
 * Vue.js 2.5+
-* Webpack 3.5.2
+* Webpack 4.15+
 
 ---
 
@@ -31,12 +31,6 @@ npm run dev
 
 # build electron app for production
 npm run build
-
-# lint all JS/Vue component files in `app/src`
-npm run lint
-
-# run webpack in production
-npm run pack
 ```
 
 ## Features

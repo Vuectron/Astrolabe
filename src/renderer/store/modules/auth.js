@@ -22,7 +22,7 @@ const actions = {
 }
 
 const mutations = {
-  [types.SET_TOKEN] (state, {token}) {
+  [types.SET_TOKEN] (state, { token }) {
     state.token = token
   },
   [types.TOGGLE_CONNECTING] (state) {
