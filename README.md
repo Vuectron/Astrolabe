@@ -8,15 +8,13 @@
 
 ## Tech Stack
 
-* Electron 4.x
 * Github Api 3.x
 * Lodash
 * Material Design
-* Muse-ui 3.x
-* Nedb
+* Vuetify 2.x
+* Vue Apollo
 * Superagent
 * Vue.js 2.5+
-* Webpack 4.15+
 
 ---
 
@@ -27,7 +25,7 @@
 npm install
 
 # serve with hot reload at localhost:9080
-npm run dev
+npm run serve
 
 # build electron app for production
 npm run build
