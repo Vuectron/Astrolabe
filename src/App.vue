@@ -1,32 +1,27 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div id="app" class="app">
+    <router-view></router-view>
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  name: 'App'
 }
+</script>
 
-#nav {
-  padding: 30px;
+<style lang="less">
+@import '~material-design-icons/iconfont/material-icons.css';
+// @import '~highlight.js/styles/github.css';
+// @import '~highlight.js/styles/monokai.css';
+@import '~highlight.js/styles/dracula.css';
+@import '~devicon/devicon.min.css';
+// @import './assets/icons/devicon-2.2/devicon.min.css';
+@import '~devicon/devicon-colors.css';
+@import '~animate.css/animate.min.css';
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+#app {
+  height: 100%;
+  overflow: hidden;
 }
 </style>
