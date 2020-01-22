@@ -6,5 +6,12 @@ module.exports = {
       warnings: true,
       errors: true
     }
+  },
+
+  pluginOptions: {
+    apollo: {
+      enableMocks: true,
+      enableEngine: true
+    }
   }
 }
