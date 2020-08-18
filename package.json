@@ -99,7 +99,7 @@
     "electron-builder": "^20.44.4",
     "electron-debug": "^2.0.0",
     "electron-devtools-installer": "^2.2.4",
-    "eslint": "^5.16.0",
+    "eslint": "^7.7.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.2.1",
