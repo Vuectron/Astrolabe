@@ -57,7 +57,7 @@
     "@octokit/rest": "^16.28.3",
     "@primer/octicons": "^9.1.1",
     "animate.css": "^3.7.2",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "color": "^3.1.2",
     "devicon": "^2.0.0",
     "electron-json-storage": "^4.1.0",
